@@ -6,9 +6,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
 import javax.swing.border.Border;
 
-public class GridButton extends JButton {
+public class GridButton extends JToggleButton {
 	
 	private boolean isHole;
 	private PieceType pieceType;
@@ -18,11 +19,6 @@ public class GridButton extends JButton {
 	public GridButton(int row, int col) {
 		this.gridLocation = new Point(col, row);
 		this.setPreferredSize(new Dimension(100, 100));
-		
-//		this.setBounds(new Rectangle(100, 100));
-//		this.setBorder(new RoundedBorder(50));
-//		this.setForeground(Color.BLUE);
-		
 		
 		
 		// Check if this gridbutton is supposed to be a hole

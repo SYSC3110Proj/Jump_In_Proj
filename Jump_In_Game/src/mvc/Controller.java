@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JToggleButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -16,7 +17,8 @@ public class Controller {
 	private View view;
 	boolean select;
 	private String loc, name;
-	private Point gridLocation;
+	private Point sourcePoint, destPoint;
+	private GridButton sourceButton;
 	
 	public Controller() {
 		game = new PlayBoard();
@@ -27,10 +29,11 @@ public class Controller {
 		view.initButton(game.getBoardName(), new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!select) {
-					loc = ((JButton)e.getSource()).getName();
-					name = ((JButton)e.getSource()).getText();
+					loc = ((JToggleButton) e.getSource()).getName();
+					name = ((JToggleButton)e.getSource()).getText();
 					
-					gridLocation = ((GridButton) e.getSource()).getGridLocation();
+					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
+					sourceButton = (GridButton) e.getSource();
 					
 					//System.out.println(name + loc);
 					select = true;
@@ -41,13 +44,13 @@ public class Controller {
 							String[] str = loc.split(",");
 							int row1 = Integer.parseInt(str[0]);
 							int col1 = Integer.parseInt(str[1]);
-							int row2 = Integer.parseInt(((JButton)e.getSource()).getName().split(",")[0]);
-							int col2 = Integer.parseInt(((JButton)e.getSource()).getName().split(",")[1]);
+							int row2 = Integer.parseInt(((JToggleButton)e.getSource()).getName().split(",")[0]);
+							int col2 = Integer.parseInt(((JToggleButton)e.getSource()).getName().split(",")[1]);
+							
+							destPoint = ((GridButton) e.getSource()).getGridLocation();
 						
 							if(name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
-//								game.jumpTo(game.getRabbit(name), getDirec(row1, col1, row2, col2));
-								
-								game.jumpTo(game.getRabbit(name), getDirection(gridLocation, new Point(col2, row2)));
+								game.jumpTo(game.getRabbit(name), getDirection(sourcePoint, destPoint));
 								
 							} else if (name.equals("fox1") || name.equals("fox2")) {
 								if (game.getFox(name)[0].getDirection().equals(Direction.HORIZONTAL)) {
@@ -56,6 +59,9 @@ public class Controller {
 									game.moveTo(game.getFox(name), row2);
 								}
 							}
+							
+							sourceButton.setSelected(false);
+							((GridButton) e.getSource()).setSelected(false);
 							view.update(game.getBoardName());
 						}
 					}
