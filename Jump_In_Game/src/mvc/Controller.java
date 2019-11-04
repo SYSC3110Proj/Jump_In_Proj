@@ -16,36 +16,29 @@ public class Controller {
 	private PlayBoard game;
 	private View view;
 	boolean select;
-	private String loc, name;
+	private String name;
 	private Point sourcePoint, destPoint;
 	private GridButton sourceButton;
 	
 	public Controller() {
-		game = new PlayBoard();
-		view = new View();
+		this.game = new PlayBoard();
+		this.view = new View();
 		
-		select = false;
+		this.select = false;
 		
-		view.initButton(game.getBoardName(), new ActionListener() {
+		this.view.initButton(game.getBoardName(), new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// If the player is currently in the selection phase
 				if (!select) {
-					loc = ((JToggleButton) e.getSource()).getName();
 					name = ((JToggleButton)e.getSource()).getText();
 					
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
 					
-					//System.out.println(name + loc);
 					select = true;
-				} else {
+				} else {	// If the player is in the movement phase
 					if (name != null) {
 						if (!name.equals("Hole") && !name.equals("mushroom")) {
-							
-							String[] str = loc.split(",");
-							int row1 = Integer.parseInt(str[0]);
-							int col1 = Integer.parseInt(str[1]);
-							int row2 = Integer.parseInt(((JToggleButton)e.getSource()).getName().split(",")[0]);
-							int col2 = Integer.parseInt(((JToggleButton)e.getSource()).getName().split(",")[1]);
 							
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
 						
@@ -54,14 +47,16 @@ public class Controller {
 								
 							} else if (name.equals("fox1") || name.equals("fox2")) {
 								if (game.getFox(name)[0].getDirection().equals(Direction.HORIZONTAL)) {
-									game.moveTo(game.getFox(name), col2);
+									game.moveTo(game.getFox(name), (int) destPoint.getX());
 								} else {
-									game.moveTo(game.getFox(name), row2);
+									game.moveTo(game.getFox(name), (int) destPoint.getY());
 								}
 							}
 							
+							// Toggle both buttons to show as off
 							sourceButton.setSelected(false);
 							((GridButton) e.getSource()).setSelected(false);
+							
 							view.update(game.getBoardName());
 						}
 					}
