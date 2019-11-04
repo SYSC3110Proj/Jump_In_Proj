@@ -1,6 +1,5 @@
 package mvc;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -16,7 +15,7 @@ public class View extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JButton[][] button;
+	private GridButton[][] button;
 	
 	public View() {
 		super();
@@ -24,13 +23,12 @@ public class View extends JPanel{
 		this.setBounds(300, 400, 500, 500);
 		
 		//use JButton to make a 5x5 board
-		button = new JButton[5][5];
+		button = new GridButton[5][5];
 		
-		for(int r=0; r<5; r++) {
-			for(int c=0; c<5; c++) {
-				button[r][c] = new JButton();
-				button[r][c].setPreferredSize(new Dimension(100,100));
-				this.add(button[r][c]);
+		for(int row = 0; row < 5; row++) {
+			for(int col = 0; col < 5; col++) {
+				button[row][col] = new GridButton(row, col);
+				this.add(button[row][col]);
 			}
 		}
 		
@@ -39,9 +37,9 @@ public class View extends JPanel{
 	
 	//when pieces are moved, update the board by changing names on it
 	public void update(String[][] chess) {
-		for(int r=0; r<5; r++) {
-			for(int c=0; c<5; c++) {
-				button[r][c].setText(chess[r][c]);
+		for(int row = 0; row < 5; row++) {
+			for(int col = 0; col < 5; col++) {
+				button[row][col].setText(chess[row][col]);
 			}
 		}
 	}
@@ -73,11 +71,11 @@ public class View extends JPanel{
 	
 	//write name on buttons
 	public void initButton(String[][] chess, ActionListener listener) {
-		for(int r=0; r<5; r++) {
-			for(int c=0; c<5; c++) {
-				button[r][c].setName(r + ","+ c);
-				button[r][c].setText(chess[r][c]);
-				button[r][c].addActionListener(listener);
+		for(int row = 0; row < 5; row++) {
+			for(int col = 0; col < 5; col++) {
+				button[row][col].setName(row + ","+ col);
+				button[row][col].setText(chess[row][col]);
+				button[row][col].addActionListener(listener);
 			}
 		}
 	}
