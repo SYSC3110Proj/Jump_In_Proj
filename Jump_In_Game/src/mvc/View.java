@@ -10,6 +10,14 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/** 
+ * The view class creates the menu and user interface, with buttons and action listeners, so that the user can interact with
+ * and play the game.
+ * @author Zewen Chen
+ * @author Craig Worthington
+ * 
+ */
+
 public class View extends JPanel{
 	/**
 	 * 
