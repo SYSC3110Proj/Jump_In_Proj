@@ -1,5 +1,11 @@
 package gamePieces;
 
+/** 
+ * The fox class is used to keep track of the coordinates and get the direction of a fox. Foxes are constructed with co-ords, direction,
+ * and optionally a name.
+ * @author Mika Argyle
+ */
+
 public class Fox extends Square {
 	
 	private Direction direction;
