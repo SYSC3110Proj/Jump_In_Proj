@@ -1,7 +1,10 @@
 package mvc.controller;
 
+import java.util.ArrayList;
+
 import gamePieces.Direction;
 import gamePieces.Fox;
+import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import gamePieces.Square;
 
@@ -13,8 +16,10 @@ import gamePieces.Square;
 
 public class PlayBoard {
 	private Square board[][];
-	private Rabbit r1, r2, r3; //3 rabbits
+//	private Rabbit r1, r2, r3; //3 rabbits
 	private Fox[] f1, f2;  //2 foxes
+	
+	private ArrayList<Rabbit> rabbits;
 	//private int cmushroom; //3 mushroom
 
 	/**
@@ -22,17 +27,28 @@ public class PlayBoard {
 	 */
 	public PlayBoard() {
 		board = new Square[5][5];
+		
+		this.rabbits = new ArrayList<Rabbit>(3);
+		
 		for (int i = 0; i < 5; i++) {//row
 			for (int j = 0; j < 5; j++) {//column
 				board[i][j] = new Square(i,j); //(row,column)
 			}
 		}
+		
+		
 		// set Hole
 		board[0][0].setName("Hole");
 		board[0][4].setName("Hole");
 		board[2][2].setName("Hole");
 		board[4][0].setName("Hole");
 		board[4][4].setName("Hole");
+		
+		board[0][0].setPieceType(PieceType.HOLE);
+		board[0][4].setPieceType(PieceType.HOLE);
+		board[2][2].setPieceType(PieceType.HOLE);
+		board[4][0].setPieceType(PieceType.HOLE);
+		board[4][4].setPieceType(PieceType.HOLE);
 
 		//default gameboard
 		setRabbit(1,0,3);
@@ -45,6 +61,9 @@ public class PlayBoard {
 		board[1][3].setName("Mushroom");
 		board[4][2].setName("Mushroom");
 		
+		board[1][3].setPieceType(PieceType.MUSHROOM);
+		board[4][2].setPieceType(PieceType.MUSHROOM);
+		
 	}
 
 
@@ -53,7 +72,7 @@ public class PlayBoard {
 	 * @return True if all rabbits are in holes, false otherwise
 	 */
 	public boolean isWin() {
-		return r1.atHole() && r2.atHole() && r3.atHole();
+		return rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole();
 	}
 
 	/**
@@ -62,8 +81,11 @@ public class PlayBoard {
 	 * @return the fox object at index i
 	 */
 	public Fox[] getFox(String str) {
-		if(str.equals("fox1")) return f1;
-		else if(str.equals("fox2")) return f2;
+		if (str.equals("fox1")) {
+			return f1;
+		} else if (str.equals("fox2")) {
+			return f2;
+		}
 		return null;
 	}
 
@@ -73,9 +95,13 @@ public class PlayBoard {
 	 * @return A Square object that represents the rabbit at index i
 	 */
 	public Rabbit getRabbit(String str){
-		if(str.equals("rabbit1")) return r1;
-		else if(str.equals("rabbit2")) return r2;
-		else if(str.equals("rabbit3")) return r3;
+		if (str.equals("rabbit1")) {
+			return rabbits.get(0);
+		} else if (str.equals("rabbit2")) {
+			return rabbits.get(1);
+		} else if (str.equals("rabbit3")) {
+			return rabbits.get(2);
+		}
 		return null;
 	}
 	
@@ -85,18 +111,16 @@ public class PlayBoard {
 	 * @param y The y coordinate of the rabbit location
 	 * @return True if the rabbit was successfully created
 	 */
-	public void setRabbit(int i, int x, int y) {
-		if(i==1) {
-			r1 = new Rabbit(x, y, "rabbit"+i);
-			board[x][y] = r1;
-		}
-		else if(i==2) {
-			r2 = new Rabbit(x, y, "rabbit"+i);
-			board[x][y] = r2;
-		}
-		else if(i==3) {
-			r3 = new Rabbit(x, y,"rabbit"+i);
-			board[x][y] = r3;
+	public void setRabbit(int i, int x, int y) {	
+		if (i == 1) {
+			rabbits.set(0, new Rabbit(x, y, "rabbit"+i));
+			board[x][y] = rabbits.get(0);
+		} else if(i == 2) {
+			rabbits.set(1, new Rabbit(x, y, "rabbit"+i));
+			board[x][y] = rabbits.get(1);
+		} else if(i == 3) {
+			rabbits.set(2, new Rabbit(x, y,"rabbit"+i));
+			board[x][y] = rabbits.get(2);
 		} 
 	}
 
@@ -112,7 +136,7 @@ public class PlayBoard {
 
 		if (direction.equals(Direction.HORIZONTAL)) {
 			for (int j = 0; j < 5; j++) { // find if there are two empty board connected to put a fox in
-				if (empty<1) {
+				if (empty < 1) {
 					if (!board[x][j].isOccupied()) {
 						empty++;
 					} else {
@@ -177,10 +201,10 @@ public class PlayBoard {
 		int row = s.getRow();
 		int col = s.getColumn();
 		
-		if(!(x==row && y==col) && x>-1 && x<5 && y>-1 && y<5) {
+		if (!(x == row && y == col) && x > -1 && x < 5 && y > -1 && y < 5) {
 			board[x][y] = s;
 			board[row][col] = new Square(row, col);
-			if(s.atHole()) {
+			if (s.atHole()) {
 				board[row][col].setName("Hole");
 			}
 			s.move(x, y);
@@ -194,8 +218,12 @@ public class PlayBoard {
 	 * @return True if the move was successful
 	 */
 	public boolean jumpTo(Rabbit r, Direction direction) {
-		if (r==null) return false;
-		if (direction == null) return false;
+		if (r == null) {
+			return false;
+		}
+		if (direction == null) {
+			return false;
+		}
 
 		// get rabbit's location
 		int row = r.getRow();
