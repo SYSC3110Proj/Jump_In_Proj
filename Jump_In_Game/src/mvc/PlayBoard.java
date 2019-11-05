@@ -255,7 +255,7 @@ public class PlayBoard {
 	 * @param f The fox to find the location of
 	 * @return The row or column where the fox is located
 	 */
-	protected int getFoxLocation(Fox[] f) {
+	public int getFoxLocation(Fox[] f) {
 		if (f[0].getDirection().equals(Direction.HORIZONTAL)) {
 			return f[0].getColumn();
 		} else if (f[0].getDirection().equals(Direction.VERTICAL)) {

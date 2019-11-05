@@ -1,8 +1,11 @@
-package gamePieces;
+package gamePieces.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import gamePieces.Direction;
+import gamePieces.Fox;
 
 /**
  * The FoxTest class contains tests for all the methods in the Fox class.
@@ -41,7 +44,6 @@ public class FoxTest {
 	public void testGetDirection() {
 		Fox instance = new Fox(1,2,Direction.VERTICAL);
 		assertEquals("VERTICAL",instance.getDirection().name());
-		
 	}
 
 }

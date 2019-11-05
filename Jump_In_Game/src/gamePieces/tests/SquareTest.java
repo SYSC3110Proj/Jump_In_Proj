@@ -1,8 +1,10 @@
-package gamePieces;
+package gamePieces.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import gamePieces.Square;
 
 /**
  * The SquareTest class contains tests for all the methods in the Square class.
@@ -21,15 +23,15 @@ public class SquareTest {
 		assertEquals(2,instance.getRow());
 		assertEquals(3,instance.getColumn());
 		
-		try{
+		try {
 			Square instance1 = new Square(5,3);
 		    fail();
-		}catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {}
 		
-		try{
+		try {
 			Square instance2 = new Square(3,6);
 		    fail();
-		}catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {}
 		
 	}
 	
@@ -62,7 +64,6 @@ public class SquareTest {
 	public void testGetColumn() {
 		Square instance = new Square(2,3,"fox1");
 		assertEquals(3,instance.getColumn());
-		
 	}
 
 	@Test
@@ -101,9 +102,6 @@ public class SquareTest {
 		assertEquals(true,hole3.atHole());
 		assertEquals(true,hole4.atHole());
 		assertEquals(true,hole5.atHole());
-		
-	
-		
 	}
 
 	@Test
@@ -114,24 +112,23 @@ public class SquareTest {
 	 */
 	public void testMove() {
 		Square instance = new Square(2,3);
-		try{
+		try {
 			instance.move(0,5);
 		    fail();
-		}catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {}
 		
 		Square instance1 = new Square(3,3);
-		try{
+		
+		try {
 			instance1.move(5,0);
 		    fail();
-		}catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {}
 		
 		Square instance2 = new Square(3,2);
 		instance2.move(2,2);
 		
 		assertEquals(2,instance2.getRow());
 		assertEquals(2,instance2.getColumn());
-		
-		
 	}
 
 	@Test
@@ -145,8 +142,6 @@ public class SquareTest {
 		
 		Square instance1 = new Square(0,3);
 		assertEquals(false,instance1.isOccupied());
-		
-		
 	}
 
 	@Test
