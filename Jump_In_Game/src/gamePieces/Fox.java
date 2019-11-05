@@ -19,6 +19,7 @@ public class Fox extends Square {
 	 */
 	public Fox(int x, int y, Direction direction, String name) {
 		super(x,y, name);
+		super.setPieceType(PieceType.FOX);
 		this.direction = direction;
 	}
 	

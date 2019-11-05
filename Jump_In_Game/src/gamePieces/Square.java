@@ -11,7 +11,6 @@ public class Square {
 	private int column;
 	private int row;
 	private String name;
-	
 	private PieceType pieceType;
 
 	/**
@@ -30,6 +29,20 @@ public class Square {
 		column = y;
 		row = x;
 		name = null;
+	}
+
+	/**
+	 * @return the pieceType
+	 */
+	public PieceType getPieceType() {
+		return pieceType;
+	}
+
+	/**
+	 * @param pieceType the pieceType to set
+	 */
+	public void setPieceType(PieceType pieceType) {
+		this.pieceType = pieceType;
 	}
 
 	/**
