@@ -8,7 +8,7 @@ import org.junit.Test;
 import gamePieces.Direction;
 import gamePieces.Fox;
 import gamePieces.Rabbit;
-import mvc.PlayBoard;
+import mvc.controller.PlayBoard;
 
 /**
  * The PlayBoardTest class contains tests for all the methods in the PlayBoard class.
