@@ -12,7 +12,6 @@ import javax.swing.border.Border;
 public class GridButton extends JToggleButton {
 	
 	private boolean isHole;
-	private PieceType pieceType;
 	private Point gridLocation;	// location in the grid of the button
 	
 	
@@ -45,16 +44,6 @@ public class GridButton extends JToggleButton {
 
 	public void setHole(boolean isHole) {
 		this.isHole = isHole;
-	}
-
-
-	public PieceType getPieceType() {
-		return pieceType;
-	}
-
-
-	public void setPieceType(PieceType pieceType) {
-		this.pieceType = pieceType;
 	}
 
 
