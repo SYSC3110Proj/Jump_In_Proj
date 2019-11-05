@@ -1,5 +1,11 @@
 package gamePieces;
 
+/** 
+ * The square object is used to seperate the board into squares, it has it's own coordinates and is either an empty square, or contains
+ * an object such as a rabbit, fox, or hole.
+ * @author Zewen Chen
+ */
+
 public class Square {
 	//position
 	private int column;
