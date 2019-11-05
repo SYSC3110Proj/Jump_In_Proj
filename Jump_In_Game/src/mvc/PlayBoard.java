@@ -5,6 +5,12 @@ import gamePieces.Fox;
 import gamePieces.Rabbit;
 import gamePieces.Square;
 
+/** 
+ * The PlayBoard class allows for a default setup as well as the repositionin of pieces on the board, contains the method
+ * to check whether the game is won or not, and lastly has all the methods needed to play the game, such as move pieces.
+ * @author Ruixuan Ni
+ */
+
 public class PlayBoard {
 	private Square board[][];
 	private Rabbit r1, r2, r3; //3 rabbits
