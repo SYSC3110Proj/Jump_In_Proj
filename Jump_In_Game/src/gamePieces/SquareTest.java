@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
+ * The SquareTest class contains tests for all the methods in the Square class.
  * @author Tiantian Lin
  */
 
