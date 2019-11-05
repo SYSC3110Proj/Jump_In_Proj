@@ -10,6 +10,7 @@ import gamePieces.Fox;
 import gamePieces.Rabbit;
 
 /**
+ * The PlayBoardTest class contains tests for all the methods in the PlayBoard class.
  * @author Tiantian Lin
  */
 
