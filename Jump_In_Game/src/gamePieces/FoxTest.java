@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
+ * The FoxTest class contains tests for all the methods in the Fox class.
  * @author Tiantian Lin
  */
 
