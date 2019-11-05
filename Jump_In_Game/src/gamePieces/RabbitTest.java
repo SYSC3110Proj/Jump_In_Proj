@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
+ * The RabbitTest class contains tests for all the methods in the rabbit class.
  * @author Tiantian Lin
  */
 
