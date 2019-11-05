@@ -38,7 +38,7 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 				// If the player is currently in the selection phase
 				if (!select) {
-					name = ((JToggleButton)e.getSource()).getText();
+					name = ((GridButton)e.getSource()).getText();
 					
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
@@ -75,30 +75,6 @@ public class Controller {
 				}
 			}
 		});
-	}
-	
-	//row1, col1 of original position and row2, col2 of destination
-	private Direction getDirec(int row1, int col1, int row2, int col2) {
-		if (row1 != row2 && col1 != col2) {
-			return null;
-		}
-		if (row1 == row2 && col1 == col2) {
-			return null;
-		}
-		if (row1 == row2) {
-			if (col1 > col2) {
-				return Direction.WEST;
-			} else {
-				return Direction.EAST;
-			}
-		} else if(col1 == col2){
-			if(row1 > row2) {
-				return Direction.NORTH;
-			} else {
-				return Direction.SOUTH;
-			}
-		}
-		return null;
 	}
 	
 	//row1, col1 of original position and row2, col2 of destination

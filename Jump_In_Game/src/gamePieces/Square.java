@@ -11,6 +11,8 @@ public class Square {
 	private int column;
 	private int row;
 	private String name;
+	
+	private PieceType pieceType;
 
 	/**
 	 * Constructor for Square object
