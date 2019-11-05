@@ -11,6 +11,14 @@ import javax.swing.JFrame;
 
 import gamePieces.Direction;
 
+/** 
+ * The Controller class creates the Playboard and View objects within a frame that the player interacts with, 
+ * it also contains some of the game logic.
+ * @author Ruixuan Ni
+ * @author Craig Worthington
+ * 
+ */
+
 public class Controller {
 	
 	private PlayBoard game;
