@@ -9,6 +9,7 @@ package gamePieces;
 public class Fox extends Square {
 	
 	private Direction direction;
+	private boolean isHead;
 	
 	/**
 	 * Constructor for fox object
@@ -18,6 +19,20 @@ public class Fox extends Square {
 	 * @param name The name of the fox
 	 */
 	public Fox(int row, int col, Direction direction, String name) {
+		super(row, col, name);
+		super.setPieceType(PieceType.FOX);
+		this.direction = direction;
+	}
+	
+	/**
+	 * Constructor for fox object
+	 * @param row The row of the fox (aka y coordinate)
+	 * @param col The column of the fox (aka x coordinate)
+	 * @param direction The direction that the fox is facing
+	 * @param name The name of the fox
+	 * @param isHead if this square is the head of the fox
+	 */
+	public Fox(int row, int col, Direction direction, String name, boolean isHead) {
 		super(row, col, name);
 		super.setPieceType(PieceType.FOX);
 		this.direction = direction;

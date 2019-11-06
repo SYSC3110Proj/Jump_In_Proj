@@ -30,6 +30,25 @@ public class Square {
 		this.row = row;
 		name = null;
 	}
+	
+	/**
+	 * Constructor for Square object
+	 * @param row The row of the square
+	 * @param col The column of the square
+	 */
+	public Square(int row, int col, PieceType pieceType) {
+		//board is set to 5x5
+		if ((row < 0) || (row > 4)) {
+			throw new IllegalArgumentException("Invalid row given!");
+		} else if ((col < 0) || (col > 4)) {
+			throw new IllegalArgumentException("Invalid column given!");
+		}
+
+		this.column = col;
+		this.row = row;
+		this.pieceType = pieceType;
+		name = null;
+	}
 
 	/**
 	 * @return the pieceType
