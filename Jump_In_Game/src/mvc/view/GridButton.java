@@ -31,11 +31,19 @@ public class GridButton extends JToggleButton {
 			this.isHole = false;
 		}
 		
+		this.setText("" + row + "," + col);
+		
 		if (this.isHole) {
 			this.setBackground(new Color(139,69,19));
 		}
 	}
-
+	
+	@Override
+	public void setText(String str) {
+		super.setText("" + gridLocation.x + "," + gridLocation.y + ": " + str);
+	}
+	
+	
 
 	public boolean isHole() {
 		return isHole;

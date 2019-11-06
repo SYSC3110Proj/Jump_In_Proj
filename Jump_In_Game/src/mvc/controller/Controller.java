@@ -54,6 +54,7 @@ public class Controller {
 							if (name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
 								if (game.canJumpIn(game.getRabbit(name), getDirection(sourcePoint, destPoint))) {
 									Point newLoc = game.getNearestJumpPoint(game.getRabbit(name), getDirection(sourcePoint, destPoint));
+									System.out.println("newLoc = " + newLoc);
 									game.moveRabbit(game.getRabbit(name), newLoc);
 								}
 								

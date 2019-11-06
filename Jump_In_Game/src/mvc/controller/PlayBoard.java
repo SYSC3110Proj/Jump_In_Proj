@@ -225,6 +225,9 @@ public class PlayBoard {
 		int currRow = rabbit.getRow();
 		int currCol = rabbit.getColumn();
 		
+		System.out.println("currRow = " + currRow + ", currCol = " + currCol);
+		System.out.println("Point (x,y) = (" + point.x + "," + point.y + ")");
+		
 		if (rect.contains(point) && (point.x == currCol && point.y == currRow)) {
 			board[point.x][point.y] = rabbit;
 			board[currRow][currCol] = new Square(currRow, currCol);
