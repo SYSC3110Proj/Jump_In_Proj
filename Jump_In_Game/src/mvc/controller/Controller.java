@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 
 import gamePieces.Direction;
 import mvc.view.*;
+import gamePieces.Square;
 
 /** 
  * The Controller class creates the Playboard and View objects within a frame that the player interacts with, 
@@ -28,6 +29,7 @@ public class Controller {
 	private String name;
 	private Point sourcePoint, destPoint;
 	private GridButton sourceButton;
+	private Square sourceSquare, destSquare;
 	
 	public Controller() {
 		this.game = new PlayBoard();
@@ -40,6 +42,9 @@ public class Controller {
 				// If the player is currently in the selection phase
 				if (!select) {
 					name = ((GridButton)e.getSource()).getText();
+					sourceSquare = game.getSquareAt(((GridButton) e.getSource()).getGridLocation());
+					System.out.println(game.getSquareAt(((GridButton) e.getSource()).getGridLocation()).toString());
+					System.out.println(game.getSquareAt(((GridButton) e.getSource()).getGridLocation()).getPieceType());
 					
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
@@ -51,7 +56,8 @@ public class Controller {
 							
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
 						
-							if (name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
+//							if (name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
+							if (name.contains("rabbit1") || name.contains("rabbit2") || name.contains("rabbit3")) {
 								if (game.canJumpIn(game.getRabbit(name), getDirection(sourcePoint, destPoint))) {
 									Point newLoc = game.getNearestJumpPoint(game.getRabbit(name), getDirection(sourcePoint, destPoint));
 									System.out.println("newLoc = " + newLoc);

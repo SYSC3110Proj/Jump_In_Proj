@@ -68,6 +68,10 @@ public class PlayBoard {
 		board[4][2].setPieceType(PieceType.MUSHROOM);
 		
 	}
+	
+	public Square getSquareAt(Point pt) {
+		return this.board[pt.y][pt.x];
+	}
 
 
 	/**
@@ -465,7 +469,6 @@ public class PlayBoard {
 		
 		return name;
 	}
-	
 }
 
 
