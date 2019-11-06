@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import gamePieces.Direction;
+import gamePieces.PieceType;
+import gamePieces.Rabbit;
 import mvc.view.*;
 import gamePieces.Square;
 
@@ -49,19 +51,32 @@ public class Controller {
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
 					
+					System.out.println("sourceSquare = " + sourceSquare);
+					System.out.println("sourcePoint = " + sourcePoint);
+					
 					select = true;
 				} else {	// If the player is in the movement phase
 					if (name != null) {
-						if (!name.equals("Hole") && !name.equals("mushroom")) {
+//						if (!name.equals("Hole") && !name.equals("mushroom")) {
+						// Test if the player is trying to move a hole or mushroom
+						if (sourceSquare.getPieceType() != PieceType.HOLE || sourceSquare.getPieceType() != PieceType.MUSHROOM) {
 							
+							destSquare = game.getSquareAt(((GridButton) e.getSource()).getGridLocation());
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
+							
+							System.out.println("destSquare = " + destSquare);
+							System.out.println("destPoint = " + destPoint);
 						
 //							if (name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
-							if (name.contains("rabbit1") || name.contains("rabbit2") || name.contains("rabbit3")) {
-								if (game.canJumpIn(game.getRabbit(name), getDirection(sourcePoint, destPoint))) {
-									Point newLoc = game.getNearestJumpPoint(game.getRabbit(name), getDirection(sourcePoint, destPoint));
+//							if (name.contains("rabbit1") || name.contains("rabbit2") || name.contains("rabbit3")) {
+							
+							if (sourceSquare.getPieceType() == PieceType.RABBIT) {
+								
+								Rabbit rabbit = (Rabbit) sourceSquare; // For additional clarity, convert sourceSquare to rabbit
+								if (game.canJumpIn(rabbit, getDirection(sourcePoint, destPoint))) {
+									Point newLoc = game.getNearestJumpPoint(rabbit, getDirection(sourcePoint, destPoint));
 									System.out.println("newLoc = " + newLoc);
-									game.moveRabbit(game.getRabbit(name), newLoc);
+									game.moveRabbit(rabbit, newLoc);
 								}
 								
 							} else if (name.equals("fox1") || name.equals("fox2")) {

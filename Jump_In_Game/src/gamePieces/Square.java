@@ -15,19 +15,19 @@ public class Square {
 
 	/**
 	 * Constructor for Square object
-	 * @param x The x coordinate of the square
-	 * @param y The y coordinate of the square
+	 * @param row The row of the square
+	 * @param col The column of the square
 	 */
-	public Square(int x, int y) {
+	public Square(int row, int col) {
 		//board is set to 5x5
-		if ((x < 0) || (x > 4)) {
+		if ((row < 0) || (row > 4)) {
 			throw new IllegalArgumentException("Invalid x coordinate");
-		} else if ((y < 0) || (y > 4)) {
+		} else if ((col < 0) || (col > 4)) {
 			throw new IllegalArgumentException("Invalid y coordinate");
 		}
 
-		column = y;
-		row = x;
+		this.column = col;
+		this.row = row;
 		name = null;
 	}
 
@@ -47,12 +47,12 @@ public class Square {
 
 	/**
 	 * Constructor for square object, with name
-	 * @param x The x coordinate of this square
-	 * @param y The y coordinate of this square
+	 * @param row The row of this square
+	 * @param col The column
 	 * @param name The name of the object in this square
 	 */
-	public Square(int x, int y, String name) {
-		this(x,y);
+	public Square(int row, int col, String name) {
+		this(row,col);
 		this.name = name;
 	}
 
@@ -123,8 +123,8 @@ public class Square {
 	 * Test if the square is occupied
 	 * @return true if the space is occupied
 	 */
+	// TODO: Change this to use enums instead of names
 	public boolean isOccupied() {
-		//tell if the square is occupied
 		return (name != null && (!name.equals("Hole")));
 	}
 

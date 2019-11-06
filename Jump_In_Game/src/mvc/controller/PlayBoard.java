@@ -8,6 +8,7 @@ import gamePieces.Direction;
 import gamePieces.Fox;
 import gamePieces.PieceType;
 import gamePieces.Rabbit;
+import gamePieces.RabbitColour;
 import gamePieces.Square;
 
 /** 
@@ -17,7 +18,7 @@ import gamePieces.Square;
  */
 
 public class PlayBoard {
-	private Square board[][];
+	private Square board[][];	// Format: board[col][row]
 //	private Rabbit r1, r2, r3; //3 rabbits
 	private Fox[] f1, f2;  //2 foxes
 	
@@ -110,6 +111,23 @@ public class PlayBoard {
 			return rabbits.get(2);
 		}
 		return null;
+	}
+	
+	/**
+	 * Retrieve a rabbit
+	 * @param i The index of the rabbit to retrieve
+	 * @return A Square object that represents the rabbit at index i
+	 */
+	public Rabbit getRabbit(RabbitColour colour){
+		if (colour.equals(RabbitColour.BROWN)) {
+			return rabbits.get(0);
+		} else if (colour.equals(RabbitColour.BROWN)) {
+			return rabbits.get(1);
+		} else if (colour.equals(RabbitColour.GREY)) {
+			return rabbits.get(2);
+		} else {
+			return null;
+		}
 	}
 	
 	/**
@@ -224,6 +242,7 @@ public class PlayBoard {
 	 * @param Point the new point for the rabbit to move to
 	 */
 	public void moveRabbit(Rabbit rabbit, Point point) {
+		// NOTE: board is [row][col] aka [y][x]
 		Rectangle rect = new Rectangle(0, 0, 5, 5);
 		
 		int currRow = rabbit.getRow();
@@ -232,14 +251,17 @@ public class PlayBoard {
 		System.out.println("currRow = " + currRow + ", currCol = " + currCol);
 		System.out.println("Point (x,y) = (" + point.x + "," + point.y + ")");
 		
-		if (rect.contains(point) && (point.x == currCol && point.y == currRow)) {
-			board[point.x][point.y] = rabbit;
+		System.out.println(board[2][4].getPieceType());
+		
+		
+		if (rect.contains(point) && !(point.x == currCol && point.y == currRow)) {
+			board[point.y][point.x] = rabbit;
 			board[currRow][currCol] = new Square(currRow, currCol);
 			
 			if (rabbit.atHole()) {
 				board[currRow][currCol].setName("Hole");
 			}
-			rabbit.move(point.x, point.y);
+			rabbit.move(point.y, point.x);	// set the internal location of the square
 		}
 	}
 	
@@ -259,7 +281,7 @@ public class PlayBoard {
 		int col = r.getColumn();
 
 		if (direction.equals(Direction.NORTH)) {
-			if (row > 0 && this.board[row-1][col].isOccupied()) {
+			if (row > 0 && this.board[row-1][col].isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
 				for (int i = 0; i <= row; i++) {
 					if (board[row-i][col].isOccupied() == false) {
 						return true;
