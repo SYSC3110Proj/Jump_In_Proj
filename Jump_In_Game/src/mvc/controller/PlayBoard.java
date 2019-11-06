@@ -1,5 +1,7 @@
 package mvc.controller;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import gamePieces.Direction;
@@ -20,6 +22,7 @@ public class PlayBoard {
 	private Fox[] f1, f2;  //2 foxes
 	
 	private ArrayList<Rabbit> rabbits;
+	private ArrayList<Fox> foxes;
 	//private int cmushroom; //3 mushroom
 
 	/**
@@ -113,13 +116,13 @@ public class PlayBoard {
 	 */
 	public void setRabbit(int i, int x, int y) {	
 		if (i == 1) {
-			rabbits.set(0, new Rabbit(x, y, "rabbit"+i));
+			rabbits.add(new Rabbit(x, y, "rabbit"+i));
 			board[x][y] = rabbits.get(0);
 		} else if(i == 2) {
-			rabbits.set(1, new Rabbit(x, y, "rabbit"+i));
+			rabbits.add(new Rabbit(x, y, "rabbit"+i));
 			board[x][y] = rabbits.get(1);
 		} else if(i == 3) {
-			rabbits.set(2, new Rabbit(x, y,"rabbit"+i));
+			rabbits.add(new Rabbit(x, y,"rabbit"+i));
 			board[x][y] = rabbits.get(2);
 		} 
 	}
@@ -210,18 +213,37 @@ public class PlayBoard {
 			s.move(x, y);
 		}
 	}
-
+	
 	/**
-	 * Move a rabbit to a new location
-	 * @param r The rabbit to move
-	 * @param direction The direction that the rabbit will jump
-	 * @return True if the move was successful
+	 * Move a square to a new location
+	 * @param rabbit the rabbit to be moved
+	 * @param Point the new point for the rabbit to move to
 	 */
-	public boolean jumpTo(Rabbit r, Direction direction) {
-		if (r == null) {
-			return false;
+	public void moveRabbit(Rabbit rabbit, Point point) {
+		Rectangle rect = new Rectangle(0, 0, 5, 5);
+		
+		int currRow = rabbit.getRow();
+		int currCol = rabbit.getColumn();
+		
+		if (rect.contains(point) && (point.x == currCol && point.y == currRow)) {
+			board[point.x][point.y] = rabbit;
+			board[currRow][currCol] = new Square(currRow, currCol);
+			
+			if (rabbit.atHole()) {
+				board[currRow][currCol].setName("Hole");
+			}
+			rabbit.move(point.x, point.y);
 		}
-		if (direction == null) {
+	}
+	
+	/**
+	 * Test if a rabbit can jump in a certain direction
+	 * @param r The rabbit to be moved
+	 * @param direction The direction to test the jump
+	 * @return True if the rabbit is able to jump in that direction
+	 */
+	public boolean canJumpIn(Rabbit r, Direction direction) {
+		if (r == null || direction == null) {
 			return false;
 		}
 
@@ -232,10 +254,7 @@ public class PlayBoard {
 		if (direction.equals(Direction.NORTH)) {
 			if (row > 0 && this.board[row-1][col].isOccupied()) {
 				for (int i = 0; i <= row; i++) {
-					if (board[row-i][col].isOccupied()) {
-						continue;
-					} else {
-						move(r, row-i, col);
+					if (board[row-i][col].isOccupied() == false) {
 						return true;
 					}
 				}
@@ -243,10 +262,7 @@ public class PlayBoard {
 		} else if (direction.equals(Direction.SOUTH)) {
 			if (row < 4 && this.board[row+1][col].isOccupied()) {
 				for (int i = 0; i < 5-row; i++) {
-					if (board[row+i][col].isOccupied()) {
-						continue;
-					} else {
-						move(r, row+i, col);
+					if (board[row+i][col].isOccupied() == false) {
 						return true;
 					}
 				}
@@ -254,10 +270,7 @@ public class PlayBoard {
 		} else if (direction.equals(Direction.EAST)) {
 			if (col < 4 && board[row][col+1].isOccupied()) {
 				for (int j = 0; j < 5-col; j++) {
-					if (board[row][col+j].isOccupied()) {
-						continue;
-					} else {
-						move(r, row, col+j);
+					if (board[row][col+j].isOccupied() == false) {
 						return true;
 					}
 				}
@@ -265,16 +278,113 @@ public class PlayBoard {
 		} else if (direction.equals(Direction.WEST)) {
 			if (col > 0 && board[row][col-1].isOccupied()) {
 				for (int j = 0; j <= col; j++) {
-					if (board[row][col-j].isOccupied()) {
-						continue;
-					} else {
-						move(r, row, col-j);
+					if (board[row][col-j].isOccupied() == false) {
 						return true;
 					}
 				}
 			}
 		}
 		return false;
+		
+	}
+	
+	/**
+	 * Return the nearest point that the rabbit can jump to in a certain direction
+	 * @param rabbit the rabbit to be moved
+	 * @param direction the direction in which the rabbit will move
+	 * @return Point where the rabbit can jump to
+	 */
+	public Point getNearestJumpPoint(Rabbit rabbit, Direction direction) {
+		// get rabbit's location
+		int row = rabbit.getRow();
+		int col = rabbit.getColumn();
+
+		if (direction.equals(Direction.NORTH)) {
+			if (row > 0 && this.board[row-1][col].isOccupied()) {
+				for (int i = 0; i <= row; i++) {
+					if (board[row-i][col].isOccupied() == false) {
+						return new Point(col, row-i);
+					}
+				}
+			}
+		} else if (direction.equals(Direction.SOUTH)) {
+			if (row < 4 && this.board[row+1][col].isOccupied()) {
+				for (int i = 0; i < 5-row; i++) {
+					if (board[row+i][col].isOccupied() == false) {
+						return new Point(col, row+i);
+					}
+				}
+			}
+		} else if (direction.equals(Direction.EAST)) {
+			if (col < 4 && board[row][col+1].isOccupied()) {
+				for (int j = 0; j < 5-col; j++) {
+					if (board[row][col+j].isOccupied() == false) {
+						return new Point(col+j, row);
+					}
+				}
+			}
+		} else if (direction.equals(Direction.WEST)) {
+			if (col > 0 && board[row][col-1].isOccupied()) {
+				for (int j = 0; j <= col; j++) {
+					if (board[row][col-j].isOccupied() == false) {
+						return new Point(col-j, row);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Move a rabbit to a new location
+	 * @param r The rabbit to move
+	 * @param direction The direction that the rabbit will jump
+	 * @return True if the move was successful
+	 */
+	public Point jumpTo(Rabbit r, Direction direction) {
+		
+		// get rabbit's location
+		int row = r.getRow();
+		int col = r.getColumn();
+
+		if (direction.equals(Direction.NORTH)) {
+			if (row > 0 && this.board[row-1][col].isOccupied()) {
+				for (int i = 0; i <= row; i++) {
+					if (board[row-i][col].isOccupied() == false) {
+						move(r, row-i, col);
+						return new Point(col, row-i);
+					}
+				}
+			}
+		} else if (direction.equals(Direction.SOUTH)) {
+			if (row < 4 && this.board[row+1][col].isOccupied()) {
+				for (int i = 0; i < 5-row; i++) {
+					if (board[row+i][col].isOccupied() == false) {
+						move(r, row+i, col);
+						return new Point(col, row+i);
+					}
+				}
+			}
+		} else if (direction.equals(Direction.EAST)) {
+			if (col < 4 && board[row][col+1].isOccupied()) {
+				for (int j = 0; j < 5-col; j++) {
+					if (board[row][col+j].isOccupied() == false) {
+						move(r, row, col+j);
+						return new Point(col+j, row);
+					}
+				}
+			}
+		} else if (direction.equals(Direction.WEST)) {
+			if (col > 0 && board[row][col-1].isOccupied()) {
+				for (int j = 0; j <= col; j++) {
+					if (board[row][col-j].isOccupied() == false) {
+						move(r, row, col-j);
+						return new Point(col-j, row);
+					}
+				}
+			}
+		}
+		return null;
 
 	}
 

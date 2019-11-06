@@ -51,8 +51,11 @@ public class Controller {
 							
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
 						
-							if(name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
-								game.jumpTo(game.getRabbit(name), getDirection(sourcePoint, destPoint));
+							if (name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
+								if (game.canJumpIn(game.getRabbit(name), getDirection(sourcePoint, destPoint))) {
+									Point newLoc = game.getNearestJumpPoint(game.getRabbit(name), getDirection(sourcePoint, destPoint));
+									game.moveRabbit(game.getRabbit(name), newLoc);
+								}
 								
 							} else if (name.equals("fox1") || name.equals("fox2")) {
 								if (game.getFox(name)[0].getDirection().equals(Direction.HORIZONTAL)) {
