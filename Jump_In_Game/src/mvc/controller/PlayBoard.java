@@ -55,9 +55,13 @@ public class PlayBoard {
 		board[4][4].setPieceType(PieceType.HOLE);
 
 		//default gameboard
-		setRabbit(1,0,3);
-		setRabbit(2,2,4);
-		setRabbit(3,4,1);
+//		setRabbit(1,0,3);
+//		setRabbit(2,2,4);
+//		setRabbit(3,4,1);
+		
+		this.setRabbit(1, 1, 4);
+		this.setRabbit(2, 2, 4);
+		this.setRabbit(3, 4, 1);
 		
 		setFox(1, Direction.VERTICAL);
 		setFox(3, Direction.HORIZONTAL);
@@ -70,6 +74,11 @@ public class PlayBoard {
 		
 	}
 	
+	/**
+	 * Get the square at point pt
+	 * @param pt The point to retrieve the square object from
+	 * @return The square object at point pt
+	 */
 	public Square getSquareAt(Point pt) {
 		return this.board[pt.y][pt.x];
 	}
@@ -132,20 +141,20 @@ public class PlayBoard {
 	
 	/**
 	 * Set the location of a rabbit on the board
-	 * @param x The x coordinate of the rabbit location
-	 * @param y The y coordinate of the rabbit location
+	 * @param row The row of the rabbit location (aka y coordinate)
+	 * @param col The column of the rabbit location (aka x coordinate)
 	 * @return True if the rabbit was successfully created
 	 */
-	public void setRabbit(int i, int x, int y) {	
+	public void setRabbit(int i, int row, int col) {	
 		if (i == 1) {
-			rabbits.add(new Rabbit(x, y, "rabbit"+i));
-			board[x][y] = rabbits.get(0);
+			rabbits.add(new Rabbit(row, col, "rabbit"+i));
+			board[row][col] = rabbits.get(0);
 		} else if(i == 2) {
-			rabbits.add(new Rabbit(x, y, "rabbit"+i));
-			board[x][y] = rabbits.get(1);
+			rabbits.add(new Rabbit(row, col, "rabbit"+i));
+			board[row][col] = rabbits.get(1);
 		} else if(i == 3) {
-			rabbits.add(new Rabbit(x, y,"rabbit"+i));
-			board[x][y] = rabbits.get(2);
+			rabbits.add(new Rabbit(row, col,"rabbit"+i));
+			board[row][col] = rabbits.get(2);
 		} 
 	}
 
@@ -219,20 +228,20 @@ public class PlayBoard {
 	/**
 	 * Move a square to a new location
 	 * @param s The square to move
-	 * @param x The x coordinate of the new location
-	 * @param y The y coordinate of the new location
+	 * @param newRow The x coordinate of the new location
+	 * @param newCol The y coordinate of the new location
 	 */
-	private void move(Square s, int x, int y) {
-		int row = s.getRow();
-		int col = s.getColumn();
+	private void move(Square s, int newRow, int newCol) {
+		int currRow = s.getRow();
+		int currCol = s.getColumn();
 		
-		if (!(x == row && y == col) && x > -1 && x < 5 && y > -1 && y < 5) {
-			board[x][y] = s;
-			board[row][col] = new Square(row, col);
+		if (!(newRow == currRow && newCol == currCol) && newRow > -1 && newRow < 5 && newCol > -1 && newCol < 5) {
+			board[newRow][newCol] = s;
+			board[currRow][currCol] = new Square(currRow, currCol);
 			if (s.atHole()) {
-				board[row][col].setName("Hole");
+				board[currRow][currCol].setName("Hole");
 			}
-			s.move(x, y);
+			s.move(newRow, newCol);
 		}
 	}
 	
@@ -251,10 +260,8 @@ public class PlayBoard {
 		System.out.println("currRow = " + currRow + ", currCol = " + currCol);
 		System.out.println("Point (x,y) = (" + point.x + "," + point.y + ")");
 		
-		System.out.println(board[2][4].getPieceType());
 		
-		
-		if (rect.contains(point) && !(point.x == currCol && point.y == currRow)) {
+		if (rect.contains(point) && !(point.x == currRow && point.y == currCol)) {
 			board[point.y][point.x] = rabbit;
 			board[currRow][currCol] = new Square(currRow, currCol);
 			
@@ -414,7 +421,6 @@ public class PlayBoard {
 			}
 		}
 		return null;
-
 	}
 
 	/**

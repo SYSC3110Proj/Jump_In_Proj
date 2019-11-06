@@ -12,25 +12,25 @@ public class Fox extends Square {
 	
 	/**
 	 * Constructor for fox object
-	 * @param x The x coordinate of the fox
-	 * @param y The y coordinate of the fox
+	 * @param row The row of the fox (aka y coordinate)
+	 * @param col The column of the fox (aka x coordinate)
 	 * @param direction The direction that the fox is facing
 	 * @param name The name of the fox
 	 */
-	public Fox(int x, int y, Direction direction, String name) {
-		super(x,y, name);
+	public Fox(int row, int col, Direction direction, String name) {
+		super(row, col, name);
 		super.setPieceType(PieceType.FOX);
 		this.direction = direction;
 	}
 	
 	/**
 	 * Constructor for fox object
-	 * @param x The x coordinate of the fox
-	 * @param y The y coordinate of the fox
+	 * @param row The row of the fox (aka y coordinate)
+	 * @param col The column of the fox (aka x coordinate)
 	 * @param direction The direction that the fox is facing
 	 */
-	public Fox(int x, int y, Direction direction) {
-		super(x,y);
+	public Fox(int row, int col, Direction direction) {
+		super(row, col);
 		this.direction = direction;
 	}
 	

@@ -21,9 +21,9 @@ public class Square {
 	public Square(int row, int col) {
 		//board is set to 5x5
 		if ((row < 0) || (row > 4)) {
-			throw new IllegalArgumentException("Invalid x coordinate");
+			throw new IllegalArgumentException("Invalid row given!");
 		} else if ((col < 0) || (col > 4)) {
-			throw new IllegalArgumentException("Invalid y coordinate");
+			throw new IllegalArgumentException("Invalid column given!");
 		}
 
 		this.column = col;
@@ -48,7 +48,7 @@ public class Square {
 	/**
 	 * Constructor for square object, with name
 	 * @param row The row of this square
-	 * @param col The column
+	 * @param col The column of this square
 	 * @param name The name of the object in this square
 	 */
 	public Square(int row, int col, String name) {
@@ -58,7 +58,7 @@ public class Square {
 
 	/**
 	 * Get the row of this square
-	 * @return the x location of this square
+	 * @return the row of this square (aka y coordinate)
 	 */
 	public int getRow() {
 		return row;
@@ -66,7 +66,7 @@ public class Square {
 
 	/**
 	 * Get the column of the location of this square
-	 * @return The y location of this square
+	 * @return The column of this square (aka x coordinate)
 	 */
 	public int getColumn() {
 		return column;
@@ -105,18 +105,18 @@ public class Square {
 
 	/**
 	 * Move the piece to a new location
-	 * @param x Horizontal coordinate of the new location
-	 * @param y Vertical location of the new coordinate
+	 * @param row Horizontal coordinate of the new location
+	 * @param col Vertical location of the new coordinate
 	 */
-	public void move(int x, int y) {
-		if ((x < 0) || (x > 4)) {
-			throw new IllegalArgumentException("Invalid x coordinate");
-		} else if ((y < 0) || (y > 4)) {
-			throw new IllegalArgumentException("Invalid y coordinate");
+	public void move(int row, int col) {
+		if ((row < 0) || (row > 4)) {
+			throw new IllegalArgumentException("Invalid row given!");
+		} else if ((col < 0) || (col > 4)) {
+			throw new IllegalArgumentException("Invalid column given!");
 		}
 		
-		row = x;
-		column = y;
+		this.row = row;
+		this.column = col;
 	}
 
 	/**

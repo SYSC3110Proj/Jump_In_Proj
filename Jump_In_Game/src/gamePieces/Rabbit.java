@@ -9,8 +9,8 @@ public class Rabbit extends Square {
 	
 	private RabbitColour colour;
 	
-	public Rabbit(int x, int y, String str) {
-		super(x, y, str);
+	public Rabbit(int row, int col, String str) {
+		super(row, col, str);
 		super.setPieceType(PieceType.RABBIT);
 		
 		// Set the rabbit's colour
