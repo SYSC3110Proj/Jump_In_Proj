@@ -6,54 +6,57 @@ import java.beans.PropertyChangeSupport;
 
 public class PointSquare {
 	//position
-	private Point position;
+	private GridPoint location;
 	private String name;
 	private PieceType pieceType;
 	private PropertyChangeSupport support;
 
+	
+	/**
+	 * Constructor for PointSquare
+	 * @param location Point object that represents the location on the grid of the square
+	 */
+	public PointSquare(Point location) {
+		if ((location.x < 0) || (location.x > 4)) {
+			throw new IllegalArgumentException("Invalid row given!");
+		} else if ((location.y < 0) || (location.y > 4)) {
+			throw new IllegalArgumentException("Invalid column given!");
+		}
+		
+		this.location = new GridPoint(location);
+		this.name = null;
+		this.pieceType = PieceType.EMPTY;
+		this.support = new PropertyChangeSupport(this);
+	}
+	
 	/**
 	 * Constructor for Square object
 	 * @param row The row of the square
 	 * @param col The column of the square
 	 */
 	public PointSquare(int row, int col) {
-		//board is set to 5x5
-		if ((row < 0) || (row > 4)) {
-			throw new IllegalArgumentException("Invalid row given!");
-		} else if ((col < 0) || (col > 4)) {
-			throw new IllegalArgumentException("Invalid column given!");
-		}
-		
-		this.position = new Point(col, row);
-		name = null;
-		support = new PropertyChangeSupport(this);
-	}
-	
-	public PointSquare(Point location) {
-		if ((row < 0) || (row > 4)) {
-			throw new IllegalArgumentException("Invalid row given!");
-		} else if ((col < 0) || (col > 4)) {
-			throw new IllegalArgumentException("Invalid column given!");
-		}
+		this(new Point(col, row));
 	}
 	
 	/**
 	 * Constructor for Square object
 	 * @param row The row of the square
 	 * @param col The column of the square
+	 * @param PieceType the type of piece this square represents
 	 */
-	public Square(int row, int col, PieceType pieceType) {
-		//board is set to 5x5
-		if ((row < 0) || (row > 4)) {
-			throw new IllegalArgumentException("Invalid row given!");
-		} else if ((col < 0) || (col > 4)) {
-			throw new IllegalArgumentException("Invalid column given!");
-		}
-
-		this.position = new Point(col, row);
+	public PointSquare(int row, int col, PieceType pieceType) {
+		this(new Point(col, row));
 		this.pieceType = pieceType;
-		name = null;
-		support = new PropertyChangeSupport(this);
+	}
+	
+	/**
+	 * Constructor for Square object
+	 * @param location the location of the square
+	 * @param PieceType the type of piece this square represents
+	 */
+	public PointSquare(Point location, PieceType pieceType) {
+		this(location);
+		this.pieceType = pieceType;
 	}
 	
 	/**
@@ -62,10 +65,9 @@ public class PointSquare {
 	 * @param col The column of this square
 	 * @param name The name of the object in this square
 	 */
-	public Square(int row, int col, String name) {
-		this(row,col);
+	public PointSquare(int row, int col, String name) {
+		this(new Point(col, row));
 		this.name = name;
-		support = new PropertyChangeSupport(this);
 	}
 	
 	/**
@@ -105,7 +107,7 @@ public class PointSquare {
 	 * @return the row of this square (aka y coordinate)
 	 */
 	public int getRow() {
-		return row;
+		return this.location.getRow();
 	}
 
 	/**
@@ -113,7 +115,7 @@ public class PointSquare {
 	 * @return The column of this square (aka x coordinate)
 	 */
 	public int getColumn() {
-		return column;
+		return this.location.getCol();
 	}
 
 	/**
@@ -137,43 +139,47 @@ public class PointSquare {
 	 * @return True if the square is at a hole
 	 */
 	public boolean atHole() {
-		if ((row == 0) && ((column == 0 || column == 4))) {
+		if (this.location.getCol() == 0) {
+			if (this.location.getRow() == 0 || this.location.getRow() == 4) {
+				return true;
+			}
+		} else if (this.location.getCol() == 4) {
+			if (this.location.getRow() == 0 || this.location.getRow() == 4) {
+				return true;
+			}
+		} else if (this.location.getCol() == 2 && this.location.getRow() == 2) {
 			return true;
-		} else if ((row == 4) && ((column == 0 || column == 4))) {
-			return true;
-		} else if ((row == 2) && (column == 2)) {
-			return true;
-		}
+		} 
+		
 		return false;
 	}
 
 	/**
 	 * Move the piece to a new location
-	 * @param row Horizontal coordinate of the new location
-	 * @param col Vertical location of the new coordinate
+	 * @param newLocation the new coordinate location of the point
 	 */
-	public void move(int row, int col) {
-		if ((row < 0) || (row > 4)) {
+	public void move(GridPoint newLocation) {
+		if ((newLocation.getRow() < 0) || (newLocation.getRow() > 4)) {
 			throw new IllegalArgumentException("Invalid row given!");
-		} else if ((col < 0) || (col > 4)) {
+		} else if ((newLocation.getCol() < 0) || (newLocation.getCol() > 4)) {
 			throw new IllegalArgumentException("Invalid column given!");
 		}
 		
-		this.row = row;
-		this.column = col;
-		
-		// Fire property changes when the square is moved
-		support.firePropertyChange("row", row, this.row);
-		support.firePropertyChange("col", col, this.column);
+		GridPoint oldLocation = this.location;
+		this.location.setLocation(newLocation);
+		support.firePropertyChange("location", oldLocation, newLocation); // Fire property changes when the square is moved
 	}
 
 	/**
 	 * Test if the square is occupied
 	 * @return true if the space is occupied
 	 */
-	// TODO: Change this to use enums instead of names
 	public boolean isOccupied() {
-		return (name != null && (!name.equals("Hole")));
+		if (this.pieceType != PieceType.EMPTY) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
