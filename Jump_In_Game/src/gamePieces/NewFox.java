@@ -1,8 +1,10 @@
 package gamePieces;
 
 import java.awt.Point;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class NewFox {
+public class NewFox implements PropertyChangeListener {
 	private Square head;
 	private Square tail;
 	private Direction orientation;
@@ -40,6 +42,12 @@ public class NewFox {
 		}
 		
 		if ()
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -83,6 +91,8 @@ public class NewFox {
 	public void setOrientation(Direction orientation) {
 		this.orientation = orientation;
 	}
+
+	
 	
 	
 	

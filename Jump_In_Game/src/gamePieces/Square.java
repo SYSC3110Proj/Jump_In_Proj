@@ -1,5 +1,8 @@
 package gamePieces;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 /** 
  * The square object is used to seperate the board into squares, it has it's own coordinates and is either an empty square, or contains
  * an object such as a rabbit, fox, or hole.
@@ -12,6 +15,7 @@ public class Square {
 	private int row;
 	private String name;
 	private PieceType pieceType;
+	private PropertyChangeSupport support;
 
 	/**
 	 * Constructor for Square object
@@ -29,6 +33,7 @@ public class Square {
 		this.column = col;
 		this.row = row;
 		name = null;
+		support = new PropertyChangeSupport(this);
 	}
 	
 	/**
@@ -48,6 +53,35 @@ public class Square {
 		this.row = row;
 		this.pieceType = pieceType;
 		name = null;
+		support = new PropertyChangeSupport(this);
+	}
+	
+	/**
+	 * Constructor for square object, with name
+	 * @param row The row of this square
+	 * @param col The column of this square
+	 * @param name The name of the object in this square
+	 */
+	public Square(int row, int col, String name) {
+		this(row,col);
+		this.name = name;
+		support = new PropertyChangeSupport(this);
+	}
+	
+	/**
+	 * Add a new property change lister
+	 * @param pcl The PropertyChangeListener to be added
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		support.addPropertyChangeListener(pcl);
+	}
+	
+	/**
+	 * Remove a property change listener
+	 * @param pcl The PropertyChangeListener to be removed
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener pcl) {
+		support.removePropertyChangeListener(pcl);
 	}
 
 	/**
@@ -64,16 +98,7 @@ public class Square {
 		this.pieceType = pieceType;
 	}
 
-	/**
-	 * Constructor for square object, with name
-	 * @param row The row of this square
-	 * @param col The column of this square
-	 * @param name The name of the object in this square
-	 */
-	public Square(int row, int col, String name) {
-		this(row,col);
-		this.name = name;
-	}
+	
 
 	/**
 	 * Get the row of this square
@@ -136,6 +161,10 @@ public class Square {
 		
 		this.row = row;
 		this.column = col;
+		
+		// Fire property changes when the square is moved
+		support.firePropertyChange("row", row, this.row);
+		support.firePropertyChange("col", col, this.column);
 	}
 
 	/**
