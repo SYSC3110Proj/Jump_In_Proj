@@ -5,7 +5,7 @@ package gamePieces;
  * @author Mika Argyle
  */
 
-public class Rabbit extends Square {
+public class Rabbit extends PointSquare {
 	
 	private RabbitColour colour;
 	
@@ -35,8 +35,5 @@ public class Rabbit extends Square {
 	 */
 	public void setColour(RabbitColour colour) {
 		this.colour = colour;
-	}
-	
-	
-	
+	}	
 }

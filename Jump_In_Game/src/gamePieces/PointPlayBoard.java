@@ -3,11 +3,11 @@ package gamePieces;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PointPlayBoard {
-	private PointSquare board[][];	// Format: board[col][row]
-//	private Rabbit r1, r2, r3; //3 rabbits
-	private Fox[] f1, f2;  //2 foxes
+	private PointSquare board[][];	// Format: board[row][col]
 	
 	private ArrayList<Rabbit> rabbits;
 	private ArrayList<NewFox> foxes;
@@ -17,34 +17,23 @@ public class PointPlayBoard {
 	 * Constructor for PlayBoard class
 	 */
 	public PointPlayBoard() {
-		board = new Square[5][5];
+		board = new PointSquare[5][5];
 		
 		this.rabbits = new ArrayList<Rabbit>(3);
 		
-		for (int i = 0; i < 5; i++) {//row
-			for (int j = 0; j < 5; j++) {//column
-				board[i][j] = new Square(i,j); //(row,column)
+		for (int row = 0; row < 5; row++) { // row
+			for (int col = 0; col < 5; col++) { // column
+				board[row][col] = new PointSquare(new GridPoint(row, col)); // (row,column)
 			}
 		}
 		
 		
-		// set Hole
-		board[0][0].setName("Hole");
-		board[0][4].setName("Hole");
-		board[2][2].setName("Hole");
-		board[4][0].setName("Hole");
-		board[4][4].setName("Hole");
-		
+		// set the locations of the Hole
 		board[0][0].setPieceType(PieceType.HOLE);
 		board[0][4].setPieceType(PieceType.HOLE);
 		board[2][2].setPieceType(PieceType.HOLE);
 		board[4][0].setPieceType(PieceType.HOLE);
 		board[4][4].setPieceType(PieceType.HOLE);
-
-		//default gameboard
-//		setRabbit(1,0,3);
-//		setRabbit(2,2,4);
-//		setRabbit(3,4,1);
 		
 		this.setRabbit(1, 1, 4);
 		this.setRabbit(2, 2, 4);
@@ -53,8 +42,6 @@ public class PointPlayBoard {
 		setFox(1, Direction.VERTICAL);
 		setFox(3, Direction.HORIZONTAL);
 		
-		board[1][3].setName("Mushroom");
-		board[4][2].setName("Mushroom");
 		
 		board[1][3].setPieceType(PieceType.MUSHROOM);
 		board[4][2].setPieceType(PieceType.MUSHROOM);
@@ -63,11 +50,11 @@ public class PointPlayBoard {
 	
 	/**
 	 * Get the square at point pt
-	 * @param pt The point to retrieve the square object from
-	 * @return The square object at point pt
+	 * @param pt The GridPoint to retrieve the square object from
+	 * @return The PointSquare object at GridPoint pt
 	 */
-	public Square getSquareAt(Point pt) {
-		return this.board[pt.y][pt.x];
+	public PointSquare getSquareAt(GridPoint pt) {
+		return this.board[pt.getRow()][pt.getCol()];
 	}
 
 
@@ -191,14 +178,30 @@ public class PointPlayBoard {
 		throw new IllegalArgumentException("cannot set fox there");
 	}
 
-	/**
-	 * Set the location of a fox on the board
-	 * @param x The x coordinate of the fox
-	 * @param direction The direction of the fox
-	 * @return True if the fox was successfully created
-	 */
-	public void setFox(int x, Direction direction) {
-		if (x == 0 || x == 2 || x == 4) {
+	
+	private static final List<GridPoint> VALID_FOX_LOCATIONS = Collections.unmodifiableList(
+			new ArrayList<GridPoint>() {{
+				add(new GridPoint(0,1));
+				add(new GridPoint(0,3));
+				add(new GridPoint(1,0));
+				add(new GridPoint(1,1));
+				add(new GridPoint(1,2));
+				add(new GridPoint(1,3));
+				add(new GridPoint(1,4));
+				add(new GridPoint(2,1));
+				add(new GridPoint(2,3));
+				add(new GridPoint(3,0));
+				add(new GridPoint(3,1));
+				add(new GridPoint(3,2));
+				add(new GridPoint(3,3));
+				add(new GridPoint(3,4));
+				add(new GridPoint(4,1));
+				add(new GridPoint(4,3));
+			}}) ;
+	
+	public void setFox(GridPoint foxHead, Direction direction) {
+		if (VALID_FOX_LOCATIONS.contains(foxHead) == false) {
+			throw new IllegalArgumentException("Fox Head is not in a valid location");
 		}
 
 		if (f1 == null) {
@@ -211,6 +214,28 @@ public class PointPlayBoard {
 			f2[1].setName("fox2");
 		}
 	}
+	
+	/**
+	 * Set the location of a fox on the board
+	 * @param x The x coordinate of the fox
+	 * @param direction The direction of the fox
+	 * @return True if the fox was successfully created
+	 */
+//	public void setFox(int x, Direction direction) {
+//		if (x == 0 || x == 2 || x == 4) {
+//			
+//		}
+//
+//		if (f1 == null) {
+//			f1 = setFoxHelper(x, direction);
+//			f1[0].setName("fox1");
+//			f1[1].setName("fox1");
+//		} else if(f2 == null) {
+//			f2 = setFoxHelper(x, direction);
+//			f2[0].setName("fox2");
+//			f2[1].setName("fox2");
+//		}
+//	}
 
 	/**
 	 * Move a square to a new location
@@ -218,61 +243,61 @@ public class PointPlayBoard {
 	 * @param newRow The x coordinate of the new location
 	 * @param newCol The y coordinate of the new location
 	 */
-	private void move(Square s, int newRow, int newCol) {
+	private void move(PointSquare s, GridPoint newLocation) {
 		int currRow = s.getRow();
 		int currCol = s.getColumn();
 		
-		if (!(newRow == currRow && newCol == currCol) && newRow > -1 && newRow < 5 && newCol > -1 && newCol < 5) {
-			board[newRow][newCol] = s;
-			board[currRow][currCol] = new Square(currRow, currCol);
+		if (!(newLocation.getRow() == currRow && newLocation.getCol() == currCol) && (newLocation.getRow() > -1) && (newLocation.getRow() < 5) && (newLocation.getCol() > -1) && (newLocation.getCol() < 5)) {
+			board[newLocation.getRow()][newLocation.getCol()] = s;
+			board[currRow][currCol] = new PointSquare(currRow, currCol);
 			if (s.atHole()) {
 				board[currRow][currCol].setName("Hole");
 			}
-			s.move(newRow, newCol);
+			s.move(newLocation);
 		}
 	}
 	
 	/**
 	 * Move a square to a new location
 	 * @param rabbit the rabbit to be moved
-	 * @param Point the new point for the rabbit to move to
+	 * @param newLoc the new point for the rabbit to move to
 	 */
-	public void moveRabbit(Rabbit rabbit, Point point) {
-		// NOTE: board is [row][col] aka [y][x]
+	public void moveRabbit(Rabbit rabbit, GridPoint newLoc) {
 		Rectangle rect = new Rectangle(0, 0, 5, 5);
 		
 		int currRow = rabbit.getRow();
 		int currCol = rabbit.getColumn();
 		
 		System.out.println("currRow = " + currRow + ", currCol = " + currCol);
-		System.out.println("Point (x,y) = (" + point.x + "," + point.y + ")");
+		System.out.println("Point (x,y) = (" + newLoc.x + "," + newLoc.y + ")");
 		
 		
-		if (rect.contains(point) && !(point.x == currRow && point.y == currCol)) {
-			board[point.y][point.x] = rabbit;
-			board[currRow][currCol] = new Square(currRow, currCol);
+		if (rect.contains(newLoc) && !(newLoc.getRow() == currRow && newLoc.getCol() == currCol)) {
+			board[newLoc.getRow()][newLoc.getCol()] = rabbit;
+			board[currRow][currCol] = new PointSquare(currRow, currCol);
 			
 			if (rabbit.atHole()) {
 				board[currRow][currCol].setName("Hole");
 			}
-			rabbit.move(point.y, point.x);	// set the internal location of the square
+			
+			rabbit.move(newLoc);	// set the internal location of the square
 		}
 	}
 	
 	/**
 	 * Test if a rabbit can jump in a certain direction
-	 * @param r The rabbit to be moved
+	 * @param rabbit The rabbit to be moved
 	 * @param direction The direction to test the jump
 	 * @return True if the rabbit is able to jump in that direction
 	 */
-	public boolean canJumpIn(Rabbit r, Direction direction) {
-		if (r == null || direction == null) {
+	public boolean testJumpDirection(Rabbit rabbit, Direction direction) {
+		if (rabbit == null || direction == null) {
 			return false;
 		}
 
 		// get rabbit's location
-		int row = r.getRow();
-		int col = r.getColumn();
+		int row = rabbit.getRow();
+		int col = rabbit.getColumn();
 
 		if (direction.equals(Direction.NORTH)) {
 			if (row > 0 && this.board[row-1][col].isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
@@ -317,7 +342,7 @@ public class PointPlayBoard {
 	 * @param direction the direction in which the rabbit will move
 	 * @return Point where the rabbit can jump to
 	 */
-	public Point getNearestJumpPoint(Rabbit rabbit, Direction direction) {
+	public GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
 		// get rabbit's location
 		int row = rabbit.getRow();
 		int col = rabbit.getColumn();
@@ -326,7 +351,7 @@ public class PointPlayBoard {
 			if (row > 0 && this.board[row-1][col].isOccupied()) {
 				for (int i = 0; i <= row; i++) {
 					if (board[row-i][col].isOccupied() == false) {
-						return new Point(col, row-i);
+						return new GridPoint(row-i, col);
 					}
 				}
 			}
@@ -334,7 +359,7 @@ public class PointPlayBoard {
 			if (row < 4 && this.board[row+1][col].isOccupied()) {
 				for (int i = 0; i < 5-row; i++) {
 					if (board[row+i][col].isOccupied() == false) {
-						return new Point(col, row+i);
+						return new GridPoint(row+i, col);
 					}
 				}
 			}
@@ -342,7 +367,7 @@ public class PointPlayBoard {
 			if (col < 4 && board[row][col+1].isOccupied()) {
 				for (int j = 0; j < 5-col; j++) {
 					if (board[row][col+j].isOccupied() == false) {
-						return new Point(col+j, row);
+						return new GridPoint(row, col+j);
 					}
 				}
 			}
@@ -350,7 +375,7 @@ public class PointPlayBoard {
 			if (col > 0 && board[row][col-1].isOccupied()) {
 				for (int j = 0; j <= col; j++) {
 					if (board[row][col-j].isOccupied() == false) {
-						return new Point(col-j, row);
+						return new GridPoint(row, col-j);
 					}
 				}
 			}
@@ -358,119 +383,73 @@ public class PointPlayBoard {
 		return null;
 	}
 	
+	private Direction getMovementDirection(GridPoint oldLoc, GridPoint newLoc) {
+		if (oldLoc.getRow() == newLoc.getRow() && oldLoc.getCol() == newLoc.getCol()) {
+			throw new IllegalArgumentException("Old location is same as new location!");
+		} else if (oldLoc.getRow() == newLoc.getRow()) {
+			if (oldLoc.getCol() < newLoc.getCol()) {
+				return Direction.EAST;
+			} else {
+				return Direction.WEST;
+			}
+		} else if (oldLoc.getCol() == newLoc.getCol()) {
+			if (oldLoc.getRow() < newLoc.getRow()) {
+				return Direction.NORTH;
+			} else {
+				return Direction.SOUTH;
+			}
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * Move a rabbit to a new location
-	 * @param r The rabbit to move
-	 * @param direction The direction that the rabbit will jump
+	 * @param rabbit The rabbit to move
+	 * @param newLoc the location for the rabbit to move to
 	 * @return True if the move was successful
 	 */
-	public Point jumpTo(Rabbit r, Direction direction) {
+	public void moveRabbitTo(Rabbit rabbit, GridPoint newLoc) {
 		
-		// get rabbit's location
-		int row = r.getRow();
-		int col = r.getColumn();
-
-		if (direction.equals(Direction.NORTH)) {
-			if (row > 0 && this.board[row-1][col].isOccupied()) {
-				for (int i = 0; i <= row; i++) {
-					if (board[row-i][col].isOccupied() == false) {
-						move(r, row-i, col);
-						return new Point(col, row-i);
-					}
-				}
+		// get the direction the rabbit is jumping in
+		Direction jumpDirection = this.getMovementDirection(new GridPoint(rabbit.getRow(), rabbit.getColumn()), newLoc);
+		
+		
+		// TODO: implement direction finding code here
+		
+		if (this.getNearestJumpPoint(rabbit, jumpDirection).equals(newLoc)) {
+			// TODO: implement rabbit movement code here
+			if (board[newLoc.getRow()][newLoc.getCol()].isOccupied()) {
+				throw new IllegalArgumentException("This location is already occupied!");
 			}
-		} else if (direction.equals(Direction.SOUTH)) {
-			if (row < 4 && this.board[row+1][col].isOccupied()) {
-				for (int i = 0; i < 5-row; i++) {
-					if (board[row+i][col].isOccupied() == false) {
-						move(r, row+i, col);
-						return new Point(col, row+i);
-					}
-				}
-			}
-		} else if (direction.equals(Direction.EAST)) {
-			if (col < 4 && board[row][col+1].isOccupied()) {
-				for (int j = 0; j < 5-col; j++) {
-					if (board[row][col+j].isOccupied() == false) {
-						move(r, row, col+j);
-						return new Point(col+j, row);
-					}
-				}
-			}
-		} else if (direction.equals(Direction.WEST)) {
-			if (col > 0 && board[row][col-1].isOccupied()) {
-				for (int j = 0; j <= col; j++) {
-					if (board[row][col-j].isOccupied() == false) {
-						move(r, row, col-j);
-						return new Point(col-j, row);
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Get the location of a fox
-	 * @param f The fox to find the location of
-	 * @return The row or column where the fox is located
-	 */
-	public int getFoxLocation(Fox[] f) {
-		if (f[0].getDirection().equals(Direction.HORIZONTAL)) {
-			return f[0].getColumn();
-		} else if (f[0].getDirection().equals(Direction.VERTICAL)) {
-			return f[0].getRow();
 		} else {
-			return 0;
+			throw new IllegalArgumentException("Invalid jump location!");
 		}
 	}
-
+	
 	/**
-	 * Move a fox to a new point
-	 * @param f The fox to be moved
-	 * @param point the point to move the fox to
-	 * @return true if the move was successful
+	 * Test if a fox can move to a given location
+	 * @param fox the fox to test if 
+	 * @param newLocation
+	 * @return true if the specified fox can move to the new location
 	 */
-	public boolean moveTo(Fox[] f, int point) {
-		//get fox's location
-		Fox head = f[0];
-		int row = head.getRow();
-		int col = head.getColumn();
-		
-		if(point > 4) point = 4;
-		if(point < 0) point = 0;
-
-		if (f[0].getDirection().equals(Direction.HORIZONTAL)) {
-			if (point > col && !board[row][point].isOccupied() && 
-					!(board[row][point-1].isOccupied() && !board[row][point-1].getName().equals(f[1].getName()))) {
-				move(f[0], row, point);
-				move(f[1], row, point-1);
-				return true;
-			} 
-			else if(point < col && !board[row][point].isOccupied() &&
-					!(board[row][point+1].isOccupied() && !board[row][point+1].getName().equals(f[1].getName()))){
-				move(f[1], row, point);
-				move(f[0], row, point+1);
-				return true;
-			}
-			else return false;			
+	// TODO: write this function
+	public boolean testValidFoxMove(NewFox fox, GridPoint newLocation) {
+		return false;
+	}
+	
+	/**
+	 * Move a fox to a new location
+	 * @param fox the fox to be moved
+	 * @param newLocation the new location on the board for the head of the fox to be moved to
+	 */
+	// TODO: implement this function
+	public void moveFox(NewFox fox, GridPoint newLocation) {
+		if (testValidFoxMove(fox, newLocation) == true) {
+			// move the fox
+		} else {
+			throw new IllegalArgumentException("Illegal fox move");
 		}
-		else if(head.getDirection().equals(Direction.VERTICAL)) {
-			if (point > row && !board[point][col].isOccupied() &&
-					!(board[point-1][col].isOccupied() && !board[point-1][col].getName().equals(f[1].getName()))) {
-				move(f[0], point, col);
-				move(f[1], point-1, col);
-				return true;
-			} 
-			else if(point < row && !board[point][col].isOccupied() && 
-					!(board[point+1][col].isOccupied()&& !board[point+1][col].getName().equals(f[1].getName()))){
-				move(f[1], point, col);
-				move(f[0], point+1, col);
-				return true;
-			}
-			else return false;	
-		}
-		else return false;
 	}
 	
 	public String[][] getBoardName(){

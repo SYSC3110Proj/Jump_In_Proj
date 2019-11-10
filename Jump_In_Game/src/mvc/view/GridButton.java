@@ -9,14 +9,16 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.border.Border;
 
+import gamePieces.GridPoint;
+
 public class GridButton extends JToggleButton {
 	
 	private boolean isHole;
-	private Point gridLocation;	// location in the grid of the button
+	private GridPoint gridLocation;	// location in the grid of the button
 	
-	
+	// TODO: add comments, add constructor with just point
 	public GridButton(int row, int col) {
-		this.gridLocation = new Point(col, row);
+		this.gridLocation = new GridPoint(row, col);
 		this.setPreferredSize(new Dimension(100, 100));
 		
 		
@@ -55,12 +57,12 @@ public class GridButton extends JToggleButton {
 	}
 
 
-	public Point getGridLocation() {
+	public GridPoint getGridLocation() {
 		return gridLocation;
 	}
 
 
-	public void setGridLocation(Point location) {
+	public void setGridLocation(GridPoint location) {
 		this.gridLocation = location;
 	}
 	

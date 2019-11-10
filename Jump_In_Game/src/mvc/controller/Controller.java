@@ -10,7 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import gamePieces.Direction;
+import gamePieces.GridPoint;
 import gamePieces.PieceType;
+import gamePieces.PointPlayBoard;
+import gamePieces.PointSquare;
 import gamePieces.Rabbit;
 import mvc.view.*;
 import gamePieces.Square;
@@ -25,16 +28,16 @@ import gamePieces.Square;
 
 public class Controller {
 	
-	private PlayBoard game;
+	private PointPlayBoard game;
 	private View view;
 	boolean select;
 	private String name;
-	private Point sourcePoint, destPoint;
+	private GridPoint sourcePoint, destPoint;
 	private GridButton sourceButton;
-	private Square sourceSquare, destSquare;
+	private PointSquare sourceSquare, destSquare;
 	
 	public Controller() {
-		this.game = new PlayBoard();
+		this.game = new PointPlayBoard();
 		this.view = new View();
 		
 		this.select = false;
@@ -43,8 +46,9 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 				// If the player is currently in the selection phase
 				if (!select) {
-					name = ((GridButton)e.getSource()).getText();
+					name = ((GridButton) e.getSource()).getText();
 					sourceSquare = game.getSquareAt(((GridButton) e.getSource()).getGridLocation());
+					
 					System.out.println(game.getSquareAt(((GridButton) e.getSource()).getGridLocation()).toString());
 					System.out.println(game.getSquareAt(((GridButton) e.getSource()).getGridLocation()).getPieceType());
 					
@@ -57,24 +61,21 @@ public class Controller {
 					select = true;
 				} else {	// If the player is in the movement phase
 					if (name != null) {
-//						if (!name.equals("Hole") && !name.equals("mushroom")) {
+
 						// Test if the player is trying to move a hole or mushroom
-						if (sourceSquare.getPieceType() != PieceType.HOLE || sourceSquare.getPieceType() != PieceType.MUSHROOM) {
+						if ((sourceSquare.getPieceType() != PieceType.HOLE) || (sourceSquare.getPieceType() != PieceType.MUSHROOM)) {
 							
 							destSquare = game.getSquareAt(((GridButton) e.getSource()).getGridLocation());
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
 							
 							System.out.println("destSquare = " + destSquare);
 							System.out.println("destPoint = " + destPoint);
-						
-//							if (name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
-//							if (name.contains("rabbit1") || name.contains("rabbit2") || name.contains("rabbit3")) {
 							
 							if (sourceSquare.getPieceType() == PieceType.RABBIT) {
 								
 								Rabbit rabbit = (Rabbit) sourceSquare; // For additional clarity, convert sourceSquare to rabbit
-								if (game.canJumpIn(rabbit, getDirection(sourcePoint, destPoint))) {
-									Point newLoc = game.getNearestJumpPoint(rabbit, getDirection(sourcePoint, destPoint));
+								if (game.testJumpDirection(rabbit, getDirection(sourcePoint, destPoint))) {
+									GridPoint newLoc = game.getNearestJumpPoint(rabbit, getDirection(sourcePoint, destPoint));
 									System.out.println("newLoc = " + newLoc);
 									game.moveRabbit(rabbit, newLoc);
 								}
@@ -104,9 +105,9 @@ public class Controller {
 	}
 	
 	//row1, col1 of original position and row2, col2 of destination
-	private Direction getDirection(Point source, Point dest) {
+	private Direction getDirection(GridPoint source, GridPoint dest) {
 		// Check if new destination is in line with the source
-		if (source.getY() != dest.getY() && source.getX() != dest.getX()) {
+		if (source.getRow() != dest.getRow() && source.getCol() != dest.getCol()) {
 			return null;
 		}
 		
@@ -116,14 +117,14 @@ public class Controller {
 		}
 		
 		// If source and dest are on same row
-		if ((int) source.getY() == (int) dest.getY()) {
-			if (source.getX() > dest.getX()) {
+		if (source.getRow() == dest.getRow()) {
+			if (source.getCol() > dest.getCol()) {
 				return Direction.WEST;
 			} else {
 				return Direction.EAST;
 			}
-		} else if ((int) source.getX() == (int) dest.getX()) { // If source and dest are in same column
-			if (source.getY() > dest.getY()) {
+		} else if (source.getCol() == dest.getCol()) { // If source and dest are in same column
+			if (source.getRow() > dest.getRow()) {
 				return Direction.NORTH;
 			} else {
 				return Direction.SOUTH;

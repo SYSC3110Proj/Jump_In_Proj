@@ -25,7 +25,7 @@ public class GameListener implements ActionListener {
 					destPoint = ((GridButton) e.getSource()).getGridLocation();
 				
 					if(name.equals("rabbit1") || name.equals("rabbit2") || name.equals("rabbit3")) {
-						game.jumpTo(game.getRabbit(name), getDirection(sourcePoint, destPoint));
+						game.moveRabbitTo(game.getRabbit(name), getDirection(sourcePoint, destPoint));
 						
 					} else if (name.equals("fox1") || name.equals("fox2")) {
 						if (game.getFox(name)[0].getDirection().equals(Direction.HORIZONTAL)) {

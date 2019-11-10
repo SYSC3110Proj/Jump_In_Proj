@@ -58,4 +58,8 @@ public class GridPoint extends Point {
 	public void setCol(int newCol) {
 		this.x = newCol;
 	}
+	
+	public String toString() {
+		return ("row=" + this.getRow() + ", col=" + this.getCol());
+	}
 }

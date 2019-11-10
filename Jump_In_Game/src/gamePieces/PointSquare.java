@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class PointSquare {
-	//position
+
 	private GridPoint location;
 	private String name;
 	private PieceType pieceType;
