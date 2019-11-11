@@ -51,7 +51,10 @@ public class Tile {
 	 */
 	public void setToken(Token token) {
 		this.token = token;
-		this.token.setLocation(this.location);
+		
+		if (this.token != null) {
+			this.token.setLocation(this.location);
+		}
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class Tile {
 	 * @return true if the tile contains a token
 	 */
 	public boolean isOccupied() {
-		if (this.token == null) {
+		if (this.token != null) {
 			return true;
 		} else {
 			return false;

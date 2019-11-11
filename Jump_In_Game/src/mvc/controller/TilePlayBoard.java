@@ -1,4 +1,4 @@
-package controller;
+package mvc.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -177,38 +177,34 @@ public class TilePlayBoard {
 			return false;
 		}
 
-		// get rabbit's location
-		int row = rabbit.getRow();
-		int col = rabbit.getColumn();
-
 		if (direction.equals(Direction.NORTH)) {
-			if (row > 0 && this.board.getTileAt(row-1, col).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
-				for (int i = 0; i <= row; i++) {
-					if (board.getTileAt(row-i, col).isOccupied() == false) {
+			if (rabbit.getRow() > 0 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
+				for (int row = rabbit.getRow()-1; row >= 0; row--) {
+					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
 						return true;
 					}
 				}
 			}
 		} else if (direction.equals(Direction.SOUTH)) {
-			if (row < 4 && this.board.getTileAt(row+1, col).isOccupied()) {
-				for (int i = 0; i < 5-row; i++) {
-					if (board.getTileAt(row+i, col).isOccupied() == false) {
+			if (rabbit.getRow() < 4 && this.board.getTileAt(rabbit.getRow()+1, rabbit.getCol()).isOccupied()) {
+				for (int row = rabbit.getRow()+1; row <= 4; row++) {
+					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
 						return true;
 					}
 				}
 			}
 		} else if (direction.equals(Direction.EAST)) {
-			if (col < 4 && board.getTileAt(row, col+1).isOccupied()) {
-				for (int i = 0; i < 5-col; i++) {
-					if (board.getTileAt(row, col+i).isOccupied() == false) {
+			if (rabbit.getCol() < 4 && board.getTileAt(rabbit.getRow(), rabbit.getCol()+1).isOccupied()) {
+				for (int col = rabbit.getCol()+1; col <= 4; col++) {
+					if (board.getTileAt(rabbit.getRow(), col).isOccupied() == false) {
 						return true;
 					}
 				}
 			}
 		} else if (direction.equals(Direction.WEST)) {
-			if (col > 0 && board.getTileAt(row, col-1).isOccupied()) {
-				for (int i = 0; i <= col; i++) {
-					if (board.getTileAt(row, col-i).isOccupied() == false) {
+			if (rabbit.getCol() > 0 && board.getTileAt(rabbit.getRow(), rabbit.getCol()-1).isOccupied()) {
+				for (int col = rabbit.getCol()-1; col >= 0; col--) {
+					if (board.getTileAt(rabbit.getRow(), col).isOccupied() == false) {
 						return true;
 					}
 				}
@@ -225,39 +221,36 @@ public class TilePlayBoard {
 	 * @return Point where the rabbit can jump to
 	 */
 	public GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
-		// get rabbit's location
-		int row = rabbit.getRow();
-		int col = rabbit.getColumn();
 		
 		if (direction.equals(Direction.NORTH)) {
-			if (row > 0 && this.board.getTileAt(row-1, col).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
-				for (int i = 0; i <= row; i++) {
-					if (board.getTileAt(row-i, col).isOccupied() == false) {
-						return new GridPoint(row-i, col);
+			if (rabbit.getRow() > 0 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
+				for (int row = rabbit.getRow()-1; row >= 0; row--) {
+					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
+						return new GridPoint(row, rabbit.getCol());
 					}
 				}
 			}
 		} else if (direction.equals(Direction.SOUTH)) {
-			if (row < 4 && this.board.getTileAt(row+1, col).isOccupied()) {
-				for (int i = 0; i < 5-row; i++) {
-					if (board.getTileAt(row+i, col).isOccupied() == false) {
-						return new GridPoint(row+i, col);
+			if (rabbit.getRow() < 4 && this.board.getTileAt(rabbit.getRow()+1, rabbit.getCol()).isOccupied()) {
+				for (int row = rabbit.getRow()+1; row <= 4; row++) {
+					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
+						return new GridPoint(row, rabbit.getCol());
 					}
 				}
 			}
 		} else if (direction.equals(Direction.EAST)) {
-			if (col < 4 && board.getTileAt(row, col+1).isOccupied()) {
-				for (int j = 0; j < 5-col; j++) {
-					if (board.getTileAt(row, col+j).isOccupied() == false) {
-						return new GridPoint(row, col+j);
+			if (rabbit.getCol() < 4 && board.getTileAt(rabbit.getRow(), rabbit.getCol()+1).isOccupied()) {
+				for (int j = rabbit.getCol()+1; j <= 4; j++) {
+					if (board.getTileAt(rabbit.getRow(), j).isOccupied() == false) {
+						return new GridPoint(rabbit.getRow(), j);
 					}
 				}
 			}
 		} else if (direction.equals(Direction.WEST)) {
-			if (col > 0 && board.getTileAt(row, col-1).isOccupied()) {
-				for (int j = 0; j <= col; j++) {
-					if (board.getTileAt(row, col-j).isOccupied() == false) {
-						return new GridPoint(row, col-j);
+			if (rabbit.getCol() > 0 && board.getTileAt(rabbit.getRow(), rabbit.getCol()-1).isOccupied()) {
+				for (int col = rabbit.getCol()-1; col >= 0; col--) {
+					if (board.getTileAt(rabbit.getRow(), col).isOccupied() == false) {
+						return new GridPoint(rabbit.getRow(), col);
 					}
 				}
 			}
@@ -270,9 +263,12 @@ public class TilePlayBoard {
 	public boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
 		for (int i = 0; i < path.size(); ++i) {
 			// Test if the tile is occupied by a token other than the given fox
-			if (path.get(i).isOccupied() 
-					&& (path.get(i).getToken() != fox.getHead() || path.get(i).getToken() != fox.getTail())) {
-				return false;
+			if (path.get(i).isOccupied()) {
+				if (path.get(i).getToken() == fox.getHead() || path.get(i).getToken() == fox.getTail()) {
+					// keep going
+				} else {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -373,8 +369,16 @@ public class TilePlayBoard {
 		// If the fox can move
 		if (testValidFoxMove(fox, newLocation) == true) {
 			// move the fox one token at a time to its new location
-			this.moveToken(fox.getHead(), newLocation);
-			this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+			
+			// If the fox is moving backwards, move the tail first
+			if (fox.getHead().getLocation().getDirectionTo(newLocation) != fox.getOrientation()) {
+				this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+				this.moveToken(fox.getHead(), newLocation);
+			} else { // else move the head first
+				this.moveToken(fox.getHead(), newLocation);
+				this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+			}
+			
 			
 		} else {
 			throw new IllegalArgumentException("Illegal fox move");
@@ -386,7 +390,11 @@ public class TilePlayBoard {
 		
 		for(int row = 0; row < 5; row++) {
 			for(int col = 0; col < 5; col++) {
-				name[row][col] = board.getTileAt(row, col).toString();
+				if (board.getTileAt(row, col).getToken() == null) {
+					name[row][col] = "empty";
+				} else {
+					name[row][col] = board.getTileAt(row, col).getToken().getPieceType().toString();
+				}
 			}
 		}
 		return name;
@@ -403,9 +411,9 @@ public class TilePlayBoard {
 		}
 	}
 	
-	public static void main(String[] args) {
-		TilePlayBoard board = new TilePlayBoard();
-		
-		board.printBoard();
-	}
+//	public static void main(String[] args) {
+//		TilePlayBoard board = new TilePlayBoard();
+//		
+//		board.printBoard();
+//	}
 }

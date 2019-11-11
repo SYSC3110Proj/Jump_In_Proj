@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class NewFox implements PropertyChangeListener {
 	
 	private Token head;

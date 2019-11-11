@@ -74,9 +74,9 @@ public class GridPoint extends Point {
 				return null;
 			}
 		} else if (this.getCol() == newLocation.getCol()) {
-			if (this.getRow() < newLocation.getCol()) {
+			if (this.getRow() < newLocation.getRow()) {
 				return Direction.SOUTH;
-			} else if (this.getCol() > newLocation.getCol()) {
+			} else if (this.getRow() > newLocation.getRow()) {
 				return Direction.NORTH;
 			} else {
 				return null;

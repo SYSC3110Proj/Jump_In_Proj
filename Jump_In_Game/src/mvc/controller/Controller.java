@@ -15,7 +15,6 @@ import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import mvc.view.*;
 import gamePieces.Tile;
-import gamePieces.TilePlayBoard;
 
 /** 
  * The Controller class creates the Playboard and View objects within a frame that the player interacts with, 
@@ -36,7 +35,6 @@ public class Controller {
 	
 	private GridPoint sourcePoint, destPoint;
 	private GridButton sourceButton;
-//	private PointSquare sourceSquare, destSquare;
 	
 	public Controller() {
 		this.game = new TilePlayBoard();
@@ -91,16 +89,16 @@ public class Controller {
 									NewFox foxToMove = game.getFoxAtLocation(sourceTile.getLocation());
 									
 									// Check if the user clicked the tail
-									if (sourceTile.getLocation().equals(foxToMove.getHead().getLocation())) {
+									if (sourceTile.getLocation().equals(foxToMove.getTail().getLocation())) {
 										// Convert the movement into a point that is equivalent
 										if (foxToMove.getOrientation() == Direction.NORTH) {
-											destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()-1);
-										} else if (foxToMove.getOrientation() == Direction.SOUTH) {
-											destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()+1);
-										} else if (foxToMove.getOrientation() == Direction.EAST) {
 											destPoint = new GridPoint(destPoint.getRow()-1, destPoint.getCol());
-										} else if (foxToMove.getOrientation() == Direction.WEST) {
+										} else if (foxToMove.getOrientation() == Direction.SOUTH) {
 											destPoint = new GridPoint(destPoint.getRow()+1, destPoint.getCol());
+										} else if (foxToMove.getOrientation() == Direction.EAST) {
+											destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()+1);
+										} else if (foxToMove.getOrientation() == Direction.WEST) {
+											destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()-1);
 										}
 									} 
 									
