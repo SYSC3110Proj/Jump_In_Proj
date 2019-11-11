@@ -1,7 +1,6 @@
 package mvc.controller;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,12 +10,12 @@ import javax.swing.JFrame;
 
 import gamePieces.Direction;
 import gamePieces.GridPoint;
+import gamePieces.NewFox;
 import gamePieces.PieceType;
-import gamePieces.PointPlayBoard;
-import gamePieces.PointSquare;
 import gamePieces.Rabbit;
 import mvc.view.*;
-import gamePieces.Square;
+import gamePieces.Tile;
+import gamePieces.TilePlayBoard;
 
 /** 
  * The Controller class creates the Playboard and View objects within a frame that the player interacts with, 
@@ -28,16 +27,19 @@ import gamePieces.Square;
 
 public class Controller {
 	
-	private PointPlayBoard game;
+	private TilePlayBoard game;
 	private View view;
 	boolean select;
 	private String name;
+	
+	private Tile sourceTile, destTile;
+	
 	private GridPoint sourcePoint, destPoint;
 	private GridButton sourceButton;
-	private PointSquare sourceSquare, destSquare;
+//	private PointSquare sourceSquare, destSquare;
 	
 	public Controller() {
-		this.game = new PointPlayBoard();
+		this.game = new TilePlayBoard();
 		this.view = new View();
 		
 		this.select = false;
@@ -49,15 +51,15 @@ public class Controller {
 				// If the player is currently in the selection phase
 				if (!select) {
 					name = ((GridButton) e.getSource()).getText();
-					sourceSquare = game.getSquareAt(((GridButton) e.getSource()).getGridLocation());
+					sourceTile = game.getBoard().getTileAt((((GridButton) e.getSource()).getGridLocation()));
 					
-					System.out.println(game.getSquareAt(((GridButton) e.getSource()).getGridLocation()).toString());
-					System.out.println(game.getSquareAt(((GridButton) e.getSource()).getGridLocation()).getPieceType());
+					System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
+					System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
 					
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
 					
-					System.out.println("sourceSquare = " + sourceSquare);
+					System.out.println("sourceTile = " + sourceTile);
 					System.out.println("sourcePoint = " + sourcePoint);
 					
 					select = true;
@@ -65,26 +67,49 @@ public class Controller {
 					if (name != null) {
 
 						// Test if the player is trying to move a hole or mushroom
-						if ((sourceSquare.getPieceType() != PieceType.HOLE) || (sourceSquare.getPieceType() != PieceType.MUSHROOM)) {
+						if (sourceTile.getToken() != null && sourceTile.getToken().getPieceType() != PieceType.MUSHROOM) {
 							
-							destSquare = game.getSquareAt(((GridButton) e.getSource()).getGridLocation());
+							destTile = game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation());
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
 							
-							System.out.println("destSquare = " + destSquare);
+							System.out.println("destTile = " + destTile);
 							System.out.println("destPoint = " + destPoint);
 							
-							if (sourceSquare.getPieceType() == PieceType.RABBIT) {
+							if (sourceTile.getToken().getPieceType() == PieceType.RABBIT) {
 								
-								Rabbit rabbit = (Rabbit) sourceSquare; // For additional clarity, convert sourceSquare to rabbit
-								if (game.testJumpDirection(rabbit, getDirection(sourcePoint, destPoint))) {
-									GridPoint newLoc = game.getNearestJumpPoint(rabbit, getDirection(sourcePoint, destPoint));
-									System.out.println("newLoc = " + newLoc);
-									game.moveRabbit(rabbit, newLoc);
+								Rabbit rabbit = (Rabbit) sourceTile.getToken(); // For additional clarity, convert sourceSquare to rabbit
+								
+								try {
+									game.moveRabbit(rabbit, destPoint);
+								} catch(IllegalArgumentException exception) {
+									System.out.println("Something went wrong!");
+									System.err.println(exception);
 								}
 								
-//							} else if (name.equals("fox1") || name.equals("fox2")) {
-							} else if (sourceSquare.getPieceType() == PieceType.FOX) {
-								game.moveFox(game.getFoxAtLocation(sourceSquare.getLocation()), destSquare.getLocation());
+							} else if (sourceTile.getToken().getPieceType() == PieceType.FOX) {
+								try {
+									NewFox foxToMove = game.getFoxAtLocation(sourceTile.getLocation());
+									
+									// Check if the user clicked the tail
+									if (sourceTile.getLocation().equals(foxToMove.getHead().getLocation())) {
+										// Convert the movement into a point that is equivalent
+										if (foxToMove.getOrientation() == Direction.NORTH) {
+											destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()-1);
+										} else if (foxToMove.getOrientation() == Direction.SOUTH) {
+											destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()+1);
+										} else if (foxToMove.getOrientation() == Direction.EAST) {
+											destPoint = new GridPoint(destPoint.getRow()-1, destPoint.getCol());
+										} else if (foxToMove.getOrientation() == Direction.WEST) {
+											destPoint = new GridPoint(destPoint.getRow()+1, destPoint.getCol());
+										}
+									} 
+									
+									game.moveFox(foxToMove, destPoint);
+									
+								} catch (IllegalArgumentException error) {
+									System.out.println("Something went wrong!");
+									System.err.println(error);
+								}
 							}
 							
 							// Toggle both buttons to show as off
@@ -95,7 +120,7 @@ public class Controller {
 						}
 					}
 					select = false;
-					if (game.isWin()) {
+					if (game.checkWinState()) {
 						view.popWin();	
 					}
 				}

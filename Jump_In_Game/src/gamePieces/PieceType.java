@@ -1,5 +1,5 @@
 package gamePieces;
 
 public enum PieceType {
-	RABBIT, FOX, MUSHROOM, HOLE, EMPTY
+	RABBIT, FOX, MUSHROOM
 }

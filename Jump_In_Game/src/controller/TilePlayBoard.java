@@ -1,11 +1,10 @@
-package gamePieces;
+package controller;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
+
+import gamePieces.*;
 
 public class TilePlayBoard {
 

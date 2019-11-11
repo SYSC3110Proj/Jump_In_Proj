@@ -61,7 +61,7 @@ public class View extends JPanel {
 		dialog.setModal(true);
 		dialog.setLayout(new FlowLayout());
 		
-		JLabel win = new JLabel("Congratulations, you have win the game.");
+		JLabel win = new JLabel("Congratulations, you have won the game.");
 		JButton quit = new JButton("quit");
 		
 		quit.addActionListener(new ActionListener() {
