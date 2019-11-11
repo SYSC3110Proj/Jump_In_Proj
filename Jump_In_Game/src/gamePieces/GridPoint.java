@@ -59,6 +59,33 @@ public class GridPoint extends Point {
 		this.x = newCol;
 	}
 	
+	/**
+	 * Get the cardinal direction from this point to a given point (only in a straight line!)
+	 * @param newLocation the location to get the direction to
+	 * @return the direction in which newLocation is located, or throws an error if not in a straight line
+	 */
+	public Direction getDirectionTo(GridPoint newLocation) {
+		if (this.getRow() == newLocation.getRow()) {
+			if (this.getCol() < newLocation.getCol()) {
+				return Direction.EAST;
+			} else if (this.getCol() > newLocation.getCol()) {
+				return Direction.WEST;
+			} else {
+				return null;
+			}
+		} else if (this.getCol() == newLocation.getCol()) {
+			if (this.getRow() < newLocation.getCol()) {
+				return Direction.SOUTH;
+			} else if (this.getCol() > newLocation.getCol()) {
+				return Direction.NORTH;
+			} else {
+				return null;
+			}
+		} else {
+			throw new IllegalArgumentException("newLocation is not in a directly north, south, east or west of this point");
+		}
+	}
+	
 	public String toString() {
 		return ("row=" + this.getRow() + ", col=" + this.getCol());
 	}

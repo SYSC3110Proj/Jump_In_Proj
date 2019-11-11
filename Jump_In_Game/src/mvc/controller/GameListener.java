@@ -43,7 +43,7 @@ public class GameListener implements ActionListener {
 				}
 			}
 			isSelecting = true;
-			if (game.isWin()) {
+			if (game.checkWinState()) {
 				view.popWin();	
 			}
 		}

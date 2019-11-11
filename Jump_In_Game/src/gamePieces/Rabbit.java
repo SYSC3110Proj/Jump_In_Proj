@@ -5,12 +5,12 @@ package gamePieces;
  * @author Mika Argyle
  */
 
-public class Rabbit extends PointSquare {
+public class Rabbit extends Token {
 	
 	private RabbitColour colour;
 	
-	public Rabbit(int row, int col, String str) {
-		super(row, col, str);
+	public Rabbit(GridPoint location, String str) {
+		super(location, PieceType.RABBIT);
 		super.setPieceType(PieceType.RABBIT);
 		
 		// Set the rabbit's colour
@@ -21,6 +21,26 @@ public class Rabbit extends PointSquare {
 		} else if (str.equals("rabbit3")) {
 			this.colour = RabbitColour.GREY;
 		} 
+	}
+	
+	/**
+	 * Test if the token is at on a hole tile
+	 * @return True if the token is on a hole tile
+	 */
+	public boolean atHole() {
+		if (this.location.getCol() == 0) {
+			if (this.location.getRow() == 0 || this.location.getRow() == 4) {
+				return true;
+			}
+		} else if (this.location.getCol() == 4) {
+			if (this.location.getRow() == 0 || this.location.getRow() == 4) {
+				return true;
+			}
+		} else if (this.location.getCol() == 2 && this.location.getRow() == 2) {
+			return true;
+		} 
+		
+		return false;
 	}
 
 	/**

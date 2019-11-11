@@ -8,8 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class NewFox implements PropertyChangeListener {
-	private PointSquare head;
-	private PointSquare tail;
+	
+	private Token head;
+	private Token tail;
 	private Direction orientation;
 	
 	// List of all valid GridPoints that a fox can be placed in
@@ -57,8 +58,8 @@ public class NewFox implements PropertyChangeListener {
 			}
 		}
 		
-		this.head = new PointSquare(head, PieceType.FOX);
-		this.tail = new PointSquare(tail, PieceType.FOX);
+		this.head = new Token(head, PieceType.FOX);
+		this.tail = new Token(tail, PieceType.FOX);
 	}
 	
 	public NewFox(GridPoint head, Direction orientation) {
@@ -101,9 +102,9 @@ public class NewFox implements PropertyChangeListener {
 			throw new IllegalArgumentException("Tail cannot be located at " + tailLocation.toString());
 		}
 		
-		this.head = new PointSquare(head, PieceType.FOX);
+		this.head = new Token(head, PieceType.FOX);
 		this.head.setName("foxHead");
-		this.tail = new PointSquare(tailLocation, PieceType.FOX);
+		this.tail = new Token(tailLocation, PieceType.FOX);
 		this.tail.setName("foxTail");
 		this.orientation = orientation;
 	}
@@ -160,28 +161,28 @@ public class NewFox implements PropertyChangeListener {
 	/**
 	 * @return the head
 	 */
-	public PointSquare getHead() {
+	public Token getHead() {
 		return head;
 	}
 
 	/**
 	 * @param head the head to set
 	 */
-	public void setHead(PointSquare head) {
+	public void setHead(Token head) {
 		this.head = head;
 	}
 
 	/**
 	 * @return the tail
 	 */
-	public PointSquare getTail() {
+	public Token getTail() {
 		return tail;
 	}
 
 	/**
 	 * @param tail the tail to set
 	 */
-	public void setTail(PointSquare tail) {
+	public void setTail(Token tail) {
 		this.tail = tail;
 	}
 
