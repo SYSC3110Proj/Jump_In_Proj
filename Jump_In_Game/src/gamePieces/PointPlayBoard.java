@@ -7,10 +7,30 @@ import java.util.Collections;
 import java.util.List;
 
 public class PointPlayBoard {
-	private PointSquare board[][];	// Format: board[row][col]
 	
+	private PointSquare board[][];	// Format: board[row][col]
 	private ArrayList<Rabbit> rabbits;
 	private ArrayList<NewFox> foxes;
+	
+	private static final List<GridPoint> VALID_FOX_LOCATIONS = Collections.unmodifiableList(
+			new ArrayList<GridPoint>() {{
+				add(new GridPoint(0,1));
+				add(new GridPoint(0,3));
+				add(new GridPoint(1,0));
+				add(new GridPoint(1,1));
+				add(new GridPoint(1,2));
+				add(new GridPoint(1,3));
+				add(new GridPoint(1,4));
+				add(new GridPoint(2,1));
+				add(new GridPoint(2,3));
+				add(new GridPoint(3,0));
+				add(new GridPoint(3,1));
+				add(new GridPoint(3,2));
+				add(new GridPoint(3,3));
+				add(new GridPoint(3,4));
+				add(new GridPoint(4,1));
+				add(new GridPoint(4,3));
+			}}) ;
 
 
 	/**
@@ -20,10 +40,11 @@ public class PointPlayBoard {
 		board = new PointSquare[5][5];
 		
 		this.rabbits = new ArrayList<Rabbit>(3);
+		this.foxes = new ArrayList<NewFox>(2);
 		
 		for (int row = 0; row < 5; row++) { // row
 			for (int col = 0; col < 5; col++) { // column
-				board[row][col] = new PointSquare(new GridPoint(row, col)); // (row,column)
+				board[row][col] = new PointSquare(new GridPoint(row, col), PieceType.EMPTY); // (row,column)
 			}
 		}
 		
@@ -39,8 +60,8 @@ public class PointPlayBoard {
 		this.setRabbit(2, 2, 4);
 		this.setRabbit(3, 4, 1);
 		
-		setFox(1, Direction.VERTICAL);
-		setFox(3, Direction.HORIZONTAL);
+		setFox(new GridPoint(0, 1), Direction.NORTH);
+		setFox(new GridPoint(3, 0), Direction.WEST);
 		
 		
 		board[1][3].setPieceType(PieceType.MUSHROOM);
@@ -67,15 +88,15 @@ public class PointPlayBoard {
 	}
 
 	/**
-	 * Retrieve a fox object
-	 * @param i The index of the fox to be retrieved
-	 * @return the fox object at index i
+	 * Retrieve a fox object at a specified location
+	 * @param point the point to retrieve the fox at
+	 * @return the fox object with a piece at that location
 	 */
-	public Fox[] getFox(String str) {
-		if (str.equals("fox1")) {
-			return f1;
-		} else if (str.equals("fox2")) {
-			return f2;
+	public NewFox getFoxAtLocation(GridPoint point) {
+		for(int i = 0; i < foxes.size(); ++i) {
+			if ((foxes.get(i).getHead().getLocation().equals(point)) || (foxes.get(i).getTail().getLocation().equals(point))) {
+				return foxes.get(i);
+			}
 		}
 		return null;
 	}
@@ -179,63 +200,20 @@ public class PointPlayBoard {
 	}
 
 	
-	private static final List<GridPoint> VALID_FOX_LOCATIONS = Collections.unmodifiableList(
-			new ArrayList<GridPoint>() {{
-				add(new GridPoint(0,1));
-				add(new GridPoint(0,3));
-				add(new GridPoint(1,0));
-				add(new GridPoint(1,1));
-				add(new GridPoint(1,2));
-				add(new GridPoint(1,3));
-				add(new GridPoint(1,4));
-				add(new GridPoint(2,1));
-				add(new GridPoint(2,3));
-				add(new GridPoint(3,0));
-				add(new GridPoint(3,1));
-				add(new GridPoint(3,2));
-				add(new GridPoint(3,3));
-				add(new GridPoint(3,4));
-				add(new GridPoint(4,1));
-				add(new GridPoint(4,3));
-			}}) ;
+
 	
 	public void setFox(GridPoint foxHead, Direction direction) {
-		if (VALID_FOX_LOCATIONS.contains(foxHead) == false) {
+		System.out.println(VALID_FOX_LOCATIONS.contains(foxHead));
+		if (VALID_FOX_LOCATIONS.contains(foxHead)) {
+			foxes.add(new NewFox(foxHead, direction));
+			System.out.println(foxes);
+		} else {
+			System.err.println("Error in here!");
 			throw new IllegalArgumentException("Fox Head is not in a valid location");
 		}
-
-		if (f1 == null) {
-			f1 = setFoxHelper(x, direction);
-			f1[0].setName("fox1");
-			f1[1].setName("fox1");
-		} else if(f2 == null) {
-			f2 = setFoxHelper(x, direction);
-			f2[0].setName("fox2");
-			f2[1].setName("fox2");
-		}
+		
+		
 	}
-	
-	/**
-	 * Set the location of a fox on the board
-	 * @param x The x coordinate of the fox
-	 * @param direction The direction of the fox
-	 * @return True if the fox was successfully created
-	 */
-//	public void setFox(int x, Direction direction) {
-//		if (x == 0 || x == 2 || x == 4) {
-//			
-//		}
-//
-//		if (f1 == null) {
-//			f1 = setFoxHelper(x, direction);
-//			f1[0].setName("fox1");
-//			f1[1].setName("fox1");
-//		} else if(f2 == null) {
-//			f2 = setFoxHelper(x, direction);
-//			f2[0].setName("fox2");
-//			f2[1].setName("fox2");
-//		}
-//	}
 
 	/**
 	 * Move a square to a new location

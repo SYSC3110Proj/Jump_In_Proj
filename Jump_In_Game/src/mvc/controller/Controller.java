@@ -44,6 +44,8 @@ public class Controller {
 		
 		this.view.initButton(game.getBoardName(), new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println(game.toString());
+				
 				// If the player is currently in the selection phase
 				if (!select) {
 					name = ((GridButton) e.getSource()).getText();
@@ -80,12 +82,9 @@ public class Controller {
 									game.moveRabbit(rabbit, newLoc);
 								}
 								
-							} else if (name.equals("fox1") || name.equals("fox2")) {
-								if (game.getFox(name)[0].getDirection().equals(Direction.HORIZONTAL)) {
-									game.moveTo(game.getFox(name), (int) destPoint.getX());
-								} else {
-									game.moveTo(game.getFox(name), (int) destPoint.getY());
-								}
+//							} else if (name.equals("fox1") || name.equals("fox2")) {
+							} else if (sourceSquare.getPieceType() == PieceType.FOX) {
+								game.moveFox(game.getFoxAtLocation(sourceSquare.getLocation()), destSquare.getLocation());
 							}
 							
 							// Toggle both buttons to show as off

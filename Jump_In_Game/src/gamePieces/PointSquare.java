@@ -60,6 +60,17 @@ public class PointSquare {
 	}
 	
 	/**
+	 * Constructor for Square object
+	 * @param location the location of the square
+	 * @param PieceType the type of piece this square represents
+	 */
+	public PointSquare(Point location, PieceType pieceType, String name) {
+		this(location);
+		this.pieceType = pieceType;
+		this.name = name;
+	}
+	
+	/**
 	 * Constructor for square object, with name
 	 * @param row The row of this square
 	 * @param col The column of this square
@@ -116,6 +127,14 @@ public class PointSquare {
 	 */
 	public int getColumn() {
 		return this.location.getCol();
+	}
+	
+	/**
+	 * Get the location of this square
+	 * @return The GridPoint that represents the location of this square
+	 */
+	public GridPoint getLocation() {
+		return this.location;
 	}
 
 	/**
@@ -187,7 +206,7 @@ public class PointSquare {
 	 */
 	public String toString() {
 		if(name == null) {
-			return null;
+			return "";
 		}
 		return name;
 	}

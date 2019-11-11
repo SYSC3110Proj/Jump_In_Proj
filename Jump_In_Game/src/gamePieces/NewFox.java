@@ -57,10 +57,8 @@ public class NewFox implements PropertyChangeListener {
 			}
 		}
 		
-		
 		this.head = new PointSquare(head, PieceType.FOX);
 		this.tail = new PointSquare(tail, PieceType.FOX);
-		this.orientation = orientation;
 	}
 	
 	public NewFox(GridPoint head, Direction orientation) {
@@ -70,41 +68,87 @@ public class NewFox implements PropertyChangeListener {
 		}
 		
 		GridPoint tailLocation = null;
-
-		if (orientation.equals(Direction.HORIZONTAL)) {
-			if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow()-1, head.getCol()))) {
-				tailLocation = new GridPoint(head.getRow()-1, head.getCol());
-			} else if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow()+1, head.getCol()))) {
-				tailLocation = new GridPoint(head.getRow()+1, head.getCol());
-			} else {
-				throw new IllegalArgumentException("No valid location for the tail piece in a horizontal orientation with head at " + head.toString());
-			}
-		} else if (orientation.equals(Direction.VERTICAL)) {
-			if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow(), head.getCol()-1))) {
-				tailLocation = new GridPoint(head.getRow(), head.getCol()-1);
-			} else if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow(), head.getCol()+1))) {
-				tailLocation = new GridPoint(head.getRow(), head.getCol()+1);
-			} else {
-				throw new IllegalArgumentException("No valid location for the tail piece in a vertical orientation with head at " + head.toString());
-			}
+		
+		if (orientation.equals(Direction.NORTH)) {
+			tailLocation = new GridPoint(head.getRow()+1, head.getCol());
+		} else if (orientation.equals(Direction.SOUTH)) {
+			tailLocation = new GridPoint(head.getRow()-1, head.getCol());
+		} else if (orientation.equals(Direction.EAST)) {
+			tailLocation = new GridPoint(head.getRow(), head.getCol()-1);
+		} else if (orientation.equals(Direction.WEST)) {
+			tailLocation = new GridPoint(head.getRow(), head.getCol()+1);
 		}
 		
+//		if (orientation.equals(Direction.HORIZONTAL)) {
+//			if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow()-1, head.getCol()))) {
+//				tailLocation = new GridPoint(head.getRow()-1, head.getCol());
+//			} else if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow()+1, head.getCol()))) {
+//				tailLocation = new GridPoint(head.getRow()+1, head.getCol());
+//			} else {
+//				throw new IllegalArgumentException("No valid location for the tail piece in a horizontal orientation with head at " + head.toString());
+//			}
+//		} else if (orientation.equals(Direction.VERTICAL)) {
+//			if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow(), head.getCol()-1))) {
+//				tailLocation = new GridPoint(head.getRow(), head.getCol()-1);
+//			} else if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow(), head.getCol()+1))) {
+//				tailLocation = new GridPoint(head.getRow(), head.getCol()+1);
+//			} else {
+//				throw new IllegalArgumentException("No valid location for the tail piece in a vertical orientation with head at " + head.toString());
+//			}
+//		}
+		
+		if (VALID_FOX_LOCATIONS.contains(tailLocation) == false) {
+			throw new IllegalArgumentException("Tail cannot be located at " + tailLocation.toString());
+		}
 		
 		this.head = new PointSquare(head, PieceType.FOX);
+		this.head.setName("foxHead");
 		this.tail = new PointSquare(tailLocation, PieceType.FOX);
+		this.tail.setName("foxTail");
 		this.orientation = orientation;
 	}
 	
 	public void moveHead(GridPoint newLoc) {
-		if (this.orientation == Direction.VERTICAL) {
-			if (head.getColumn() != newLoc.getCol()) {
-				throw new IllegalArgumentException("Head must remain in the current column");
-			}
-		} else if (this.orientation == Direction.HORIZONTAL) {
-			if (head.getRow() != newLoc.getRow()) {
-				throw new IllegalArgumentException("Head must remain in the current row");
-			}
-		}
+		// TODO: add checks
+		if (this.orientation == Direction.NORTH) {
+			this.head.move(newLoc);
+			this.tail.move(new GridPoint(newLoc.getRow()+1, newLoc.getCol()));
+		} else if (this.orientation == Direction.SOUTH) {
+			this.head.move(newLoc);
+			this.tail.move(new GridPoint(newLoc.getRow()-1, newLoc.getCol()));
+		} else if (this.orientation == Direction.EAST) {
+			this.head.move(newLoc);
+			this.tail.move(new GridPoint(newLoc.getRow(), newLoc.getCol()-1));
+		} else if (this.orientation == Direction.WEST) {
+			this.head.move(newLoc);
+			this.tail.move(new GridPoint(newLoc.getRow(), newLoc.getCol()+1));
+		} 
+		
+//		else if (this.orientation == Direction.VERTICAL) {
+//			if (head.getColumn() != newLoc.getCol()) {
+//				throw new IllegalArgumentException("Head must remain in the current column");
+//			}
+//			// TODO: add check to see if head and tail will be within board
+//			
+//			int verticalDisplacement = newLoc.getRow() - this.head.getRow();
+//			
+//			this.head.move(newLoc);
+//			this.tail.move(new GridPoint(this.tail.getRow() + verticalDisplacement, this.tail.getColumn()));
+//			
+//		} else if (this.orientation == Direction.HORIZONTAL) {
+//			if (head.getRow() != newLoc.getRow()) {
+//				throw new IllegalArgumentException("Head must remain in the current row");
+//			}
+//			
+//			// TODO: add check to see if head and tail will be within board
+//			
+//			int horizontalDisplacement = newLoc.getRow() - this.head.getRow();
+//			
+//			this.head.move(newLoc);
+//			this.tail.move(new GridPoint(this.tail.getRow(), this.tail.getColumn() + horizontalDisplacement));
+//		}
+		
+		
 	}
 	
 	@Override
@@ -153,6 +197,11 @@ public class NewFox implements PropertyChangeListener {
 	 */
 	public void setOrientation(Direction orientation) {
 		this.orientation = orientation;
+	}
+
+	@Override
+	public String toString() {
+		return "NewFox [head=" + head + ", tail=" + tail + ", orientation=" + orientation + "]";
 	}
 
 	
