@@ -48,15 +48,15 @@ public class NewFox implements PropertyChangeListener {
 			throw new IllegalArgumentException("Head and tail must be next to each other");
 		}
 		
-		if (orientation == Direction.VERTICAL) {
-			if (head.x != tail.x) {
-				throw new IllegalArgumentException("Head and tail must be in the same column");
-			}
-		} else if (orientation == Direction.HORIZONTAL) {
-			if (head.y != tail.y) {
-				throw new IllegalArgumentException("Head and tail must be in same row");
-			}
-		}
+//		if (orientation == Direction.VERTICAL) {
+//			if (head.x != tail.x) {
+//				throw new IllegalArgumentException("Head and tail must be in the same column");
+//			}
+//		} else if (orientation == Direction.HORIZONTAL) {
+//			if (head.y != tail.y) {
+//				throw new IllegalArgumentException("Head and tail must be in same row");
+//			}
+//		}
 		
 		this.head = new Token(head, PieceType.FOX);
 		this.tail = new Token(tail, PieceType.FOX);
@@ -124,33 +124,27 @@ public class NewFox implements PropertyChangeListener {
 			this.head.move(newLoc);
 			this.tail.move(new GridPoint(newLoc.getRow(), newLoc.getCol()+1));
 		} 
-		
-//		else if (this.orientation == Direction.VERTICAL) {
-//			if (head.getColumn() != newLoc.getCol()) {
-//				throw new IllegalArgumentException("Head must remain in the current column");
-//			}
-//			// TODO: add check to see if head and tail will be within board
-//			
-//			int verticalDisplacement = newLoc.getRow() - this.head.getRow();
-//			
-//			this.head.move(newLoc);
-//			this.tail.move(new GridPoint(this.tail.getRow() + verticalDisplacement, this.tail.getColumn()));
-//			
-//		} else if (this.orientation == Direction.HORIZONTAL) {
-//			if (head.getRow() != newLoc.getRow()) {
-//				throw new IllegalArgumentException("Head must remain in the current row");
-//			}
-//			
-//			// TODO: add check to see if head and tail will be within board
-//			
-//			int horizontalDisplacement = newLoc.getRow() - this.head.getRow();
-//			
-//			this.head.move(newLoc);
-//			this.tail.move(new GridPoint(this.tail.getRow(), this.tail.getColumn() + horizontalDisplacement));
-//		}
-		
-		
 	}
+	
+	/**
+	 * Get the location of this fox's tail if the head was moved to the location specified in the parameter
+	 * @param newTheoreticalHeadLocation the new theoretical head location to test
+	 * @param foxOrientation the current orientation of the fox
+	 * @return the new theoretical tail location
+	 */
+	public static final GridPoint getTheoreticalNewTailLocation(GridPoint newTheoreticalHeadLocation, Direction foxOrientation) {
+		if (foxOrientation.equals(Direction.EAST)) {
+			return new GridPoint(newTheoreticalHeadLocation.getRow(), newTheoreticalHeadLocation.getCol()-1);
+		} else if (foxOrientation.equals(Direction.WEST)) {
+			return new GridPoint(newTheoreticalHeadLocation.getRow(), newTheoreticalHeadLocation.getCol()+1);
+		} else if (foxOrientation.equals(Direction.NORTH)) {
+			return new GridPoint(newTheoreticalHeadLocation.getRow()+1, newTheoreticalHeadLocation.getCol());
+		} else if (foxOrientation.equals(Direction.SOUTH)) {
+			return new GridPoint(newTheoreticalHeadLocation.getRow()-1, newTheoreticalHeadLocation.getCol());
+		}
+		return null;
+	}
+	
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent arg0) {
@@ -198,6 +192,14 @@ public class NewFox implements PropertyChangeListener {
 	 */
 	public void setOrientation(Direction orientation) {
 		this.orientation = orientation;
+	}
+	
+	
+	/**
+	 * @return the validFoxLocations
+	 */
+	public static List<GridPoint> getValidFoxLocations() {
+		return VALID_FOX_LOCATIONS;
 	}
 
 	@Override

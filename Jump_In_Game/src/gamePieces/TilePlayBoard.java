@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 public class TilePlayBoard {
 
@@ -266,39 +267,94 @@ public class TilePlayBoard {
 		return null;
 	}
 	
-	/**
-	 * Move a rabbit to a new location
-	 * @param rabbit The rabbit to move
-	 * @param newLoc the location for the rabbit to move to
-	 * @return True if the move was successful
-	 */
-	public void moveRabbitTo(Rabbit rabbit, GridPoint newLoc) {
-		
-		// get the direction the rabbit is jumping in
-		Direction jumpDirection = new GridPoint(rabbit.getRow(), rabbit.getColumn()).getDirectionTo(newLoc);
-		
-		
-		// TODO: implement direction finding code here
-		
-		if (this.getNearestJumpPoint(rabbit, jumpDirection).equals(newLoc)) {
-			// TODO: implement rabbit movement code here
-			if (board[newLoc.getRow()][newLoc.getCol()].isOccupied()) {
-				throw new IllegalArgumentException("This location is already occupied!");
+	public boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
+		for (int i = 0; i < path.size(); ++i) {
+			// Test if the tile is occupied by a token other than the given fox
+			if (path.get(i).isOccupied() 
+					&& (path.get(i).getToken() != fox.getHead() || path.get(i).getToken() != fox.getTail())) {
+				return false;
 			}
-		} else {
-			throw new IllegalArgumentException("Invalid jump location!");
 		}
+		return true;
 	}
+		
 	
 	/**
 	 * Test if a fox can move to a given location
 	 * @param fox the fox to test if 
-	 * @param newLocation
+	 * @param newHeadLocation
 	 * @return true if the specified fox can move to the new location
 	 */
-	// TODO: write this function
-	public boolean testValidFoxMove(NewFox fox, GridPoint newLocation) {
+	public boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
+		Direction movementDirection = fox.getHead().getLocation().getDirectionTo(newHeadLocation);
+		
+		if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
+			// test if head and tail share same row as the new location
+			if (fox.getHead().getRow() == newHeadLocation.getRow() && fox.getTail().getRow() == newHeadLocation.getRow()) { 
+				
+				// Get the location that the tail of the fox would be moved to
+				GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
+				
+				// If the new theoretical head and tail locations of the fox are valid locations
+				if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+					ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
+					
+					// get the two points the farthest away from one another
+					if (fox.getHead().getLocation().distance(newTailLocation) > fox.getHead().getLocation().distance(newHeadLocation)) {
+						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newTailLocation);
+					} else {
+						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newHeadLocation);
+					}
+					
+					return this.testNoObstructionsOnFoxPath(fox, tilesInPath);
+				}
+			}
+		} else if (movementDirection.equals(Direction.NORTH) || movementDirection.equals(Direction.SOUTH)) {
+			if (fox.getHead().getCol() == newHeadLocation.getCol() && fox.getTail().getCol() == newHeadLocation.getCol()) {
+				GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
+				
+				// If the new theoretical head and tail locations are valid locations
+				if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+					ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
+					
+					// get the two points farthest away from one another
+					if (fox.getHead().getLocation().distance(newTailLocation) > fox.getHead().getLocation().distance(newHeadLocation)) {
+						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newTailLocation);
+					} else {
+						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newHeadLocation);
+					}
+					
+					return this.testNoObstructionsOnFoxPath(fox, tilesInPath);
+				}
+			}
+		}
 		return false;
+	}
+	
+	
+	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
+		Direction direction = startPoint.getDirectionTo(endPoint);
+		
+		if (direction.equals(Direction.NORTH)) {
+			for (int row = startPoint.getRow(); row >= endPoint.getRow(); --row) {
+				tilesInPath.add(board.getTileAt(row, startPoint.getCol()));
+			}
+		} else if (direction.equals(Direction.SOUTH)) {
+			for (int row = startPoint.getRow(); row <= endPoint.getRow(); ++row) {
+				tilesInPath.add(board.getTileAt(row, startPoint.getCol()));
+			}
+		} else if (direction.equals(Direction.EAST)) {
+			for (int col = startPoint.getCol(); col <= endPoint.getCol(); ++col) {
+				tilesInPath.add(board.getTileAt(startPoint.getRow(), col));
+			}
+		} else if (direction.equals(Direction.WEST)) {
+			for (int col = startPoint.getCol(); col >= endPoint.getCol(); --col) {
+				tilesInPath.add(board.getTileAt(startPoint.getRow(), col));
+			}
+		}
+		
+		return tilesInPath;
 	}
 	
 	/**

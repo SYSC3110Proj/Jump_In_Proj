@@ -6,6 +6,5 @@ package gamePieces;
  */
 
 public enum Direction {
-	VERTICAL, HORIZONTAL, 
-	SOUTH, NORTH, EAST, WEST,
+	SOUTH, NORTH, EAST, WEST
 }
