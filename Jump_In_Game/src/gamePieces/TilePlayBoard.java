@@ -157,6 +157,7 @@ public class TilePlayBoard {
 	 * @param newLoc the new point for the rabbit to move to
 	 */
 	public void moveRabbit(Rabbit rabbit, GridPoint newLoc) {
+		// Test all the conditions to ensure that rabbit can be moved!
 		if (this.testJumpDirection(rabbit, rabbit.getLocation().getDirectionTo(newLoc)) 
 				&& this.getNearestJumpPoint(rabbit, rabbit.getLocation().getDirectionTo(newLoc)).equals(newLoc) 
 				&& (board.getTileAt(newLoc).isOccupied()) == false) {
@@ -277,6 +278,38 @@ public class TilePlayBoard {
 		}
 		return true;
 	}
+	
+	/**
+	 * Get all the tiles along the movement path of a fox piece
+	 * NOTE: if using head as both start and end point, path may not account for the end location of the tail!
+	 * @param startPoint the starting point for the fox movement
+	 * @param endPoint the ending point for the fox movement
+	 * @return ArrayList with all the tiles along the path
+	 */
+	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
+		Direction direction = startPoint.getDirectionTo(endPoint);
+		
+		if (direction.equals(Direction.NORTH)) {
+			for (int row = startPoint.getRow(); row >= endPoint.getRow(); --row) {
+				tilesInPath.add(board.getTileAt(row, startPoint.getCol()));
+			}
+		} else if (direction.equals(Direction.SOUTH)) {
+			for (int row = startPoint.getRow(); row <= endPoint.getRow(); ++row) {
+				tilesInPath.add(board.getTileAt(row, startPoint.getCol()));
+			}
+		} else if (direction.equals(Direction.EAST)) {
+			for (int col = startPoint.getCol(); col <= endPoint.getCol(); ++col) {
+				tilesInPath.add(board.getTileAt(startPoint.getRow(), col));
+			}
+		} else if (direction.equals(Direction.WEST)) {
+			for (int col = startPoint.getCol(); col >= endPoint.getCol(); --col) {
+				tilesInPath.add(board.getTileAt(startPoint.getRow(), col));
+			}
+		}
+		
+		return tilesInPath;
+	}
 		
 	
 	/**
@@ -331,32 +364,6 @@ public class TilePlayBoard {
 		return false;
 	}
 	
-	
-	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
-		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
-		Direction direction = startPoint.getDirectionTo(endPoint);
-		
-		if (direction.equals(Direction.NORTH)) {
-			for (int row = startPoint.getRow(); row >= endPoint.getRow(); --row) {
-				tilesInPath.add(board.getTileAt(row, startPoint.getCol()));
-			}
-		} else if (direction.equals(Direction.SOUTH)) {
-			for (int row = startPoint.getRow(); row <= endPoint.getRow(); ++row) {
-				tilesInPath.add(board.getTileAt(row, startPoint.getCol()));
-			}
-		} else if (direction.equals(Direction.EAST)) {
-			for (int col = startPoint.getCol(); col <= endPoint.getCol(); ++col) {
-				tilesInPath.add(board.getTileAt(startPoint.getRow(), col));
-			}
-		} else if (direction.equals(Direction.WEST)) {
-			for (int col = startPoint.getCol(); col >= endPoint.getCol(); --col) {
-				tilesInPath.add(board.getTileAt(startPoint.getRow(), col));
-			}
-		}
-		
-		return tilesInPath;
-	}
-	
 	/**
 	 * Move a fox to a new location
 	 * @param fox the fox to be moved
@@ -364,8 +371,12 @@ public class TilePlayBoard {
 	 */
 	// TODO: implement this function
 	public void moveFox(NewFox fox, GridPoint newLocation) {
+		// If the fox can move
 		if (testValidFoxMove(fox, newLocation) == true) {
-			// move the fox
+			// move the fox one token at a time to its new location
+			this.moveToken(fox.getHead(), newLocation);
+			this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+			
 		} else {
 			throw new IllegalArgumentException("Illegal fox move");
 		}
@@ -374,46 +385,28 @@ public class TilePlayBoard {
 	public String[][] getBoardName(){
 		String[][] name = new String[5][5];
 		
-		for(int r=0; r<5; r++) {
-			for(int c=0; c<5; c++) {
-				name[r][c] = board[r][c].toString();
+		for(int row = 0; row < 5; row++) {
+			for(int col = 0; col < 5; col++) {
+				name[row][col] = board.getTileAt(row, col).toString();
 			}
 		}
-		
 		return name;
 	}
 	
+	public void printBoard() {
+		String[][] boardString = this.getBoardName();
+		
+		for(int row = 0; row < 5; ++row) {
+			for(int col = 0; col < 5; ++col) {
+				System.out.print(board.getTileAt(row, col).toString() + ", ");
+			}
+			System.out.print("\n");
+		}
+	}
 	
-	/**
-	 * Retrieve a rabbit
-	 * @param i The index of the rabbit to retrieve
-	 * @return A Square object that represents the rabbit at index i
-	 */
-//	public Rabbit getRabbit(String str){
-//		if (str.equals("rabbit1")) {
-//			return rabbits.get(0);
-//		} else if (str.equals("rabbit2")) {
-//			return rabbits.get(1);
-//		} else if (str.equals("rabbit3")) {
-//			return rabbits.get(2);
-//		}
-//		return null;
-//	}
-	
-	/**
-	 * Retrieve a rabbit
-	 * @param i The index of the rabbit to retrieve
-	 * @return A Square object that represents the rabbit at index i
-	 */
-//	public Rabbit getRabbit(RabbitColour colour){
-//		if (colour.equals(RabbitColour.BROWN)) {
-//			return rabbits.get(0);
-//		} else if (colour.equals(RabbitColour.BROWN)) {
-//			return rabbits.get(1);
-//		} else if (colour.equals(RabbitColour.GREY)) {
-//			return rabbits.get(2);
-//		} else {
-//			return null;
-//		}
-//	}
+	public static void main(String[] args) {
+		TilePlayBoard board = new TilePlayBoard();
+		
+		board.printBoard();
+	}
 }
