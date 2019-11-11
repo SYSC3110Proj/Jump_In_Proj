@@ -66,6 +66,7 @@ public class Controller {
 							((GridButton) e.getSource()).setSelected(false);
 							
 							view.update(game.getBoardName());
+							game.updateRecord();
 						}
 					}
 					select = false;

@@ -1,5 +1,7 @@
 package mvc;
 
+import java.util.ArrayList;
+
 import gamePieces.Direction;
 import gamePieces.Fox;
 import gamePieces.Rabbit;
@@ -16,11 +18,15 @@ public class PlayBoard {
 	private Rabbit r1, r2, r3; //3 rabbits
 	private Fox[] f1, f2;  //2 foxes
 	//private int cmushroom; //3 mushroom
+	
+	private ArrayList<Square[][]> record;
 
 	/**
 	 * Constructor for PlayBoard class
 	 */
 	public PlayBoard() {
+		record = new ArrayList<Square[][]>();
+		
 		board = new Square[5][5];
 		for (int i = 0; i < 5; i++) {//row
 			for (int j = 0; j < 5; j++) {//column
@@ -34,7 +40,7 @@ public class PlayBoard {
 		board[4][0].setName("Hole");
 		board[4][4].setName("Hole");
 
-		//default gameboard
+		//default gameboard 
 		setRabbit(1,0,3);
 		setRabbit(2,2,4);
 		setRabbit(3,4,1);
@@ -45,6 +51,7 @@ public class PlayBoard {
 		board[1][3].setName("Mushroom");
 		board[4][2].setName("Mushroom");
 		
+		record.add(board);
 	}
 
 
@@ -55,11 +62,23 @@ public class PlayBoard {
 	public boolean isWin() {
 		return r1.atHole() && r2.atHole() && r3.atHole();
 	}
+	
+	public ArrayList<Square[][]> getRecord(){
+		return record;
+	}
+	
+	/**
+	 * should be called every time the board is changed
+	 * to make sure the record is keeping recording
+	 */
+	public void updateRecord() {
+		record.add(board);
+	}
 
 	/**
 	 * Retrieve a fox object
-	 * @param i The index of the fox to be retrieved
-	 * @return the fox object at index i
+	 * @param str the name of fox
+	 * @return the fox object with that name
 	 */
 	public Fox[] getFox(String str) {
 		if(str.equals("fox1")) return f1;
@@ -69,8 +88,8 @@ public class PlayBoard {
 
 	/**
 	 * Retrieve a rabbit
-	 * @param i The index of the rabbit to retrieve
-	 * @return A Square object that represents the rabbit at index i
+	 * @param str is the name of rabbits
+	 * @return A Square object that represents the rabbit with this name
 	 */
 	public Rabbit getRabbit(String str){
 		if(str.equals("rabbit1")) return r1;
@@ -85,7 +104,7 @@ public class PlayBoard {
 	 * @param y The y coordinate of the rabbit location
 	 * @return True if the rabbit was successfully created
 	 */
-	public void setRabbit(int i, int x, int y) {
+	private void setRabbit(int i, int x, int y) {
 		if(i==1) {
 			r1 = new Rabbit(x, y, "rabbit"+i);
 			board[x][y] = r1;
@@ -152,7 +171,7 @@ public class PlayBoard {
 	 * @param direction The direction of the fox
 	 * @return True if the fox was successfully created
 	 */
-	public void setFox(int x, Direction direction) {
+	private void setFox(int x, Direction direction) {
 		if (x == 0 || x == 2 || x == 4) {
 		}
 
@@ -247,7 +266,6 @@ public class PlayBoard {
 			}
 		}
 		return false;
-
 	}
 
 	/**
