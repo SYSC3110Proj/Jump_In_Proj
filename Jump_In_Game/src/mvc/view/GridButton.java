@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.border.Border;
 
 import gamePieces.GridPoint;
+import gamePieces.Token;
 
-public class GridButton extends JToggleButton {
+public class GridButton extends JToggleButton implements PropertyChangeListener {
 	
 	private boolean isHole;
 	private GridPoint gridLocation;	// location in the grid of the button
@@ -64,6 +67,12 @@ public class GridButton extends JToggleButton {
 
 	public void setGridLocation(GridPoint location) {
 		this.gridLocation = location;
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		System.out.println("in propertychangelistener");
+		this.setText(((Token) evt.getNewValue()).getPieceType().toString());
 	}
 	
 	

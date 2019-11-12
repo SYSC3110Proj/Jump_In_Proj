@@ -1,9 +1,13 @@
 package gamePieces;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 public class Tile {
 	private final GridPoint location;
 	private boolean isHole;
 	private Token token;
+	private PropertyChangeSupport support;
 	
 	/**
 	 * Constructor for tile
@@ -16,6 +20,15 @@ public class Tile {
 		this.location = location;
 		this.isHole = isHole;
 		this.token = token;
+		this.support = new PropertyChangeSupport(this);
+	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		support.addPropertyChangeListener(pcl);
+	}
+	
+	public void removePropertyChangeListener(PropertyChangeListener pcl) {
+		support.removePropertyChangeListener(pcl);
 	}
 
 	/**
@@ -47,10 +60,11 @@ public class Tile {
 	}
 
 	/**
-	 * @param token the token to set
+	 * @param newToken the token to set
 	 */
-	public void setToken(Token token) {
-		this.token = token;
+	public void setToken(Token newToken) {
+		support.firePropertyChange("token", this.token, newToken);
+		this.token = newToken;
 		
 		if (this.token != null) {
 			this.token.setLocation(this.location);
