@@ -38,7 +38,7 @@ public class Rabbit extends Token {
 			}
 		} else if (this.location.getCol() == 2 && this.location.getRow() == 2) {
 			return true;
-		} 
+		}
 		
 		return false;
 	}
