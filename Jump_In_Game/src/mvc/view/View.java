@@ -45,13 +45,11 @@ public class View extends JPanel {
 		this.setVisible(true);
 	}
 	
-	//when pieces are moved, update the board by changing names on it
-	public void update(String[][] chess) {
-		for(int row = 0; row < 5; row++) {
-			for(int col = 0; col < 5; col++) {
-				button[row][col].setText(chess[row][col]);
-			}
-		}
+	/**
+	 * @return the button
+	 */
+	public GridButton[][] getButton() {
+		return button;
 	}
 	
 	//when all rabbits are in the hole, pop a dialog of greeting

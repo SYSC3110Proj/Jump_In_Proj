@@ -71,8 +71,13 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		System.out.println("in propertychangelistener");
-		this.setText(((Token) evt.getNewValue()).getPieceType().toString());
+		Token newToken = (Token) evt.getNewValue();
+		
+		if (newToken != null) {
+			this.setText(newToken.getPieceType().toString());
+		} else {
+			this.setText("empty");
+		}
 	}
 	
 	

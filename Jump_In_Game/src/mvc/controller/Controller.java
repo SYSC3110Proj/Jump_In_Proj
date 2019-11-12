@@ -40,6 +40,14 @@ public class Controller {
 		this.game = new TilePlayBoard();
 		this.view = new View();
 		
+		for (int row = 0; row < 5; ++row) {
+			for (int col = 0; col < 5; ++col) {
+				this.game.getBoard().getTileAt(row, col).addPropertyChangeListener(this.view.getButton()[row][col]);
+			}
+		}
+		
+		
+		
 		this.select = false;
 		
 		this.view.initButton(game.getBoardName(), new ActionListener() {
@@ -114,7 +122,6 @@ public class Controller {
 							sourceButton.setSelected(false);
 							((GridButton) e.getSource()).setSelected(false);
 							
-							view.update(game.getBoardName());
 						}
 					}
 					select = false;
