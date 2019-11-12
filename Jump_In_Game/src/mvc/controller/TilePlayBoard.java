@@ -1,5 +1,7 @@
 package mvc.controller;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,30 +10,12 @@ import gamePieces.*;
 
 public class TilePlayBoard {
 
-	private Board board;	// Format: board[row][col]
+	private Board board;
 	private ArrayList<Rabbit> rabbits;
 	private ArrayList<NewFox> foxes;
 	private ArrayList<Token> mushrooms;
-	
-	private static final List<GridPoint> VALID_FOX_LOCATIONS = Collections.unmodifiableList(
-			new ArrayList<GridPoint>() {{
-				add(new GridPoint(0,1));
-				add(new GridPoint(0,3));
-				add(new GridPoint(1,0));
-				add(new GridPoint(1,1));
-				add(new GridPoint(1,2));
-				add(new GridPoint(1,3));
-				add(new GridPoint(1,4));
-				add(new GridPoint(2,1));
-				add(new GridPoint(2,3));
-				add(new GridPoint(3,0));
-				add(new GridPoint(3,1));
-				add(new GridPoint(3,2));
-				add(new GridPoint(3,3));
-				add(new GridPoint(3,4));
-				add(new GridPoint(4,1));
-				add(new GridPoint(4,3));
-			}}) ;
+	private boolean winState;	// Indicator to whether or not the game has been won
+	private PropertyChangeSupport support;
 
 
 	/**
@@ -42,6 +26,9 @@ public class TilePlayBoard {
 		
 		this.rabbits = new ArrayList<Rabbit>(3);
 		this.foxes = new ArrayList<NewFox>(2);
+		this.winState = false;
+		
+		this.support = new PropertyChangeSupport(this);
 		
 		for (int row = 0; row < 5; row++) { // row
 			for (int col = 0; col < 5; col++) { // column
@@ -64,7 +51,7 @@ public class TilePlayBoard {
 		board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
 		
 		// Add Rabbits
-		this.rabbits.add(new Rabbit(new GridPoint(1,4), "rabbit1"));
+		this.rabbits.add(new Rabbit(new GridPoint(0,3), "rabbit1"));
 		this.rabbits.add(new Rabbit(new GridPoint(2,4), "rabbit2"));
 		this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));
 		
@@ -73,10 +60,26 @@ public class TilePlayBoard {
 		board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
 		
 		// Set Foxes
-		this.setFox(new GridPoint(0, 1), Direction.NORTH);
-		this.setFox(new GridPoint(3, 0), Direction.WEST);
+		this.setFox(new GridPoint(1, 1), Direction.SOUTH);
+		this.setFox(new GridPoint(3, 4), Direction.EAST);
 	}
 	
+	/**
+	 * Add a PropertyChangeListener to observe this class
+	 * @param pcl the PropertyChangeListener to observe this class
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		support.addPropertyChangeListener(pcl);
+	}
+	
+	/**
+	 * Remove a PropertyChangeListener
+	 * @param pcl the PropertyChangeListener already observing this class
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener pcl) {
+		support.removePropertyChangeListener(pcl);
+	}
+
 	/**
 	 * Get the board
 	 * @return the board
@@ -88,10 +91,13 @@ public class TilePlayBoard {
 
 	/**
 	 * Test for win condition by checking if all rabbits are in holes
-	 * @return True if all rabbits are in holes, false otherwise
 	 */
-	public boolean checkWinState() {
-		return rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole();
+	private void checkWinState() {
+		System.out.println("old win state: " + this.winState);
+		System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
+		support.firePropertyChange("winState", this.winState, (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole())); // send the propertyChange
+		this.winState = (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole());
+		
 	}
 
 	/**
@@ -112,17 +118,14 @@ public class TilePlayBoard {
 
 	
 	public void setFox(GridPoint foxHead, Direction direction) {
-		System.out.println(VALID_FOX_LOCATIONS.contains(foxHead));
-		if (VALID_FOX_LOCATIONS.contains(foxHead)) {
+		if (NewFox.getValidFoxLocations().contains(foxHead)) {
 			foxes.add(new NewFox(foxHead, direction));
-			
 			NewFox newlyAddedFox = this.foxes.get(this.foxes.size() - 1);
 			
 			// Add the fox tokens to the game board
 			this.board.getTileAt(newlyAddedFox.getHead().getLocation()).setToken(newlyAddedFox.getHead());
 			this.board.getTileAt(newlyAddedFox.getTail().getLocation()).setToken(newlyAddedFox.getTail());
 		} else {
-			System.err.println("Error in here!");
 			throw new IllegalArgumentException("Fox Head is not in a valid location");
 		}
 	}
@@ -145,6 +148,7 @@ public class TilePlayBoard {
 				// Move token to new location and set the token at the old location as null
 				this.board.getTileAt(newLocation).setToken(token);
 				this.board.getTileAt(oldLocation).setToken(null);
+				this.checkWinState();
 			}
 			
 		}
@@ -172,7 +176,7 @@ public class TilePlayBoard {
 	 * @param direction The direction to test the jump
 	 * @return True if the rabbit is able to jump in that direction
 	 */
-	public boolean testJumpDirection(Rabbit rabbit, Direction direction) {
+	private boolean testJumpDirection(Rabbit rabbit, Direction direction) {
 		if (rabbit == null || direction == null) {
 			return false;
 		}
@@ -220,7 +224,7 @@ public class TilePlayBoard {
 	 * @param direction the direction in which the rabbit will move
 	 * @return Point where the rabbit can jump to
 	 */
-	public GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
+	private GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
 		
 		if (direction.equals(Direction.NORTH)) {
 			if (rabbit.getRow() > 0 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
@@ -260,7 +264,7 @@ public class TilePlayBoard {
 		return null;
 	}
 	
-	public boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
+	private boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
 		for (int i = 0; i < path.size(); ++i) {
 			// Test if the tile is occupied by a token other than the given fox
 			if (path.get(i).isOccupied()) {
@@ -281,7 +285,7 @@ public class TilePlayBoard {
 	 * @param endPoint the ending point for the fox movement
 	 * @return ArrayList with all the tiles along the path
 	 */
-	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+	private ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
 		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 		Direction direction = startPoint.getDirectionTo(endPoint);
 		
@@ -313,7 +317,7 @@ public class TilePlayBoard {
 	 * @param newHeadLocation
 	 * @return true if the specified fox can move to the new location
 	 */
-	public boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
+	private boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
 		Direction movementDirection = fox.getHead().getLocation().getDirectionTo(newHeadLocation);
 		
 		if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
@@ -399,21 +403,4 @@ public class TilePlayBoard {
 		}
 		return name;
 	}
-	
-	public void printBoard() {
-		String[][] boardString = this.getBoardName();
-		
-		for(int row = 0; row < 5; ++row) {
-			for(int col = 0; col < 5; ++col) {
-				System.out.print(board.getTileAt(row, col).toString() + ", ");
-			}
-			System.out.print("\n");
-		}
-	}
-	
-//	public static void main(String[] args) {
-//		TilePlayBoard board = new TilePlayBoard();
-//		
-//		board.printBoard();
-//	}
 }

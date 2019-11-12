@@ -35,6 +35,18 @@ public class NewFox implements PropertyChangeListener {
 				add(new GridPoint(4,3));
 			}}) ;
 	
+	public static final List<GridPoint> FOX_BORDER_LOCATIONS = Collections.unmodifiableList(
+			new ArrayList<GridPoint>() {{
+				add(new GridPoint(0,1));
+				add(new GridPoint(0,3));
+				add(new GridPoint(1,0));
+				add(new GridPoint(1,4));
+				add(new GridPoint(3,0));
+				add(new GridPoint(3,4));
+				add(new GridPoint(4,1));
+				add(new GridPoint(4,3));
+			}}) ;
+	
 	public NewFox(GridPoint head, GridPoint tail) {
 		
 		if (VALID_FOX_LOCATIONS.contains(head) == false) {
@@ -201,6 +213,13 @@ public class NewFox implements PropertyChangeListener {
 	 */
 	public static List<GridPoint> getValidFoxLocations() {
 		return VALID_FOX_LOCATIONS;
+	}
+
+	/**
+	 * @return the foxBorderLocations
+	 */
+	public static List<GridPoint> getFoxBorderLocations() {
+		return FOX_BORDER_LOCATIONS;
 	}
 
 	@Override

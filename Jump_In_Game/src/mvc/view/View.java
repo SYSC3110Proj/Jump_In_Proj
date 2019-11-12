@@ -20,7 +20,7 @@ import javax.swing.JPanel;
  * 
  */
 
-public class View extends JPanel {
+public class View extends JPanel implements PropertyChangeListener {
 	/**
 	 * 
 	 */
@@ -86,5 +86,13 @@ public class View extends JPanel {
 				button[row][col].addActionListener(listener);
 			}
 		}
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals("winState") &&  (boolean) evt.getNewValue() == true) {
+			popWin();
+		}
+		
 	}
 }
