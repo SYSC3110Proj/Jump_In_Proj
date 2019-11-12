@@ -48,8 +48,6 @@ public class Controller {
 			}
 		}
 		
-		
-		
 		this.select = false;
 		
 		this.view.initButton(game.getBoardName(), new ActionListener() {
