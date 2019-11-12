@@ -48,7 +48,6 @@ public class NewFox implements PropertyChangeListener {
 			}}) ;
 	
 	public NewFox(GridPoint head, GridPoint tail) {
-		
 		if (VALID_FOX_LOCATIONS.contains(head) == false) {
 			throw new IllegalArgumentException("Head is not at a valid location");
 		}
@@ -61,19 +60,10 @@ public class NewFox implements PropertyChangeListener {
 			throw new IllegalArgumentException("Head and tail must be next to each other");
 		}
 		
-//		if (orientation == Direction.VERTICAL) {
-//			if (head.x != tail.x) {
-//				throw new IllegalArgumentException("Head and tail must be in the same column");
-//			}
-//		} else if (orientation == Direction.HORIZONTAL) {
-//			if (head.y != tail.y) {
-//				throw new IllegalArgumentException("Head and tail must be in same row");
-//			}
-//		}
-		
 		this.head = new Token(head, PieceType.FOX);
 		this.tail = new Token(tail, PieceType.FOX);
 	}
+	
 	
 	public NewFox(GridPoint head, Direction orientation) {
 		
@@ -92,24 +82,6 @@ public class NewFox implements PropertyChangeListener {
 		} else if (orientation.equals(Direction.WEST)) {
 			tailLocation = new GridPoint(head.getRow(), head.getCol()+1);
 		}
-		
-//		if (orientation.equals(Direction.HORIZONTAL)) {
-//			if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow()-1, head.getCol()))) {
-//				tailLocation = new GridPoint(head.getRow()-1, head.getCol());
-//			} else if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow()+1, head.getCol()))) {
-//				tailLocation = new GridPoint(head.getRow()+1, head.getCol());
-//			} else {
-//				throw new IllegalArgumentException("No valid location for the tail piece in a horizontal orientation with head at " + head.toString());
-//			}
-//		} else if (orientation.equals(Direction.VERTICAL)) {
-//			if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow(), head.getCol()-1))) {
-//				tailLocation = new GridPoint(head.getRow(), head.getCol()-1);
-//			} else if (VALID_FOX_LOCATIONS.contains(new GridPoint(head.getRow(), head.getCol()+1))) {
-//				tailLocation = new GridPoint(head.getRow(), head.getCol()+1);
-//			} else {
-//				throw new IllegalArgumentException("No valid location for the tail piece in a vertical orientation with head at " + head.toString());
-//			}
-//		}
 		
 		if (VALID_FOX_LOCATIONS.contains(tailLocation) == false) {
 			throw new IllegalArgumentException("Tail cannot be located at " + tailLocation.toString());
