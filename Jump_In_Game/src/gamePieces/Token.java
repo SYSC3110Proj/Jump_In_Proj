@@ -3,8 +3,14 @@ package gamePieces;
 import java.awt.Point;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 
-public class Token {
+public class Token implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7898018235259814734L;
+	
 	protected GridPoint location;
 	private String name;
 	private PieceType pieceType;
@@ -12,8 +18,9 @@ public class Token {
 
 	
 	/**
-	 * Constructor for PointSquare
-	 * @param location Point object that represents the location on the grid of the square
+	 * Constructor for Token
+	 * @param location Point object that represents the location on the grid of the token
+	 * @param pieceType the type of piece that this token is
 	 */
 	public Token(Point location, PieceType pieceType) {
 		if ((location.x < 0) || (location.x > 4)) {
@@ -29,7 +36,18 @@ public class Token {
 	}
 	
 	/**
-	 * Add a new property change lister
+	 * Copy constructor for Token
+	 * @param token the token to create a deep copy of
+	 */
+	public Token(Token token) {
+		this.location = new GridPoint(token.getLocation());
+		this.name = token.getName();
+		this.pieceType = token.pieceType;
+		this.support = new PropertyChangeSupport(this);
+	}
+	
+	/**
+	 * Add a new property change listener
 	 * @param pcl The PropertyChangeListener to be added
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -61,32 +79,32 @@ public class Token {
 	
 
 	/**
-	 * Get the row of this square
-	 * @return the row of this square (aka y coordinate)
+	 * Get the row of this token
+	 * @return the row of this token (aka y coordinate)
 	 */
 	public int getRow() {
 		return this.location.getRow();
 	}
 
 	/**
-	 * Get the column of the location of this square
-	 * @return The column of this square (aka x coordinate)
+	 * Get the column of the location of this token
+	 * @return The column of this token (aka x coordinate)
 	 */
 	public int getColumn() {
 		return this.location.getCol();
 	}
 	
 	/**
-	 * Get the column of the location of this square
-	 * @return The column of this square (aka x coordinate)
+	 * Get the column of the location of this token
+	 * @return The column of this token (aka x coordinate)
 	 */
 	public int getCol() {
 		return this.location.getCol();
 	}
 	
 	/**
-	 * Get the location of this square
-	 * @return The GridPoint that represents the location of this square
+	 * Get the location of this token
+	 * @return The GridPoint that represents the location of this token
 	 */
 	public GridPoint getLocation() {
 		return this.location;
@@ -97,16 +115,16 @@ public class Token {
 	}
 
 	/**
-	 * Set the name of the object in the square
-	 * @param name The name of the object for this square
+	 * Set the name of the object in the token
+	 * @param name The name of the object for this token
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Get the name of the object in the square
-	 * @return the name of the object in the square
+	 * Get the name of the object in the token
+	 * @return the name of the object in the token
 	 */
 	public String getName() {
 		return name;
@@ -125,7 +143,7 @@ public class Token {
 		
 		GridPoint oldLocation = this.location;
 		this.location.setLocation(newLocation);
-		support.firePropertyChange("location", oldLocation, newLocation); // Fire property changes when the square is moved
+		support.firePropertyChange("location", oldLocation, newLocation); // Fire property changes when the token is moved
 	}
 
 	@Override
