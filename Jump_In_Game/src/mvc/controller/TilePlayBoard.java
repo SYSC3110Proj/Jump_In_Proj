@@ -24,8 +24,8 @@ public class TilePlayBoard {
 	public TilePlayBoard() {
 		this.board = new Board();
 		
-		this.rabbits = new ArrayList<Rabbit>(3);
-		this.foxes = new ArrayList<NewFox>(2);
+		this.rabbits = new ArrayList<Rabbit>();
+		this.foxes = new ArrayList<NewFox>();
 		this.winState = false;
 		
 		this.support = new PropertyChangeSupport(this);
@@ -87,6 +87,14 @@ public class TilePlayBoard {
 	public Board getBoard() {
 		return this.board;
 	}
+	
+	public Rabbit getRabbit(int i) {
+		return rabbits.get(i);
+	}
+	
+	public NewFox getFox(int i) {
+		return foxes.get(i);
+	}
 
 
 	/**
@@ -96,8 +104,9 @@ public class TilePlayBoard {
 		System.out.println("old win state: " + this.winState);
 		System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
 		support.firePropertyChange("winState", this.winState, (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole())); // send the propertyChange
-		this.winState = (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole());
-		
+		for(Rabbit r: rabbits) {
+			winState &= r.atHole();
+		}
 	}
 
 	/**
@@ -181,41 +190,7 @@ public class TilePlayBoard {
 			return false;
 		}
 
-		if (direction.equals(Direction.NORTH)) {
-			if (rabbit.getRow() > 0 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
-				for (int row = rabbit.getRow()-1; row >= 0; row--) {
-					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
-						return true;
-					}
-				}
-			}
-		} else if (direction.equals(Direction.SOUTH)) {
-			if (rabbit.getRow() < 4 && this.board.getTileAt(rabbit.getRow()+1, rabbit.getCol()).isOccupied()) {
-				for (int row = rabbit.getRow()+1; row <= 4; row++) {
-					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
-						return true;
-					}
-				}
-			}
-		} else if (direction.equals(Direction.EAST)) {
-			if (rabbit.getCol() < 4 && board.getTileAt(rabbit.getRow(), rabbit.getCol()+1).isOccupied()) {
-				for (int col = rabbit.getCol()+1; col <= 4; col++) {
-					if (board.getTileAt(rabbit.getRow(), col).isOccupied() == false) {
-						return true;
-					}
-				}
-			}
-		} else if (direction.equals(Direction.WEST)) {
-			if (rabbit.getCol() > 0 && board.getTileAt(rabbit.getRow(), rabbit.getCol()-1).isOccupied()) {
-				for (int col = rabbit.getCol()-1; col >= 0; col--) {
-					if (board.getTileAt(rabbit.getRow(), col).isOccupied() == false) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-		
+		return this.getNearestJumpPoint(rabbit, direction) != null;
 	}
 	
 	/**
@@ -224,7 +199,7 @@ public class TilePlayBoard {
 	 * @param direction the direction in which the rabbit will move
 	 * @return Point where the rabbit can jump to
 	 */
-	private GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
+	public GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
 		
 		if (direction.equals(Direction.NORTH)) {
 			if (rabbit.getRow() > 0 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
@@ -317,46 +292,48 @@ public class TilePlayBoard {
 	 * @param newHeadLocation
 	 * @return true if the specified fox can move to the new location
 	 */
-	private boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
+	public boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
 		Direction movementDirection = fox.getHead().getLocation().getDirectionTo(newHeadLocation);
 		
-		if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
-			// test if head and tail share same row as the new location
-			if (fox.getHead().getRow() == newHeadLocation.getRow() && fox.getTail().getRow() == newHeadLocation.getRow()) { 
+		if(movementDirection != null) {
+			if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
+				// test if head and tail share same row as the new location
+				if (fox.getHead().getRow() == newHeadLocation.getRow() && fox.getTail().getRow() == newHeadLocation.getRow()) { 
 				
-				// Get the location that the tail of the fox would be moved to
-				GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
+					// Get the location that the tail of the fox would be moved to
+					GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
 				
-				// If the new theoretical head and tail locations of the fox are valid locations
-				if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
-					ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
+					// If the new theoretical head and tail locations of the fox are valid locations
+					if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+						ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 					
 					// get the two points the farthest away from one another
-					if (fox.getHead().getLocation().distance(newTailLocation) > fox.getHead().getLocation().distance(newHeadLocation)) {
-						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newTailLocation);
-					} else {
-						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newHeadLocation);
-					}
+						if (fox.getHead().getLocation().distance(newTailLocation) > fox.getHead().getLocation().distance(newHeadLocation)) {
+							tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newTailLocation);
+						} else {
+							tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newHeadLocation);
+						}
 					
-					return this.testNoObstructionsOnFoxPath(fox, tilesInPath);
+						return this.testNoObstructionsOnFoxPath(fox, tilesInPath);
+					}
 				}
-			}
-		} else if (movementDirection.equals(Direction.NORTH) || movementDirection.equals(Direction.SOUTH)) {
-			if (fox.getHead().getCol() == newHeadLocation.getCol() && fox.getTail().getCol() == newHeadLocation.getCol()) {
-				GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
+			} else if (movementDirection.equals(Direction.NORTH) || movementDirection.equals(Direction.SOUTH)) {
+				if (fox.getHead().getCol() == newHeadLocation.getCol() && fox.getTail().getCol() == newHeadLocation.getCol()) {
+					GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
 				
-				// If the new theoretical head and tail locations are valid locations
-				if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
-					ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
+					// If the new theoretical head and tail locations are valid locations
+					if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+						ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 					
-					// get the two points farthest away from one another
-					if (fox.getHead().getLocation().distance(newTailLocation) > fox.getHead().getLocation().distance(newHeadLocation)) {
-						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newTailLocation);
-					} else {
-						tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newHeadLocation);
+						// get the two points farthest away from one another
+						if (fox.getHead().getLocation().distance(newTailLocation) > fox.getHead().getLocation().distance(newHeadLocation)) {
+							tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newTailLocation);
+						} else {
+							tilesInPath = this.getTilesAlongFoxPath(fox.getHead().getLocation(), newHeadLocation);
+						}
+					
+						return this.testNoObstructionsOnFoxPath(fox, tilesInPath);
 					}
-					
-					return this.testNoObstructionsOnFoxPath(fox, tilesInPath);
 				}
 			}
 		}
@@ -403,4 +380,17 @@ public class TilePlayBoard {
 		}
 		return name;
 	}
+	
+	public boolean isWin() {
+		return winState;
+	}
+	
+	public int getRabbitNum() {
+		return rabbits.size();
+	}
+	
+	public int getFoxNum() {
+		return foxes.size();
+	}
+	
 }

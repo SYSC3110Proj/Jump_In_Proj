@@ -82,7 +82,8 @@ public class GridPoint extends Point {
 				return null;
 			}
 		} else {
-			throw new IllegalArgumentException("newLocation is not in a directly north, south, east or west of this point");
+			//throw new IllegalArgumentException("newLocation is not in a directly north, south, east or west of this point");
+			return null;
 		}
 	}
 	
