@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JToggleButton;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -97,6 +98,18 @@ public class Controller {
 //						view.popWin();	
 //					}
 				}
+			}
+		});
+		
+		view.initMenu(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals("undo")) {
+					game.undo();
+				}
+				else if(e.getActionCommand().equals("redo")) {
+					game.redo();
+				}
+				
 			}
 		});
 	}
@@ -216,7 +229,8 @@ public class Controller {
 		JFrame frame=new JFrame("Jump-In");
         frame.setLayout(new BorderLayout());
         frame.setBounds(500, 500, 500, 500);
-        frame.getContentPane().add(con.view);
+        frame.getContentPane().add(con.view, BorderLayout.CENTER);
+        frame.getContentPane().add(con.view.getMenuBar(), BorderLayout.NORTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 	}

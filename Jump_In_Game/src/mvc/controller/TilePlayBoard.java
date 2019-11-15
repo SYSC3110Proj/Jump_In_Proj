@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 import gamePieces.*;
 
@@ -16,6 +17,8 @@ public class TilePlayBoard implements Cloneable{
 	private ArrayList<Token> mushrooms;
 	private boolean winState;	// Indicator to whether or not the game has been won
 	private PropertyChangeSupport support;
+	private Stack<Record> before;
+	private Stack<Record> after;
 
 
 	/**
@@ -23,6 +26,9 @@ public class TilePlayBoard implements Cloneable{
 	 */
 	public TilePlayBoard() {
 		this.board = new Board();
+		
+		this.before = new Stack<Record>();
+		this.after = new Stack<Record>();
 		
 		this.rabbits = new ArrayList<Rabbit>();
 		this.foxes = new ArrayList<NewFox>();
@@ -70,6 +76,9 @@ public class TilePlayBoard implements Cloneable{
 		this.rabbits = new ArrayList<Rabbit>();
 		this.foxes = new ArrayList<NewFox>();
 		this.winState = false;
+		
+		this.before = new Stack<Record>();
+		this.after = new Stack<Record>();
 		
 		this.support = new PropertyChangeSupport(this);
 		
@@ -189,7 +198,6 @@ public class TilePlayBoard implements Cloneable{
 	private void moveToken(Token token, GridPoint newLocation) {
 		
 		// TODO: test if new location is within board
-		
 		// If token is moving
 		if (token.getLocation().equals(newLocation) == false) {
 			if (board.getTileAt(newLocation).getToken() != null) {
@@ -197,6 +205,9 @@ public class TilePlayBoard implements Cloneable{
 			} else {
 				GridPoint oldLocation = token.getLocation();
 				// Move token to new location and set the token at the old location as null
+				
+				before.add(new Record(token, oldLocation, newLocation));
+				
 				this.board.getTileAt(newLocation).setToken(token);
 				this.board.getTileAt(oldLocation).setToken(null);
 				this.checkWinState();
@@ -409,6 +420,22 @@ public class TilePlayBoard implements Cloneable{
 		}*/
 	}
 	
+	public void redo() {
+		if(after.empty())return;
+		
+		Record record = after.pop();
+		moveToken(record.getPiece(), record.getNextLoc());
+	}
+	
+	public void undo() {
+		if(before.empty())return;
+		
+		Record record = before.pop();
+		after.add(record);
+		moveToken(record.getPiece(), record.getLastLoc());
+		before.pop();
+	}
+	
 	public String[][] getBoardName(){
 		String[][] name = new String[5][5];
 		
@@ -445,6 +472,10 @@ public class TilePlayBoard implements Cloneable{
 			e.printStackTrace();
 		}
 		return board;
+	}
+	
+	public Stack<Record> getList(){
+		return before;
 	}
 	
 }

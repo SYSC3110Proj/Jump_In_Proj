@@ -10,6 +10,8 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 /** 
@@ -26,11 +28,21 @@ public class View extends JPanel implements PropertyChangeListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private GridButton[][] button;
+	private JMenuBar menuBar;
+	private JMenuItem undo;
+	private JMenuItem redo;
 	
 	public View() {
 		super();
 		this.setLayout(new GridLayout(5,5));
 		this.setBounds(300, 400, 500, 500);
+		
+		menuBar = new JMenuBar();
+		undo = new JMenuItem("undo");
+		redo = new JMenuItem("redo");
+		
+		menuBar.add(undo);
+		menuBar.add(redo);
 		
 		//use JButton to make a 5x5 board
 		button = new GridButton[5][5];
@@ -43,6 +55,15 @@ public class View extends JPanel implements PropertyChangeListener {
 		}
 		
 		this.setVisible(true);
+	}
+	
+	public void initMenu(ActionListener listener) {
+		undo.addActionListener(listener);
+		redo.addActionListener(listener);
+	}
+	
+	public JMenuBar getMenuBar() {
+		return menuBar;
 	}
 	
 	/**
