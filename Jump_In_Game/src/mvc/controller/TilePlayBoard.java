@@ -8,7 +8,7 @@ import java.util.List;
 
 import gamePieces.*;
 
-public class TilePlayBoard {
+public class TilePlayBoard implements Cloneable{
 
 	private Board board;
 	private ArrayList<Rabbit> rabbits;
@@ -101,12 +101,14 @@ public class TilePlayBoard {
 	 * Test for win condition by checking if all rabbits are in holes
 	 */
 	private void checkWinState() {
-		System.out.println("old win state: " + this.winState);
-		System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
-		support.firePropertyChange("winState", this.winState, (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole())); // send the propertyChange
+		//System.out.println("old win state: " + this.winState);
+		//System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
+		boolean prevWinState = this.winState;
 		for(Rabbit r: rabbits) {
 			winState &= r.atHole();
 		}
+		support.firePropertyChange("winState", prevWinState, this.winState); // send the propertyChange
+		
 	}
 
 	/**
@@ -202,33 +204,33 @@ public class TilePlayBoard {
 	public GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
 		
 		if (direction.equals(Direction.NORTH)) {
-			if (rabbit.getRow() > 0 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
+			if (rabbit.getRow() > 1 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
 				for (int row = rabbit.getRow()-1; row >= 0; row--) {
-					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
+					if (!board.getTileAt(row, rabbit.getCol()).isOccupied()) {
 						return new GridPoint(row, rabbit.getCol());
 					}
 				}
 			}
 		} else if (direction.equals(Direction.SOUTH)) {
-			if (rabbit.getRow() < 4 && this.board.getTileAt(rabbit.getRow()+1, rabbit.getCol()).isOccupied()) {
+			if (rabbit.getRow() < 3 && this.board.getTileAt(rabbit.getRow()+1, rabbit.getCol()).isOccupied()) {
 				for (int row = rabbit.getRow()+1; row <= 4; row++) {
-					if (board.getTileAt(row, rabbit.getCol()).isOccupied() == false) {
+					if (!board.getTileAt(row, rabbit.getCol()).isOccupied()) {
 						return new GridPoint(row, rabbit.getCol());
 					}
 				}
 			}
 		} else if (direction.equals(Direction.EAST)) {
-			if (rabbit.getCol() < 4 && board.getTileAt(rabbit.getRow(), rabbit.getCol()+1).isOccupied()) {
+			if (rabbit.getCol() < 3 && board.getTileAt(rabbit.getRow(), rabbit.getCol()+1).isOccupied()) {
 				for (int j = rabbit.getCol()+1; j <= 4; j++) {
-					if (board.getTileAt(rabbit.getRow(), j).isOccupied() == false) {
+					if (!board.getTileAt(rabbit.getRow(), j).isOccupied()) {
 						return new GridPoint(rabbit.getRow(), j);
 					}
 				}
 			}
 		} else if (direction.equals(Direction.WEST)) {
-			if (rabbit.getCol() > 0 && board.getTileAt(rabbit.getRow(), rabbit.getCol()-1).isOccupied()) {
+			if (rabbit.getCol() > 1 && board.getTileAt(rabbit.getRow(), rabbit.getCol()-1).isOccupied()) {
 				for (int col = rabbit.getCol()-1; col >= 0; col--) {
-					if (board.getTileAt(rabbit.getRow(), col).isOccupied() == false) {
+					if (!board.getTileAt(rabbit.getRow(), col).isOccupied()) {
 						return new GridPoint(rabbit.getRow(), col);
 					}
 				}
@@ -361,9 +363,10 @@ public class TilePlayBoard {
 			}
 			
 			
-		} else {
+		} 
+		/*else {
 			throw new IllegalArgumentException("Illegal fox move");
-		}
+		}*/
 	}
 	
 	public String[][] getBoardName(){
@@ -391,6 +394,17 @@ public class TilePlayBoard {
 	
 	public int getFoxNum() {
 		return foxes.size();
+	}
+	
+	@Override
+	public TilePlayBoard clone() {
+		TilePlayBoard board = null;
+		try{
+			board = (TilePlayBoard)super.clone();
+		}catch(CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return board;
 	}
 	
 }
