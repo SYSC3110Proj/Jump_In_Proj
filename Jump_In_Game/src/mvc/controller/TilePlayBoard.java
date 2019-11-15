@@ -64,6 +64,46 @@ public class TilePlayBoard implements Cloneable{
 		this.setFox(new GridPoint(3, 4), Direction.EAST);
 	}
 	
+	public TilePlayBoard(TilePlayBoard playBoard) {
+		this.board = new Board();
+		
+		this.rabbits = new ArrayList<Rabbit>();
+		this.foxes = new ArrayList<NewFox>();
+		this.winState = false;
+		
+		this.support = new PropertyChangeSupport(this);
+		
+		for (int row = 0; row < 5; row++) { // row
+			for (int col = 0; col < 5; col++) { // column
+				board.setTileAt(row, col, new Tile(new GridPoint(row, col), null, false));
+			}
+		}
+		
+		// set the locations of the Holes
+		board.getTileAt(0, 0).setHole(true);
+		board.getTileAt(0, 4).setHole(true);
+		board.getTileAt(2, 2).setHole(true);
+		board.getTileAt(4, 0).setHole(true);
+		board.getTileAt(4, 4).setHole(true);
+		
+		// Add Mushrooms
+		this.mushrooms = new ArrayList<Token>(2);
+		this.mushrooms.add(new Token(new GridPoint(1, 3), PieceType.MUSHROOM));
+		this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));
+		board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
+		board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
+		
+		// Add Rabbits
+		for(int i=1; i<=playBoard.getRabbitNum(); i++) {
+			this.rabbits.add(new Rabbit(new GridPoint(playBoard.getRabbit(i-1).getRow(), playBoard.getRabbit(i-1).getCol()), "rabbit"+i));
+			board.getTileAt(this.rabbits.get(i-1).getLocation()).setToken(this.rabbits.get(i-1));
+		}
+		
+		//add foxes
+		for(int i=0; i<playBoard.getFoxNum(); i++) {
+			this.setFox(new GridPoint(playBoard.getFox(i).getHead().getRow(), playBoard.getFox(i).getHead().getCol()), playBoard.getFox(i).getOrientation());
+		}
+	}
 	/**
 	 * Add a PropertyChangeListener to observe this class
 	 * @param pcl the PropertyChangeListener to observe this class

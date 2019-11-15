@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import gamePieces.Direction;
 import gamePieces.GridPoint;
 import gamePieces.PieceType;
-import gamePieces.Rabbit;
 import mvc.controller.TilePlayBoard;
 
 public class DFSTree {
@@ -52,6 +51,22 @@ public class DFSTree {
 		
 	}
 	
+	private ArrayList<boolean[][]> copy(ArrayList<boolean[][]> visited){
+		ArrayList<boolean[][]> newVisited = new ArrayList<boolean[][]>();
+		
+		for(int i=0; i<visited.size(); i++) {
+			boolean[][] v = new boolean[5][5];
+			for(int j=0; j<5; j++) {
+				for(int h=0; h<5; h++) {
+					v[j][h] = visited.get(i)[j][h];
+				}
+			}
+			newVisited.add(v);
+		}
+		
+		return newVisited;
+	}
+	
 	private void search(Node node) {
 		
 		if(node.getBoard().isWin()) {
@@ -68,7 +83,7 @@ public class DFSTree {
 						break;
 					}
 				}
-				visited = node.getVisited();
+				//visited = node.getVisited();
 				search(node);
 			}
 		}
@@ -77,19 +92,19 @@ public class DFSTree {
 			int piece = node.getNextWay().getName();
 			int direction = node.getNextWay().getDirection();
 			
-			TilePlayBoard copy = node.getBoard().clone();
+			TilePlayBoard copy = new TilePlayBoard(node.getBoard());
 			//int foxNum = b.getFoxNum();
 			
 			if(piece < copy.getRabbitNum()) {
 				GridPoint point = copy.getNearestJumpPoint(copy.getRabbit(piece), Direction.values()[direction]);
-				if(point != null && !visited.get(piece)[point.getRow()][point.getCol()]) {
-					visited.get(piece)[point.getRow()][point.getCol()] = true;
+				if(point != null && !node.getVisited().get(piece)[point.getRow()][point.getCol()]) {
+					node.getVisited().get(piece)[point.getRow()][point.getCol()] = true;
 					for(int i=0; i<copy.getFoxNum(); i++) {
 						foxRepeat[i] = false;
 					}
 					
 					copy.moveRabbit(copy.getRabbit(piece), point);
-					Node next = new Node(copy, "rabbit" + piece, visited, point, node);
+					Node next = new Node(copy, "rabbit" + piece, copy(node.getVisited()), point, node);
 					node.setNext(next);
 					System.out.println("r" + piece + " " + point.getRow() + point.getCol());
 					search(next);
@@ -107,7 +122,7 @@ public class DFSTree {
 				if(foxRepeat[fox]) {
 					Node prev = node.getPrevNode();
 					prev.removePossibility();
-					visited = prev.getVisited();
+					//visited = prev.getVisited();
 					search(prev);
 				}
 				else if(dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH)) {
@@ -120,7 +135,7 @@ public class DFSTree {
 					else {
 						copy.moveFox(copy.getFox(fox), point);
 						foxRepeat[fox] = true;
-						Node next = new Node(copy, "fox" + fox, visited, point, node);
+						Node next = new Node(copy, "fox" + fox, copy(node.getVisited()), point, node);
 						node.setNext(next);
 						System.out.println("f" + fox + " " + point.getRow() + point.getCol());
 						search(next);
@@ -138,7 +153,7 @@ public class DFSTree {
 					else {
 						copy.moveFox(copy.getFox(fox), point);
 						foxRepeat[fox] = true;
-						Node next = new Node(copy, "fox" + fox, visited, point, node);
+						Node next = new Node(copy, "fox" + fox, copy(node.getVisited()), point, node);
 						node.setNext(next);
 						System.out.println("f"+ fox + " " + point.getRow() + point.getCol());
 						search(next);
@@ -148,7 +163,7 @@ public class DFSTree {
 					Node prev = node.getPrevNode();
 					prev.removePossibility();
 					if(prev.hasNext()) {
-						visited = prev.getVisited();
+						//visited = prev.getVisited();
 						search(prev);
 					}
 					else {
@@ -159,7 +174,7 @@ public class DFSTree {
 								break;
 							}
 						}
-						visited = prev.getVisited();
+						//visited = prev.getVisited();
 						search(prev);
 					}
 				}
