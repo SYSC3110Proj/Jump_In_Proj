@@ -126,7 +126,10 @@ public class TilePlayBoard {
 		System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
 		support.firePropertyChange("winState", this.winState, (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole())); // send the propertyChange
 		this.winState = (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole());
-		
+	}
+	
+	public boolean getWinState() {
+		return this.winState;
 	}
 
 	/**

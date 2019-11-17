@@ -241,7 +241,7 @@ public class Controller {
 		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
 		
 		// For each rabbit, test each jump direction to see if there is a valid move that can be made
-		for(Rabbit rabbit : this.game.getRabbits())  {
+		for (Rabbit rabbit : this.game.getRabbits())  {
 			for (Direction dir : Direction.values()) {
 				if (this.game.testJumpDirection(rabbit, dir)) { // If a valid move for a rabbit can be made in the given direction
 					possibleMoves.add(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir))); // add it to the list of possible moves
@@ -250,7 +250,13 @@ public class Controller {
 		}
 		
 		// For each fox, it can only move in its row
-		
+		for (NewFox fox : this.game.getFoxes()) {
+			for (GridPoint newFoxLocation : fox.getValidMoveLocations()) { // For every valid fox movement location
+				if (this.game.testValidFoxMove(fox, newFoxLocation)) {
+					possibleMoves.add(new MovementData(fox.getHead(), newFoxLocation));
+				}
+			}
+		}
 		
 		return possibleMoves;
 	}
@@ -265,32 +271,9 @@ public class Controller {
 		
 		// Add all possible moves as a child node of the current node
 		
-		
-		
-		
-		for (NewFox fox : this.game.getFoxes()) {
-			if (fox.getOrientation() == Direction.EAST || fox.getOrientation() == Direction.WEST) {
-				int foxStartPoint = 0;
-				int foxEndPoint = 0;
-				if (fox.getOrientation() == Direction.EAST) {
-					foxStartPoint = 0;
-					foxEndPoint = 3;
-				} else {
-					foxStartPoint = 1;
-					foxEndPoint = 4;
-				}
-				
-				// Get all the points the fox could move to up or down
-				for (int i = foxStartPoint; i <= foxEndPoint; ++i) {
-					if (this.game.testValidFoxMove(fox, new GridPoint(fox.getHead().getRow(), i)) == true) {
-						currNode.addChild(new MovementData(fox.getHead(), new GridPoint(fox.getHead().getRow(), i)));
-					}
-				}
-				
-			}
+		while (this.game.getWinState() == false) {
+			// Do the tree here
 		}
-		
-		
 		
 	}
 	

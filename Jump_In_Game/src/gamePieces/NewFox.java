@@ -14,9 +14,17 @@ public class NewFox implements PropertyChangeListener {
 	private Token tail;
 	private Direction orientation;
 	
+	private static final int MIN_ROW = 0;
+	private static final int MAX_ROW = 0;
+	private static final int MIN_COL = 0;
+	private static final int MAX_COL = 0;
+	
+	
 	// List of all valid GridPoints that a fox can be placed in
 	public static final List<GridPoint> VALID_FOX_LOCATIONS = Collections.unmodifiableList(
-			new ArrayList<GridPoint>() {{
+			new ArrayList<GridPoint>() {
+				private static final long serialVersionUID = 4511043816701717338L;
+			{
 				add(new GridPoint(0,1));
 				add(new GridPoint(0,3));
 				add(new GridPoint(1,0));
@@ -36,7 +44,9 @@ public class NewFox implements PropertyChangeListener {
 			}}) ;
 	
 	public static final List<GridPoint> FOX_BORDER_LOCATIONS = Collections.unmodifiableList(
-			new ArrayList<GridPoint>() {{
+			new ArrayList<GridPoint>() {
+				private static final long serialVersionUID = -1912311069171602663L;
+			{
 				add(new GridPoint(0,1));
 				add(new GridPoint(0,3));
 				add(new GridPoint(1,0));
@@ -109,6 +119,30 @@ public class NewFox implements PropertyChangeListener {
 			this.head.move(newLoc);
 			this.tail.move(new GridPoint(newLoc.getRow(), newLoc.getCol()+1));
 		} 
+	}
+	
+	public ArrayList<GridPoint> getValidMoveLocations() {
+		ArrayList<GridPoint> validMoveLocations = new ArrayList<GridPoint>();
+		
+		if (this.orientation == Direction.NORTH) {
+			for (int i = MIN_ROW; i <= MAX_ROW - 1; ++i) {
+				validMoveLocations.add(new GridPoint(i, this.head.getCol()));
+			}
+		} else if (this.orientation == Direction.SOUTH) {
+			for (int i = MIN_ROW + 1; i <= MAX_ROW; ++i) {
+				validMoveLocations.add(new GridPoint(i, this.head.getCol()));
+			}
+		} else if (this.orientation == Direction.EAST) {
+			for (int i = MIN_COL; i <= MAX_COL - 1; ++i) {
+				validMoveLocations.add(new GridPoint(i, this.head.getCol()));
+			}
+		} else if (this.orientation == Direction.WEST) {
+			for (int i = MIN_COL + 1; i <= MAX_COL; ++i) {
+				validMoveLocations.add(new GridPoint(i, this.head.getCol()));
+			}
+		}
+		
+		return validMoveLocations;
 	}
 	
 	/**
