@@ -3,6 +3,8 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JToggleButton;
 import javax.swing.JButton;
@@ -212,21 +214,58 @@ public class Controller {
 		return null;
 	}
 	
+	public void moveForwardAndBack() {
+		Rabbit rabbitToMove = this.game.getRabbits().get(0);
+		MovementData rabbitMoveToMake = new MovementData(this.game.getRabbits().get(0), new GridPoint(2, 3));
+		MovementData foxMoveToMake = new MovementData(this.game.getBoard().getTileAt(new GridPoint(1, 1)).getToken(), new GridPoint(3, 1));
+		
+		
+		try {
+			TimeUnit.SECONDS.sleep(1);
+			this.game.executeMove(rabbitMoveToMake);
+			TimeUnit.SECONDS.sleep(1);
+			this.game.executeMove(foxMoveToMake);
+			TimeUnit.SECONDS.sleep(1);
+			this.game.executeMove(rabbitMoveToMake.getInverseMove());
+			TimeUnit.SECONDS.sleep(1);
+			this.game.executeMove(foxMoveToMake.getInverseMove());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public ArrayList<MovementData> getAllMoves(Node currNode) {
+		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
+		
+		// For each rabbit, test each jump direction to see if there is a valid move that can be made
+		for(Rabbit rabbit : this.game.getRabbits())  {
+			for (Direction dir : Direction.values()) {
+				if (this.game.testJumpDirection(rabbit, dir)) { // If a valid move for a rabbit can be made in the given direction
+					possibleMoves.add(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir))); // add it to the list of possible moves
+				}
+			}
+		}
+		
+		// For each fox, it can only move in its row
+		
+		
+		return possibleMoves;
+	}
+	
 	/**
 	 * Create a tree of possible moves using a breadth first search pattern
 	 */
 	public void findSolution() {
-		Node treeRoot = new Node<MovementData>(null);	// root of the tree is null
+		Node<MovementData> treeRoot = new Node<MovementData>(null);	// root of the tree is null
 		
-		Node currNode = treeRoot;
+		Node<MovementData> currNode = treeRoot;
 		
-		for (Rabbit rabbit : this.game.getRabbits()) {
-			for (Direction dir : Direction.values()) {
-				if (this.game.testJumpDirection(rabbit, dir)) {
-					currNode.addChild(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir)));
-				}
-			}
-		}
+		// Add all possible moves as a child node of the current node
+		
+		
 		
 		
 		for (NewFox fox : this.game.getFoxes()) {
@@ -250,6 +289,8 @@ public class Controller {
 				
 			}
 		}
+		
+		
 		
 	}
 	

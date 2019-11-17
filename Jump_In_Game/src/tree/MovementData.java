@@ -47,5 +47,17 @@ public class MovementData {
 	}
 	
 	
+	public MovementData getInverseMove() {
+		MovementData inverseMove = new MovementData(new Token(this.token), new GridPoint(this.newLocation));
+		
+		GridPoint newStart = inverseMove.getNewLocation(); // Save the new starting location
+		GridPoint newEnd = inverseMove.getToken().getLocation(); // Save the new ending location
+		
+		inverseMove.getToken().setLocation(newStart); // Set the new starting location for the token as the old location of the move
+		inverseMove.setNewLocation(newEnd); // Set the new end location as the original location of the token
+		
+		return inverseMove;
+	}
+	
 
 }

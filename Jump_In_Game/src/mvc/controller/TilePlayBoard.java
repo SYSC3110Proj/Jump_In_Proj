@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import gamePieces.*;
+import tree.MovementData;
 
 public class TilePlayBoard {
 
@@ -414,6 +415,25 @@ public class TilePlayBoard {
 			
 		} else {
 			throw new IllegalArgumentException("Illegal fox move");
+		}
+	}
+	
+	/**
+	 * Execute a move based on the given MovementData object
+	 * @param move
+	 */
+	public void executeMove(MovementData move) {
+		if (move.getToken().getPieceType() == PieceType.RABBIT) {
+			// TODO: add more conditions to prevent errors
+			if (this.rabbits.contains(board.getTileAt(move.getToken().getLocation()).getToken())) {
+				Rabbit rabbitToMove = this.rabbits.get(this.rabbits.indexOf(this.board.getTileAt(move.getToken().getLocation()).getToken()));
+				this.moveRabbit(rabbitToMove, move.getNewLocation());
+			} else {
+				System.err.println("Rabbit cannot be found!");
+			}
+		} else if (move.getToken().getPieceType() == PieceType.FOX) {
+			NewFox foxToMove = this.getFoxAtLocation(move.getToken().getLocation());
+			this.moveFox(foxToMove, move.getNewLocation());
 		}
 	}
 	

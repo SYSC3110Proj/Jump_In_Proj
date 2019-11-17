@@ -7,6 +7,7 @@ package gamePieces;
 
 public class Rabbit extends Token {
 	
+	private static final long serialVersionUID = 4304558624413697278L;
 	private RabbitColour colour;
 		
 	/**
