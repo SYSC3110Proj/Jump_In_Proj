@@ -48,11 +48,11 @@ public class NewFox implements PropertyChangeListener {
 			}}) ;
 	
 	public NewFox(GridPoint head, GridPoint tail) {
-		if (VALID_FOX_LOCATIONS.contains(head) == false) {
+		if (!VALID_FOX_LOCATIONS.contains(head)) {
 			throw new IllegalArgumentException("Head is not at a valid location");
 		}
 		
-		if (VALID_FOX_LOCATIONS.contains(tail) == false) {
+		if (!VALID_FOX_LOCATIONS.contains(tail)) {
 			throw new IllegalArgumentException("tail is not at a valid location");
 		}
 		
@@ -67,7 +67,7 @@ public class NewFox implements PropertyChangeListener {
 	
 	public NewFox(GridPoint head, Direction orientation) {
 		
-		if (VALID_FOX_LOCATIONS.contains(head) == false) {
+		if (!VALID_FOX_LOCATIONS.contains(head)) {
 			throw new IllegalArgumentException("Head is not at a valid location");
 		}
 		
@@ -83,7 +83,7 @@ public class NewFox implements PropertyChangeListener {
 			tailLocation = new GridPoint(head.getRow(), head.getCol()+1);
 		}
 		
-		if (VALID_FOX_LOCATIONS.contains(tailLocation) == false) {
+		if (!VALID_FOX_LOCATIONS.contains(tailLocation)) {
 			throw new IllegalArgumentException("Tail cannot be located at " + tailLocation.toString());
 		}
 		

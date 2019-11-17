@@ -3,8 +3,6 @@ package mvc.controller;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Stack;
 
 import gamePieces.*;
@@ -51,22 +49,22 @@ public class TilePlayBoard implements Cloneable{
 		
 		// Add Mushrooms
 		this.mushrooms = new ArrayList<Token>(2);
-		this.mushrooms.add(new Token(new GridPoint(1, 3), PieceType.MUSHROOM));
+		this.mushrooms.add(new Token(new GridPoint(1, 3), PieceType.MUSHROOM));//1,3
 		this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));
 		board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
 		board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
 		
 		// Add Rabbits
 		this.rabbits.add(new Rabbit(new GridPoint(0,3), "rabbit1"));
-		this.rabbits.add(new Rabbit(new GridPoint(2,4), "rabbit2"));
-		this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));
+		//this.rabbits.add(new Rabbit(new GridPoint(2,4), "rabbit2"));
+		//this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));
 		
 		board.getTileAt(this.rabbits.get(0).getLocation()).setToken(this.rabbits.get(0));
-		board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
-		board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
+		//board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
+		//board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
 		
 		// Set Foxes
-		this.setFox(new GridPoint(1, 1), Direction.SOUTH);
+		this.setFox(new GridPoint(4, 1), Direction.SOUTH);
 		this.setFox(new GridPoint(3, 4), Direction.EAST);
 	}
 	
@@ -153,9 +151,11 @@ public class TilePlayBoard implements Cloneable{
 		//System.out.println("old win state: " + this.winState);
 		//System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
 		boolean prevWinState = this.winState;
+		boolean nowWinState = true;
 		for(Rabbit r: rabbits) {
-			winState &= r.atHole();
+			nowWinState &= r.atHole();
 		}
+		this.winState = nowWinState;
 		support.firePropertyChange("winState", prevWinState, this.winState); // send the propertyChange
 		
 	}
@@ -199,7 +199,7 @@ public class TilePlayBoard implements Cloneable{
 		
 		// TODO: test if new location is within board
 		// If token is moving
-		if (token.getLocation().equals(newLocation) == false) {
+		if (!token.getLocation().equals(newLocation)) {
 			if (board.getTileAt(newLocation).getToken() != null) {
 				throw new IllegalArgumentException("Tile at " + newLocation.toString() + " is occupied!");
 			} else {
@@ -257,32 +257,36 @@ public class TilePlayBoard implements Cloneable{
 		if (direction.equals(Direction.NORTH)) {
 			if (rabbit.getRow() > 1 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
 				for (int row = rabbit.getRow()-1; row >= 0; row--) {
-					if (!board.getTileAt(row, rabbit.getCol()).isOccupied()) {
-						return new GridPoint(row, rabbit.getCol());
+					Tile tile = board.getTileAt(row, rabbit.getCol());
+					if (!tile.isOccupied()) {
+						return tile.getLocation();
 					}
 				}
 			}
 		} else if (direction.equals(Direction.SOUTH)) {
 			if (rabbit.getRow() < 3 && this.board.getTileAt(rabbit.getRow()+1, rabbit.getCol()).isOccupied()) {
 				for (int row = rabbit.getRow()+1; row <= 4; row++) {
-					if (!board.getTileAt(row, rabbit.getCol()).isOccupied()) {
-						return new GridPoint(row, rabbit.getCol());
+					Tile tile = board.getTileAt(row, rabbit.getCol());
+					if (!tile.isOccupied()) {
+						return tile.getLocation();
 					}
 				}
 			}
 		} else if (direction.equals(Direction.EAST)) {
 			if (rabbit.getCol() < 3 && board.getTileAt(rabbit.getRow(), rabbit.getCol()+1).isOccupied()) {
 				for (int j = rabbit.getCol()+1; j <= 4; j++) {
-					if (!board.getTileAt(rabbit.getRow(), j).isOccupied()) {
-						return new GridPoint(rabbit.getRow(), j);
+					Tile tile = board.getTileAt(rabbit.getRow(), j);
+					if (!tile.isOccupied()) {
+						return tile.getLocation();
 					}
 				}
 			}
 		} else if (direction.equals(Direction.WEST)) {
 			if (rabbit.getCol() > 1 && board.getTileAt(rabbit.getRow(), rabbit.getCol()-1).isOccupied()) {
 				for (int col = rabbit.getCol()-1; col >= 0; col--) {
-					if (!board.getTileAt(rabbit.getRow(), col).isOccupied()) {
-						return new GridPoint(rabbit.getRow(), col);
+					Tile tile = board.getTileAt(rabbit.getRow(), col);
+					if (!tile.isOccupied()) {
+						return tile.getLocation();
 					}
 				}
 			}
@@ -425,6 +429,10 @@ public class TilePlayBoard implements Cloneable{
 		
 		Record record = after.pop();
 		moveToken(record.getPiece(), record.getNextLoc());
+		if(record.getPiece().getPieceType().equals(PieceType.FOX)) {
+			record = after.pop();
+			moveToken(record.getPiece(), record.getNextLoc());
+		}
 	}
 	
 	public void undo() {
@@ -434,14 +442,13 @@ public class TilePlayBoard implements Cloneable{
 		after.add(record);
 		moveToken(record.getPiece(), record.getLastLoc());
 		before.pop();
-	}
-	
-	public void undoAndClear() {
-		if(before.empty())return;
 		
-		Record record = before.pop();
-		moveToken(record.getPiece(), record.getLastLoc());
-		before.pop();
+		if(record.getPiece().getPieceType().equals(PieceType.FOX)) {
+			record = before.pop();
+			after.add(record);
+			moveToken(record.getPiece(), record.getLastLoc());
+			before.pop();
+		}
 	}
 	
 	public String[][] getBoardName(){
@@ -471,19 +478,8 @@ public class TilePlayBoard implements Cloneable{
 		return foxes.size();
 	}
 	
-	@Override
-	public TilePlayBoard clone() {
-		TilePlayBoard board = null;
-		try{
-			board = (TilePlayBoard)super.clone();
-		}catch(CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return board;
-	}
-	
-	public Stack<Record> getList(){
-		return before;
+	public Record getUndoInfo() {
+		return after.peek();
 	}
 	
 }

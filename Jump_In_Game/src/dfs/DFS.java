@@ -10,146 +10,184 @@ import mvc.controller.TilePlayBoard;
 
 public class DFS {
 	
-	private DFSNode head;
 	private TilePlayBoard temp;
-	private int level;
-	private int state;
+	private Stack<Choice> solvent;
+	private Stack<Record> rabbitMoveRecord;
+	private ArrayList<Choice> choiceList;
+	private int record;
+	private int num;
+	private ArrayList<boolean[][]> visited;
+
 	
 	public DFS(TilePlayBoard board) {
 		this.temp = new TilePlayBoard(board);
-		this.level = 3;
-		this.state = 0;
-		//this.undoNum = 0;
-		
-		ArrayList<Choice> choices = new ArrayList<Choice>();
+		solvent = new Stack<Choice>();
+		rabbitMoveRecord = new Stack<Record>();
+		choiceList = new ArrayList<Choice>();
 		
 		for(int i=0; i<board.getRabbitNum(); i++) {
 			for(int j=0; j<4; j++) {
-				choices.add(new Choice(i,j));
-			}
-		}
-		for(int i=board.getRabbitNum(); i<board.getFoxNum()+board.getRabbitNum();i++) {
-			for(int j=1; j<4; j++) {
-				choices.add(new Choice(i,j));
+				choiceList.add(new Choice(i,j));
 			}
 		}
 		
-		head = new DFSNode(-1, -1, null, choices);
-		head.setNextNode();
-		search(head);
-		
-		
-		//getSolvent();		
-	}
-
-	private void search(DFSNode node) {
-		if(temp.isWin()) return;
-		
-		if(!node.hasOtherWayToGo() || state==level) {
-			if(!node.hasPrev())return;
-			else {
-				node = node.getPrev();
-				node.setNextNode();
-				temp.undoAndClear();
-				state--;
-				System.out.println("no other way to go, back");
-				search(node);
-			}
-		}
-		
-		else {
-			node = node.getNext();
-			int piece = node.getName();
-			int direc = node.getDirec();
-			
-			if(piece < temp.getRabbitNum()) {
-				GridPoint point = temp.getNearestJumpPoint(temp.getRabbit(piece), Direction.values()[direc]); 
-				if(point != null) {//can move rabbit
-					temp.moveRabbit(temp.getRabbit(piece), point);
-					if(node.hasOtherWayToGo()) {
-						//System.out.println("move rabbit"+piece + "to" + Direction.values()[direc]);
-						node.setNextNode();
-						state++;
-					}
-					else {//can move rabbit but there is no next to go
-						node = node.getPrev();
-						node.setNextNode();
-						temp.undoAndClear();
-						//System.out.println("move rabbit"+piece + "back from" + Direction.values()[direc]);
+		visited = new ArrayList<boolean[][]>();
+		for(int i=0; i<temp.getRabbitNum(); i++) {
+			boolean[][] v = new boolean[5][5];
+			//set occupied place as visited
+			for(int r=0; r<5; r++) {
+				for(int c=0; c<5; c++) {
+					if(temp.getBoard().getTileAt(r, c).isOccupied()) {
+						v[r][c] = true;
 					}
 				}
-				else {//unable to move rabbit
-					node = node.getPrev();
-					node.setNextNode();
-					//System.out.println("cannot move rabbit"+piece + "to" + Direction.values()[direc]);
-				}
 			}
-			else {//move fox
-				int fox = piece-temp.getRabbitNum();
-				Direction orientation = temp.getFox(fox).getOrientation();
+			//set location of fox as not visited
+			for(int j=0; j<temp.getFoxNum(); j++) {
+				int row1 = temp.getFox(j).getHead().getRow();
+				int row2 = temp.getFox(j).getTail().getRow();
+				int col1 = temp.getFox(j).getHead().getCol();
+				int col2 = temp.getFox(j).getTail().getCol();
 				
-				if(orientation.equals(Direction.NORTH) || orientation.equals(Direction.SOUTH)) {
-					int col = temp.getFox(fox).getHead().getCol();
-					GridPoint point =  new GridPoint(direc, col);
-					if(temp.testValidFoxMove(temp.getFox(fox), point)){
-						temp.moveFox(temp.getFox(fox), point);
-						if(node.hasOtherWayToGo()) {//can move fox and has next
-							state++;
-							node.setNextNode();
-							//System.out.println("move fox"+ fox + "to" + direc);
-							//cur = cur.getNext();
-						}
-						else {//can move fox but not has next
-							node = node.getPrev();
-							node.setNextNode();
-							temp.undoAndClear();
-							//System.out.println("move fox"+ fox + "back from" + direc);
-						}
-					}
-					else {//cannot move fox
-						node = node.getPrev();
-						node.setNextNode();
-						//System.out.println("can not move fox"+ fox + "to" + direc);
-					}
-				}
-				else if(orientation.equals(Direction.EAST) || orientation.equals(Direction.WEST)) {
-					int row = temp.getFox(fox).getHead().getRow();
-					GridPoint point =  new GridPoint(row, direc);
-					if(temp.testValidFoxMove(temp.getFox(fox), point)){
-						temp.moveFox(temp.getFox(fox), point);
-						if(node.hasOtherWayToGo()) {//can move fox and has next
-							state++;
-							node.setNextNode();
-							//System.out.println("move fox"+ fox + "to" + direc);
-							//cur = cur.getNext();
-						}
-						else {//can move fox but not has next
-							node = node.getPrev();
-							node.setNextNode();
-							temp.undoAndClear();
-							//System.out.println("move fox"+ fox + "to" + direc);
-						}
-					}
-					else {//cannot move fox
-						node = node.getPrev();
-						node.setNextNode();
-						//System.out.println("can not move fox"+ fox + "to" + direc);
-					}
-				}
+				v[row1][col1] = false;
+				v[row2][col2] = false;
 			}
-			search(node);
+			visited.add(v);
 		}
 		
+		record = 0;
+		num = 0;
+		
+		solve();
+	
 	}
 	
+	private GridPoint getEmptyLocForR(int rabbit, int direction) {
+		int col = temp.getRabbit(rabbit).getCol();
+		int row = temp.getRabbit(rabbit).getRow();
+		Direction direc = Direction.values()[direction];
+		
+		if(direc.equals(Direction.NORTH)) {
+			if(row<2)return null;
+			return new GridPoint(row-1, col);
+		}
+		else if(direc.equals(Direction.SOUTH)) {
+			if(row>2)return null;
+			return new GridPoint(row+1, col);
+		}
+		else if(direc.equals(Direction.EAST)) {
+			if(col>2)return null;
+			return new GridPoint(row, col+1);
+		}
+		else if(direc.equals(Direction.WEST)) {
+			if(col<2)return null;
+			return new GridPoint(row, col-1);
+		}
+		return null;
+	}
 	
+
+	public void solve() {
+		
+		while(!temp.isWin()) {
+			if(num == 500) break;
+			
+			if(record >= temp.getRabbitNum()*4) { //if all cases have been tried and none success
+				temp.undo();
+				Record undoInfo = this.rabbitMoveRecord.pop();
+				int name = undoInfo.getPieceNum();
+				int row = undoInfo.getNextLoc().getRow();
+				int col = undoInfo.getNextLoc().getCol();
+				
+				visited.get(name)[row][col] = false;
+				
+				Choice c = this.solvent.pop();
+				record = (c.getName())*4 + c.getDirection();
+				//System.out.println("record" + record + ", undo");
+			}
+			//System.out.println(choiceList.get(record).getName() + ":" + choiceList.get(record).getDirection());
+			
+			int rabbit = this.choiceList.get(record).getName();
+			int direction = this.choiceList.get(record).getDirection();
+			
+			GridPoint rabbitPoint = temp.getNearestJumpPoint(temp.getRabbit(rabbit), Direction.values()[direction]);
+			if(rabbitPoint!= null) {//if rabbit can jump
+				//if that point is not visited, which means rabbit is not repeat its behavior
+				if(!visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()]) {
+					solvent.add(choiceList.get(record));
+					GridPoint before = temp.getRabbit(rabbit).getLocation();
+					temp.moveRabbit(temp.getRabbit(rabbit), rabbitPoint);
+					this.rabbitMoveRecord.add(new Record(rabbit, before, temp.getRabbit(rabbit).getLocation()));
+					record = 0;
+					visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()] = true;
+					num++;
+					//System.out.println("move rabbit" + rabbit + "to" + Direction.values()[direction]);
+				}
+				//that location is visited
+				else {
+					//System.out.println("cannot move(case1), try next");
+					record++;
+				}
+			}
+			else {//rabbit cannot jump to that location
+				GridPoint point = getEmptyLocForR(rabbit, direction);
+				int foxN = -1;
+				GridPoint foxHead = null;
+				//fox can move to help
+				if(point != null) {
+					for(int i=0; i<temp.getFoxNum(); i++) {
+						if(temp.testValidFoxMove(temp.getFox(i), point)) {
+							foxN = i;
+							foxHead = temp.getFox(i).getHead().getLocation();
+							temp.moveFox(temp.getFox(i), point);
+							//System.out.println("move fox" + i + "to" + point.getRow() + "," + point.getCol());
+						}
+					}
+					rabbitPoint = temp.getNearestJumpPoint(temp.getRabbit(rabbit), Direction.values()[direction]);
+					//can jump to there now
+					if(rabbitPoint != null && !visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()]) {
+						solvent.add(choiceList.get(record));
+						GridPoint before = temp.getRabbit(rabbit).getLocation();
+						temp.moveRabbit(temp.getRabbit(rabbit), rabbitPoint);
+						this.rabbitMoveRecord.add(new Record(rabbit, before, temp.getRabbit(rabbit).getLocation()));
+						record = 0;
+						visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()] = true;
+						num++;
+						//System.out.println("move rabbit" + rabbit + "to" + Direction.values()[direction]);
+					}
+					//still cannot jump to that location
+					else {//undo fox move
+						if(foxN!=-1 && !temp.getFox(foxN).getHead().getLocation().equals(foxHead)) temp.undo();
+						//System.out.println("cannot move(case2), try next");
+						record++;
+					}
+				}
+				//fox cannot move to that place
+				else {
+					//System.out.println("no point, try next, undo fox move");
+					record++;
+				}
+			}
+		
+		}
+	}
+	
+
 	public void getSolvent() {
-		/*Stack<Record> stack = temp.getList();
-		while(!stack.isEmpty()) {
-			Record r = stack.pop();
-			System.out.println(r.getPiece().getName() + ":" + r.getNextLoc().getRow() + "," + r.getNextLoc().getCol());
-		}*/
-		System.out.println(temp.isWin());
+		if(temp.isWin()) {
+			Stack<Choice> temp = new Stack<Choice>();
+			while(!solvent.isEmpty()) {
+				temp.add(solvent.pop());
+			}
+			while(!temp.isEmpty()) {
+				Choice r = temp.pop();
+				System.out.println("move rabbit" + (r.getName()+1) + " to " + Direction.values()[r.getDirection()]);
+			}
+		}
+		else {
+			System.out.println("no solution for this puzzle");
+		}
+		
 	}
 	
 	public static void main(String[] args) {
