@@ -401,7 +401,7 @@ public class TilePlayBoard implements Cloneable{
 	// TODO: implement this function
 	public void moveFox(NewFox fox, GridPoint newLocation) {
 		// If the fox can move
-		if (testValidFoxMove(fox, newLocation) == true) {
+		if (testValidFoxMove(fox, newLocation)) {
 			// move the fox one token at a time to its new location
 			
 			// If the fox is moving backwards, move the tail first
@@ -432,6 +432,14 @@ public class TilePlayBoard implements Cloneable{
 		
 		Record record = before.pop();
 		after.add(record);
+		moveToken(record.getPiece(), record.getLastLoc());
+		before.pop();
+	}
+	
+	public void undoAndClear() {
+		if(before.empty())return;
+		
+		Record record = before.pop();
 		moveToken(record.getPiece(), record.getLastLoc());
 		before.pop();
 	}

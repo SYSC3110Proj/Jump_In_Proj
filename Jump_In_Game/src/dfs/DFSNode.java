@@ -7,13 +7,20 @@ public class DFSNode {
 	private int direc;
 	
 	private DFSNode prevNode;
-	private ArrayList<DFSNode> nextNodes;
+	private DFSNode nextNode;
 	
-	public DFSNode(int name, int direc, DFSNode prevNode) {
+	private ArrayList<Choice> choices;
+	private int choiceNum;
+	private int maxChoiceNum;
+	
+	
+	public DFSNode(int name, int direc, DFSNode prevNode, ArrayList<Choice> choices) {
 		this.name = name;
 		this.direc = direc;
-		nextNodes = new ArrayList<DFSNode>();
+		this.choices = choices;
 		this.prevNode = prevNode;
+		this.choiceNum = 0;
+		this.maxChoiceNum = choices.size();
 	}
 	
 	public int getName() {
@@ -24,37 +31,37 @@ public class DFSNode {
 		return this.direc;
 	}
 	
-	public void removeNext() {
-		if(hasNext()) {
-			nextNodes.remove(0);
+	public void setNextNode() {
+		if(hasOtherWayToGo()) {
+			this.nextNode = new DFSNode(choices.get(choiceNum).getName(), choices.get(choiceNum).getDirection(), this, this.choices);
+			this.choiceNum++;
 		}
 	}
 	
-	public boolean hasNext() {
-		return !nextNodes.isEmpty();
+	public boolean hasOtherWayToGo() {
+		return choiceNum < maxChoiceNum;
 	}
 	
 	public boolean hasPrev() {
 		return this.prevNode!=null;
 	}
 	
-	public void addNext(DFSNode node) {
-		nextNodes.add(node);
-		node.prevNode = this;
+	public boolean hasNext() {
+		return this.nextNode != null;
+	}
+	
+	public void setPrev(DFSNode node) {
+		this.prevNode = node;
 	}
 	
 	public DFSNode getPrev() {
-		return this.prevNode;
-	}
-	
-	public DFSNode getNext() {
-		if(hasNext()) {
-			return nextNodes.get(0);
+		if(prevNode != null) {
+			return this.prevNode;
 		}
 		return this;
 	}
 	
-	public ArrayList<DFSNode> getNextList(){
-		return nextNodes;
+	public DFSNode getNext() {
+		return nextNode;
 	}
 }
