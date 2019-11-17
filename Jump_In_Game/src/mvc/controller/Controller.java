@@ -14,6 +14,8 @@ import gamePieces.NewFox;
 import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import mvc.view.*;
+import tree.MovementData;
+import tree.Node;
 import gamePieces.Tile;
 
 /** 
@@ -208,6 +210,47 @@ public class Controller {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Create a tree of possible moves using a breadth first search pattern
+	 */
+	public void findSolution() {
+		Node treeRoot = new Node<MovementData>(null);	// root of the tree is null
+		
+		Node currNode = treeRoot;
+		
+		for (Rabbit rabbit : this.game.getRabbits()) {
+			for (Direction dir : Direction.values()) {
+				if (this.game.testJumpDirection(rabbit, dir)) {
+					currNode.addChild(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir)));
+				}
+			}
+		}
+		
+		
+		for (NewFox fox : this.game.getFoxes()) {
+			if (fox.getOrientation() == Direction.EAST || fox.getOrientation() == Direction.WEST) {
+				int foxStartPoint = 0;
+				int foxEndPoint = 0;
+				if (fox.getOrientation() == Direction.EAST) {
+					foxStartPoint = 0;
+					foxEndPoint = 3;
+				} else {
+					foxStartPoint = 1;
+					foxEndPoint = 4;
+				}
+				
+				// Get all the points the fox could move to up or down
+				for (int i = foxStartPoint; i <= foxEndPoint; ++i) {
+					if (this.game.testValidFoxMove(fox, new GridPoint(fox.getHead().getRow(), i)) == true) {
+						currNode.addChild(new MovementData(fox.getHead(), new GridPoint(fox.getHead().getRow(), i)));
+					}
+				}
+				
+			}
+		}
+		
 	}
 	
 	public static void main(String[] args) {

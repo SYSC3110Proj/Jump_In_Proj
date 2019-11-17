@@ -65,6 +65,34 @@ public class TilePlayBoard {
 	}
 	
 	/**
+	 * @return the rabbits
+	 */
+	public ArrayList<Rabbit> getRabbits() {
+		return rabbits;
+	}
+
+	/**
+	 * @param rabbits the rabbits to set
+	 */
+	public void setRabbits(ArrayList<Rabbit> rabbits) {
+		this.rabbits = rabbits;
+	}
+
+	/**
+	 * @return the foxes
+	 */
+	public ArrayList<NewFox> getFoxes() {
+		return foxes;
+	}
+
+	/**
+	 * @param foxes the foxes to set
+	 */
+	public void setFoxes(ArrayList<NewFox> foxes) {
+		this.foxes = foxes;
+	}
+
+	/**
 	 * Add a PropertyChangeListener to observe this class
 	 * @param pcl the PropertyChangeListener to observe this class
 	 */
@@ -176,7 +204,7 @@ public class TilePlayBoard {
 	 * @param direction The direction to test the jump
 	 * @return True if the rabbit is able to jump in that direction
 	 */
-	private boolean testJumpDirection(Rabbit rabbit, Direction direction) {
+	public boolean testJumpDirection(Rabbit rabbit, Direction direction) {
 		if (rabbit == null || direction == null) {
 			return false;
 		}
@@ -224,7 +252,7 @@ public class TilePlayBoard {
 	 * @param direction the direction in which the rabbit will move
 	 * @return Point where the rabbit can jump to
 	 */
-	private GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
+	public GridPoint getNearestJumpPoint(Rabbit rabbit, Direction direction) {
 		
 		if (direction.equals(Direction.NORTH)) {
 			if (rabbit.getRow() > 0 && this.board.getTileAt(rabbit.getRow()-1, rabbit.getCol()).isOccupied()) {	// check if rabbit can move upwards, and if the space north of the rabbit is occupied
@@ -264,7 +292,7 @@ public class TilePlayBoard {
 		return null;
 	}
 	
-	private boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
+	public boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
 		for (int i = 0; i < path.size(); ++i) {
 			// Test if the tile is occupied by a token other than the given fox
 			if (path.get(i).isOccupied()) {
@@ -285,7 +313,7 @@ public class TilePlayBoard {
 	 * @param endPoint the ending point for the fox movement
 	 * @return ArrayList with all the tiles along the path
 	 */
-	private ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
 		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 		Direction direction = startPoint.getDirectionTo(endPoint);
 		
@@ -317,7 +345,7 @@ public class TilePlayBoard {
 	 * @param newHeadLocation
 	 * @return true if the specified fox can move to the new location
 	 */
-	private boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
+	public boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
 		Direction movementDirection = fox.getHead().getLocation().getDirectionTo(newHeadLocation);
 		
 		if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
