@@ -59,14 +59,14 @@ public class Controller {
 					name = ((GridButton) e.getSource()).getText();
 					sourceTile = game.getBoard().getTileAt((((GridButton) e.getSource()).getGridLocation()));
 					
-					System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
-					System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
+					//System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
+					//System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
 					
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
 					
-					System.out.println("sourceTile = " + sourceTile);
-					System.out.println("sourcePoint = " + sourcePoint);
+					//System.out.println("sourceTile = " + sourceTile);
+					//System.out.println("sourcePoint = " + sourcePoint);
 					
 					select = true;
 				} else {	// If the player is in the movement phase
@@ -78,8 +78,8 @@ public class Controller {
 							destTile = game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation());
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
 							
-							System.out.println("destTile = " + destTile);
-							System.out.println("destPoint = " + destPoint);
+							//System.out.println("destTile = " + destTile);
+							//System.out.println("destPoint = " + destPoint);
 							
 							if (sourceTile.getToken().getPieceType() == PieceType.RABBIT) {
 								moveRabbit();
