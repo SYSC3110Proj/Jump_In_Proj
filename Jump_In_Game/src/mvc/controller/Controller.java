@@ -264,20 +264,66 @@ public class Controller {
 	}
 	
 	/**
+	 * Check a list of moves to see if any will create a win state
+	 * @param listOfMoves the list of moves to test
+	 * @return true if any of the moves will create a win
+	 */
+	public boolean checkListOfMovesForWin(ArrayList<MovementData> listOfMoves) {
+		for (MovementData move : listOfMoves) {
+			this.game.executeMove(move);
+			if (this.game.getWinState() == true) {
+				System.out.println("Winning move = " + move.toString());
+				return true;
+			} else {
+				this.game.executeMove(move.getInverseMove());
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Create a tree of possible moves using a breadth first search pattern
 	 */
 	public void findSolution() {
 		Node<MovementData> treeRoot = new Node<MovementData>(null);	// root of the tree is null
 		
 		Node<MovementData> currNode = treeRoot;
-		Queue<Node> movesToTest = new LinkedList<Node>();
+		Queue<Node<MovementData>> movesToTest = new LinkedList<Node<MovementData>>();
+		
+		// Add all the possible moves from the root position as child nodes to the root
+		for (MovementData move : this.getAllMoves(treeRoot)) {
+			treeRoot.addChild(move);
+			movesToTest.add(treeRoot.getChildren().get(treeRoot.getChildren().size()-1));
+		}
+		
+		System.out.println(treeRoot);
+		System.out.println(movesToTest);
+		
 		
 		// Add all possible moves as a child node of the current node
 		
-		while (this.game.getWinState() == false) {
-			// Do the tree here
-			ArrayList<MovementData> childData = this.getAllMoves(currNode);
-		}
+//		while (true) {
+//			// Get the list of all moves from this location
+//			ArrayList<MovementData> childMoves = this.getAllMoves(currNode);
+//			
+//			if (this.checkListOfMovesForWin(childMoves) == true) {
+//				// TODO: do something here to get the winning move
+//				break; // exit from the loop
+//			}
+//			
+//			// Add child nodes of the possible moves to the current node
+//			for (MovementData move : childMoves) {
+//				currNode.addChild(move);
+//				movesToTest.add(currNode.getChildren().get(currNode.getChildren().size()-1));
+//			}
+//			
+//			// Reverse the move 
+//			
+//			currNode = movesToTest.poll();
+//			
+//			
+//		}
 		
 	}
 	
@@ -290,6 +336,8 @@ public class Controller {
         frame.getContentPane().add(con.view);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        
+        con.findSolution();
 	}
 	
 

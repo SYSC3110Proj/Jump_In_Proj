@@ -34,7 +34,6 @@ public class Node<T> {
 	 * @param parent The parent node for this node
 	 */
 	public void setParent(Node<T> parent) {
-		parent.addChild(this);
 		this.parent = parent;
 	}
 	
@@ -55,6 +54,18 @@ public class Node<T> {
 	public void addChild(Node<T> child) {
 		child.setParent(this);
 		this.children.add(child);
+	}
+	
+	public boolean hasChild(Node<T> child) {
+		return this.children.contains(child) ? true : false;
+	}
+	
+	/**
+	 * Get the list of all child nodes for this node
+	 * @return
+	 */
+	public List<Node<T>> getChildren() {
+		return this.children;
 	}
 	
 	/**
@@ -102,6 +113,29 @@ public class Node<T> {
 	 */
 	public void removeParent() {
 		this.parent = null;
+	}
+
+	@Override
+	public String toString() {
+		String parentString = "";
+		String childrenString = "";
+		
+		if (this.isRoot()) {
+			parentString = "Root";
+		} else {
+			parentString = this.parent.toString();
+		}
+		
+		if (this.isLeaf()) {
+			childrenString = "leaf";
+		} else {
+			childrenString = this.children.toString();
+		}
+		
+		
+		
+		String dataString = this.data.toString();
+		return "Node [parent=" + parentString + ", data=" + dataString + ", children=" + childrenString + "]";
 	}
 
 }
