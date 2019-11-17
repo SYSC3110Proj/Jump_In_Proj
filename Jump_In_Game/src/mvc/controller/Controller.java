@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JToggleButton;
@@ -268,11 +270,13 @@ public class Controller {
 		Node<MovementData> treeRoot = new Node<MovementData>(null);	// root of the tree is null
 		
 		Node<MovementData> currNode = treeRoot;
+		Queue<Node> movesToTest = new LinkedList<Node>();
 		
 		// Add all possible moves as a child node of the current node
 		
 		while (this.game.getWinState() == false) {
 			// Do the tree here
+			ArrayList<MovementData> childData = this.getAllMoves(currNode);
 		}
 		
 	}
