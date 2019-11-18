@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The NewFox class has a location for the head and the tail, and the direction the fox is facing. It also contains methods
+ * for constructing instances of itself, and methods to determine where it is, where it can be, and to actually move it.
+ */
 
 public class NewFox implements PropertyChangeListener {
 	
