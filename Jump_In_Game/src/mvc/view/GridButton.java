@@ -2,14 +2,10 @@ package mvc.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JButton;
 import javax.swing.JToggleButton;
-import javax.swing.border.Border;
 
 import gamePieces.GridPoint;
 import gamePieces.Token;
