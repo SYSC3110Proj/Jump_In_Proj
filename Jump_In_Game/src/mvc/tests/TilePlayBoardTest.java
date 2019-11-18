@@ -10,6 +10,11 @@ import gamePieces.NewFox;
 import gamePieces.Rabbit;
 import mvc.controller.TilePlayBoard;
 
+/**
+ * The TilePlayBoardTest class contains tests for all the methods in the TilePlayBoard class.
+ * @author Tiantian Lin
+ */
+
 public class TilePlayBoardTest {
 
 	
@@ -17,7 +22,7 @@ public class TilePlayBoardTest {
 	@Test
 	public void testSetFox() {
 		TilePlayBoard instance = new TilePlayBoard();
-		instance.setFox(new GridPoint(2,1), Direction.SOUTH);
+		instance.setFox(new GridPoint(2,1), Direction.SOUTH,"fox1");
 		NewFox newFox = instance.getFoxAtLocation(new GridPoint(2,1));
 		assertEquals(Direction.SOUTH,newFox.getOrientation());
 	}

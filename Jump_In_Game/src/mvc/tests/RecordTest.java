@@ -9,6 +9,11 @@ import gamePieces.PieceType;
 import gamePieces.Token;
 import mvc.controller.Record;
 
+/**
+ * The RecordTest class contains tests for all the methods in the Record class.
+ * @author Tiantian Lin
+ */
+
 public class RecordTest {
 
 	
