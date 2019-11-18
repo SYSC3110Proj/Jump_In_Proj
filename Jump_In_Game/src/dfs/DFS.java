@@ -17,6 +17,7 @@ public class DFS {
 	private int record;
 	private int num;
 	private ArrayList<boolean[][]> visited;
+	private GridPoint nextLoc;
 
 	public DFS(TilePlayBoard board) {
 		this.temp = new TilePlayBoard();
@@ -56,6 +57,7 @@ public class DFS {
 		
 		record = 0;
 		num = 0;
+		nextLoc = new GridPoint(-1,-1);
 		
 		solve();
 	
@@ -226,12 +228,18 @@ public class DFS {
 			while(!record.isEmpty()) {
 				Record r = record.pop();
 				if(r.getPieceNum() < temp.getRabbitNum()) {
+					nextLoc = r.getNextLoc();
 					System.out.println("move rabbit" + (r.getPieceNum()+1) + " to " + r.getNextLoc().getRow() + "," + r.getNextLoc().getCol());
 				}
 			}
 		}
+
 		
 	}
+	public GridPoint getnextLoc() {
+		return this.nextLoc;
+	}
+	
 	
 	public static void main(String[] args) {
 		TilePlayBoard game = new TilePlayBoard();

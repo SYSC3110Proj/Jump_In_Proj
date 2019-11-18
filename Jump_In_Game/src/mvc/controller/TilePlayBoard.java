@@ -41,11 +41,13 @@ public class TilePlayBoard implements Cloneable{
 		}
 		
 		// set the locations of the Holes
+		
 		board.getTileAt(0, 0).setHole(true);
 		board.getTileAt(0, 4).setHole(true);
 		board.getTileAt(2, 2).setHole(true);
 		board.getTileAt(4, 0).setHole(true);
 		board.getTileAt(4, 4).setHole(true);
+		
 		
 		// Add Mushrooms
 		this.mushrooms = new ArrayList<Token>(2);
@@ -56,11 +58,11 @@ public class TilePlayBoard implements Cloneable{
 		
 		// Add Rabbits
 		this.rabbits.add(new Rabbit(new GridPoint(1,3), "rabbit1"));//0,3
-		this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit2"));//2,4
+		this.rabbits.add(new Rabbit(new GridPoint(2,4), "rabbit2"));//2,4
 		//this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));//4,1
 		
 		board.getTileAt(this.rabbits.get(0).getLocation()).setToken(this.rabbits.get(0));
-		//board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
+		board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
 		//board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
 		
 		// Set Foxes

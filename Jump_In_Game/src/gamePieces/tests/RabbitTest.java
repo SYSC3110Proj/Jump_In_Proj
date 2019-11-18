@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import gamePieces.GridPoint;
 import gamePieces.Rabbit;
+import gamePieces.RabbitColour;
 
 /**
  * The RabbitTest class contains tests for all the methods in the rabbit class.
@@ -18,11 +20,16 @@ public class RabbitTest {
 	 * 
 	 */
 	public void testRabbit() {
-		Rabbit instance = new Rabbit(1,2,"rabbit1");
+		Rabbit instance = new Rabbit(new GridPoint(1,2),"rabbit1");
 		assertEquals(1,instance.getRow());
 		assertEquals(2,instance.getColumn());
-		assertEquals("rabbit1",instance.getName());
+		assertEquals(RabbitColour.BROWN,instance.getColour());
+	}
+	
+	public void testatHole() {
+		
+		Rabbit instance = new Rabbit(new GridPoint(0,0),"rabbit1");
+		assertEquals(true,instance.atHole());
 	}
 
 }
-

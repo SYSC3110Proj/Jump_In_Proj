@@ -3,7 +3,6 @@ package gamePieces.tests;
 import static org.junit.Assert.assertEquals;
 
 import gamePieces.Direction;
-import gamePieces.Fox;
 import gamePieces.GridPoint;
 import gamePieces.NewFox;
 
