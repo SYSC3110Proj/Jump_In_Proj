@@ -24,9 +24,7 @@ Author: Mika Argyle
 * Tile.java: Main object for the each square on the game board  
 Author: Zewen Chen
 * Token.java: Main object for each token on the game board  
-Author: Zewen Chen
-* Token.java: Main object for each token on the game board  
-Author: Zewen Chen
+* PieceType.java: contains all the possible types of pieces.
 
 Test code:
 * PlayBoardTest.java:Test of PlayBoard class
