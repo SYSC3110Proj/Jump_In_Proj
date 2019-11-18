@@ -6,6 +6,10 @@ import gamePieces.Direction;
 import gamePieces.GridPoint;
 import gamePieces.NewFox;
 
+/**
+ * The NewFoxTest class contains tests for all the methods in the NewFox class.
+ */
+
 public class NewFoxTest {
 
 	/**
@@ -20,7 +24,7 @@ public class NewFoxTest {
 	}
 	
 	/**
-	 * Test the constructor for Fox with the head point and a direction
+	 * Test the constructor for NewFox with the head point and a direction
 	 */
 	public void NewFoxOnePointDirectionConstructorTest() {
 		NewFox instance = new NewFox(new GridPoint(3, 0), Direction.WEST);
