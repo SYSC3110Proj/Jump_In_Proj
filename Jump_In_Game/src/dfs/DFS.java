@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import gamePieces.Direction;
 import gamePieces.GridPoint;
+import gamePieces.PieceType;
 import mvc.controller.Record;
 import mvc.controller.TilePlayBoard;
 
@@ -12,17 +13,16 @@ public class DFS {
 	
 	private TilePlayBoard temp;
 	private Stack<Choice> solvent;
-	private Stack<Record> rabbitMoveRecord;
+	private Stack<Record> MoveRecord;
 	private ArrayList<Choice> choiceList;
 	private int record;
 	private int num;
 	private ArrayList<boolean[][]> visited;
 
-	
 	public DFS(TilePlayBoard board) {
-		this.temp = new TilePlayBoard(board);
+		this.temp = new TilePlayBoard();
 		solvent = new Stack<Choice>();
-		rabbitMoveRecord = new Stack<Record>();
+		MoveRecord = new Stack<Record>();
 		choiceList = new ArrayList<Choice>();
 		
 		for(int i=0; i<board.getRabbitNum(); i++) {
@@ -62,7 +62,7 @@ public class DFS {
 	
 	}
 	
-	private GridPoint getEmptyLocForR(int rabbit, int direction) {
+	private GridPoint getNearestLocForR(int rabbit, int direction) {
 		int col = temp.getRabbit(rabbit).getCol();
 		int row = temp.getRabbit(rabbit).getRow();
 		Direction direc = Direction.values()[direction];
@@ -85,16 +85,25 @@ public class DFS {
 		}
 		return null;
 	}
-	
 
 	public void solve() {
 		
 		while(!temp.isWin()) {
-			if(num == 500) break;
+			if(num == 50) break;
 			
 			if(record >= temp.getRabbitNum()*4) { //if all cases have been tried and none success
+				//MoveRecord.pop();
+				Record undoInfo = MoveRecord.pop();
 				temp.undo();
-				Record undoInfo = this.rabbitMoveRecord.pop();
+				
+				//if its a fox move
+				while(!MoveRecord.isEmpty() && undoInfo.getPieceNum() >= temp.getRabbitNum()) {
+					temp.undo();
+					undoInfo = MoveRecord.pop();
+					//undoInfo = MoveRecord.peek();
+					//System.out.println("undo fox");
+				}
+				
 				int name = undoInfo.getPieceNum();
 				int row = undoInfo.getNextLoc().getRow();
 				int col = undoInfo.getNextLoc().getCol();
@@ -102,22 +111,48 @@ public class DFS {
 				visited.get(name)[row][col] = false;
 				
 				Choice c = this.solvent.pop();
-				record = (c.getName())*4 + c.getDirection();
+				record = (c.getName())*4 + c.getDirection()+1;
+				continue;
 				//System.out.println("record" + record + ", undo");
 			}
 			//System.out.println(choiceList.get(record).getName() + ":" + choiceList.get(record).getDirection());
 			
 			int rabbit = this.choiceList.get(record).getName();
 			int direction = this.choiceList.get(record).getDirection();
+			boolean moveFox = false;
 			
 			GridPoint rabbitPoint = temp.getNearestJumpPoint(temp.getRabbit(rabbit), Direction.values()[direction]);
 			if(rabbitPoint!= null) {//if rabbit can jump
 				//if that point is not visited, which means rabbit is not repeat its behavior
+				//and don't want to try to move fox to help
 				if(!visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()]) {
+					//try if rabbit can jump through two squares
+					for(int i=0; i<temp.getFoxNum(); i++) {
+						if(temp.testValidFoxMove(temp.getFox(i), rabbitPoint)) {
+							GridPoint before = temp.getFox(i).getHead().getLocation();
+							temp.moveFox(temp.getFox(i), rabbitPoint);
+							GridPoint after = temp.getFox(i).getHead().getLocation();
+							if(!before.equals(after)) {
+								this.MoveRecord.add(new Record(i+temp.getRabbitNum(), before, after));
+								moveFox = true;
+							}
+						}
+					}
+					if(moveFox) {
+						if(temp.getNearestJumpPoint(temp.getRabbit(rabbit), Direction.values()[direction]) != null) {
+							rabbitPoint = temp.getNearestJumpPoint(temp.getRabbit(rabbit), Direction.values()[direction]);
+							//System.out.println("move fox");
+						}
+						else {
+							MoveRecord.pop();
+							temp.undo();
+						}
+					}
+					//move rabbit and record
 					solvent.add(choiceList.get(record));
 					GridPoint before = temp.getRabbit(rabbit).getLocation();
 					temp.moveRabbit(temp.getRabbit(rabbit), rabbitPoint);
-					this.rabbitMoveRecord.add(new Record(rabbit, before, temp.getRabbit(rabbit).getLocation()));
+					this.MoveRecord.add(new Record(rabbit, before, temp.getRabbit(rabbit).getLocation()));
 					record = 0;
 					visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()] = true;
 					num++;
@@ -125,46 +160,55 @@ public class DFS {
 				}
 				//that location is visited
 				else {
-					//System.out.println("cannot move(case1), try next");
+					//System.out.println("cannot move(cz visited), try next");
 					record++;
 				}
 			}
 			else {//rabbit cannot jump to that location
-				GridPoint point = getEmptyLocForR(rabbit, direction);
-				int foxN = -1;
+				GridPoint point = getNearestLocForR(rabbit, direction);
 				GridPoint foxHead = null;
 				//fox can move to help
 				if(point != null) {
 					for(int i=0; i<temp.getFoxNum(); i++) {
 						if(temp.testValidFoxMove(temp.getFox(i), point)) {
-							foxN = i;
 							foxHead = temp.getFox(i).getHead().getLocation();
 							temp.moveFox(temp.getFox(i), point);
-							//System.out.println("move fox" + i + "to" + point.getRow() + "," + point.getCol());
+							if(!foxHead.equals(temp.getFox(i).getHead().getLocation())) {
+								this.MoveRecord.add(new Record(i+temp.getRabbitNum(), foxHead, temp.getFox(i).getHead().getLocation()));
+								moveFox = true;
+								//System.out.println("move fox" + i + "to" + point.getRow() + "," + point.getCol());
+							}
 						}
 					}
-					rabbitPoint = temp.getNearestJumpPoint(temp.getRabbit(rabbit), Direction.values()[direction]);
-					//can jump to there now
-					if(rabbitPoint != null && !visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()]) {
-						solvent.add(choiceList.get(record));
-						GridPoint before = temp.getRabbit(rabbit).getLocation();
-						temp.moveRabbit(temp.getRabbit(rabbit), rabbitPoint);
-						this.rabbitMoveRecord.add(new Record(rabbit, before, temp.getRabbit(rabbit).getLocation()));
-						record = 0;
-						visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()] = true;
-						num++;
-						//System.out.println("move rabbit" + rabbit + "to" + Direction.values()[direction]);
-					}
-					//still cannot jump to that location
-					else {//undo fox move
-						if(foxN!=-1 && !temp.getFox(foxN).getHead().getLocation().equals(foxHead)) temp.undo();
+					if(moveFox) {
+						rabbitPoint = temp.getNearestJumpPoint(temp.getRabbit(rabbit), Direction.values()[direction]);
+						//can jump to there now
+						if(rabbitPoint != null && !visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()]) {
+							solvent.add(choiceList.get(record));
+							GridPoint before = temp.getRabbit(rabbit).getLocation();
+							temp.moveRabbit(temp.getRabbit(rabbit), rabbitPoint);
+							this.MoveRecord.add(new Record(rabbit, before, temp.getRabbit(rabbit).getLocation()));
+							record = 0;
+							visited.get(rabbit)[rabbitPoint.getRow()][rabbitPoint.getCol()] = true;
+							num++;
+							//System.out.println("move rabbit" + rabbit + "to" + Direction.values()[direction]);
+						}
+						//still cannot jump to that location
+						else {//undo fox move
+							temp.undo();
+							this.MoveRecord.pop();
+						}
 						//System.out.println("cannot move(case2), try next");
+						record++;
+					}
+					else {
+						//System.out.println("no point, try next");
 						record++;
 					}
 				}
 				//fox cannot move to that place
 				else {
-					//System.out.println("no point, try next, undo fox move");
+					//System.out.println("no point, try next");
 					record++;
 				}
 			}
@@ -174,18 +218,18 @@ public class DFS {
 	
 
 	public void getSolvent() {
-		if(temp.isWin()) {
-			Stack<Choice> temp = new Stack<Choice>();
-			while(!solvent.isEmpty()) {
-				temp.add(solvent.pop());
-			}
-			while(!temp.isEmpty()) {
-				Choice r = temp.pop();
-				System.out.println("move rabbit" + (r.getName()+1) + " to " + Direction.values()[r.getDirection()]);
-			}
-		}
+		if(!temp.isWin()) System.out.println("there is no solvent for this puzzle");
 		else {
-			System.out.println("no solution for this puzzle");
+			Stack<Record> record = new Stack<Record>();
+			while(!this.MoveRecord.isEmpty()) {
+				record.add(this.MoveRecord.pop());
+			}
+			while(!record.isEmpty()) {
+				Record r = record.pop();
+				if(r.getPieceNum() < temp.getRabbitNum()) {
+					System.out.println("move rabbit" + (r.getPieceNum()+1) + " to " + r.getNextLoc().getRow() + "," + r.getNextLoc().getCol());
+				}
+			}
 		}
 		
 	}

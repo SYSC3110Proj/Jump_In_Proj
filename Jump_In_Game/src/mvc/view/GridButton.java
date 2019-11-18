@@ -45,7 +45,7 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 	
 	@Override
 	public void setText(String str) {
-		super.setText("" + gridLocation.x + "," + gridLocation.y + ": " + str);
+		super.setText("" + gridLocation.y + "," + gridLocation.x + ": " + str);
 	}
 	
 	

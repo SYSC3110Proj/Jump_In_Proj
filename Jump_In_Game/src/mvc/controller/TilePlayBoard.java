@@ -49,23 +49,23 @@ public class TilePlayBoard implements Cloneable{
 		
 		// Add Mushrooms
 		this.mushrooms = new ArrayList<Token>(2);
-		this.mushrooms.add(new Token(new GridPoint(1, 3), PieceType.MUSHROOM));//1,3
-		this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));
+		this.mushrooms.add(new Token(new GridPoint(2, 3), PieceType.MUSHROOM));//1,3
+		this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));//4,2
 		board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
 		board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
 		
 		// Add Rabbits
-		this.rabbits.add(new Rabbit(new GridPoint(0,3), "rabbit1"));
-		//this.rabbits.add(new Rabbit(new GridPoint(2,4), "rabbit2"));
-		//this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));
+		this.rabbits.add(new Rabbit(new GridPoint(1,3), "rabbit1"));//0,3
+		this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit2"));//2,4
+		//this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));//4,1
 		
 		board.getTileAt(this.rabbits.get(0).getLocation()).setToken(this.rabbits.get(0));
 		//board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
 		//board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
 		
 		// Set Foxes
-		this.setFox(new GridPoint(4, 1), Direction.SOUTH);
-		this.setFox(new GridPoint(3, 4), Direction.EAST);
+		this.setFox(new GridPoint(4, 1), Direction.SOUTH);//3,1
+		this.setFox(new GridPoint(3, 4), Direction.EAST);//3,4
 	}
 	
 	public TilePlayBoard(TilePlayBoard playBoard) {
@@ -95,7 +95,7 @@ public class TilePlayBoard implements Cloneable{
 		
 		// Add Mushrooms
 		this.mushrooms = new ArrayList<Token>(2);
-		this.mushrooms.add(new Token(new GridPoint(1, 3), PieceType.MUSHROOM));
+		this.mushrooms.add(new Token(new GridPoint(2, 3), PieceType.MUSHROOM));
 		this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));
 		board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
 		board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
