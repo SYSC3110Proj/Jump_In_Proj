@@ -46,6 +46,7 @@ public class NewFox implements PropertyChangeListener {
 				add(new GridPoint(4,3));
 			}}) ;
 	
+	//List of all valid GridPoints along the edge of the board
 	public static final List<GridPoint> FOX_BORDER_LOCATIONS = Collections.unmodifiableList(
 			new ArrayList<GridPoint>() {
 				private static final long serialVersionUID = -1912311069171602663L;
@@ -60,13 +61,14 @@ public class NewFox implements PropertyChangeListener {
 				add(new GridPoint(4,3));
 			}}) ;
 	
+	//Creates a NewFox object with a head location, tail location, and a name.
 	public NewFox(GridPoint head, GridPoint tail, String name) {
 		if (!VALID_FOX_LOCATIONS.contains(head)) {
 			throw new IllegalArgumentException("Head is not at a valid location");
 		}
 		
 		if (!VALID_FOX_LOCATIONS.contains(tail)) {
-			throw new IllegalArgumentException("tail is not at a valid location");
+			throw new IllegalArgumentException("Tail is not at a valid location");
 		}
 		
 		if ((int) head.distance(tail) != 1) {
@@ -79,6 +81,7 @@ public class NewFox implements PropertyChangeListener {
 		this.tail.setName(name);
 	}
 	
+	//Creates a NewFox object with a head location, a direction (North, East, South, West) and a name.
 	
 	public NewFox(GridPoint head, Direction orientation, String name) {
 		
@@ -109,6 +112,8 @@ public class NewFox implements PropertyChangeListener {
 		this.orientation = orientation;
 	}
 	
+	//Moves the head to the specified location, if valid, and positions the tail accordingly based on this new location and current orientation.
+	//@ param  newloc  The new GridPoint location of the head.
 	public void moveHead(GridPoint newLoc) {
 		// TODO: add checks
 		if (this.orientation == Direction.NORTH) {
