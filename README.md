@@ -57,7 +57,7 @@ this button would set the whole game to its original statue
 
 ## Test solved puzzles
 
-Puzzles constructors in TilePlayBoard class distinguish by integer variable.
+Puzzles constructors in TilePlayBoard class distinguish by integer variable.  
 There are three puzzles in solver test class passed sucessfully.
 ￼
 ￼
