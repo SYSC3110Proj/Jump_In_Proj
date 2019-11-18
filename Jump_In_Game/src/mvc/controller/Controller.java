@@ -21,7 +21,6 @@ import gamePieces.Rabbit;
 import mvc.view.*;
 import tree.FullPathNode;
 import tree.MovementData;
-import tree.Node;
 import gamePieces.Tile;
 
 /** 
@@ -311,7 +310,6 @@ public class Controller {
         frame.getContentPane().add(con.view.getMenuBar(), BorderLayout.NORTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        con.findSolution();
 	}
 	
 

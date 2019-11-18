@@ -84,7 +84,6 @@ public class GridPoint extends Point implements Serializable {
 				return null;
 			}
 		} else {
-			//throw new IllegalArgumentException("newLocation is not in a directly north, south, east or west of this point");
 			return null;
 		}
 	}
