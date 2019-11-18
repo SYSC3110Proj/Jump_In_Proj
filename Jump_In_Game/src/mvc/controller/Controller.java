@@ -34,6 +34,7 @@ import gamePieces.Tile;
 public class Controller {
 	
 	private TilePlayBoard game;
+	private TilePlayBoard solve;
 	private View view;
 	boolean select;
 	private String name;
@@ -114,6 +115,16 @@ public class Controller {
 				}
 				else if(e.getActionCommand().equals("redo")) {
 					game.redo();
+				}
+				else if(e.getActionCommand().equals("solve")) {
+					ArrayList<MovementData> solvent = findSolution();
+					String text = "";
+					for(int i=0; i<solvent.size(); i++) {
+						MovementData temp = solvent.get(i);
+						text += "move" + temp.getToken().getName() + " to (" + 
+						temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
+					}
+					view.getTextArea().setText(text);
 				}
 				
 			}
@@ -233,22 +244,22 @@ public class Controller {
 	 * Get list of all moves available to the player from the board's current state 
 	 * @return The list of all moves from the current state available to the player
 	 */
-	public ArrayList<MovementData> getAllMovesFromCurrentState() {
+	private ArrayList<MovementData> getAllMovesFromCurrentState() {
 		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
 		
 		// For each rabbit, test each jump direction to see if there is a valid move that can be made
-		for (Rabbit rabbit : this.game.getRabbits())  {
+		for (Rabbit rabbit : this.solve.getRabbits())  {
 			for (Direction dir : Direction.values()) {
-				if (this.game.testJumpDirection(rabbit, dir)) { // If a valid move for a rabbit can be made in the given direction
-					possibleMoves.add(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir))); // add it to the list of possible moves
+				if (this.solve.testJumpDirection(rabbit, dir)) { // If a valid move for a rabbit can be made in the given direction
+					possibleMoves.add(new MovementData(rabbit, this.solve.getNearestJumpPoint(rabbit, dir))); // add it to the list of possible moves
 				}
 			}
 		}
 		
 		// For each fox, it can only move in its row
-		for (NewFox fox : this.game.getFoxes()) {
+		for (NewFox fox : this.solve.getFoxes()) {
 			for (GridPoint newFoxLocation : fox.getValidMoveLocations()) { // For every valid fox movement location
-				if (this.game.testValidFoxMove(fox, newFoxLocation)) {
+				if (this.solve.testValidFoxMove(fox, newFoxLocation)) {
 					possibleMoves.add(new MovementData(fox.getHead(), newFoxLocation));
 				}
 			}
@@ -258,6 +269,7 @@ public class Controller {
 	}
 	
 	public ArrayList<MovementData> findSolution() {
+		solve = new TilePlayBoard(game);
 		ArrayList<MovementData> solution = new ArrayList<MovementData>();
 		Queue<FullPathNode> queue = new LinkedList<FullPathNode>();
 		FullPathNode currNode;
@@ -274,11 +286,11 @@ public class Controller {
 			
 			// execute all moves to set board in that state
 			for (MovementData move : currNode.getMovesFromInit()) {
-				this.game.executeMove(move);
+				this.solve.executeMove(move);
 			}
 			
 			// If this move gets the board into a win state, exit
-			if (this.game.getWinState() == true) {
+			if (this.solve.getWinState() == true) {
 				solution = currNode.getMovesFromInit();
 				break;
 			}
@@ -292,7 +304,7 @@ public class Controller {
 				
 			// Roll back the board to its initial state
 			for (int i = currNode.getMovesFromInit().size() - 1; i >= 0; --i) {
-				this.game.executeMove(currNode.getMovesFromInit().get(i).getInverseMove());
+				this.solve.executeMove(currNode.getMovesFromInit().get(i).getInverseMove());
 			}
 		}
 		
@@ -305,9 +317,10 @@ public class Controller {
 		
 		JFrame frame=new JFrame("Jump-In");
         frame.setLayout(new BorderLayout());
-        frame.setBounds(500, 500, 500, 500);
+        frame.setBounds(500, 500, 500, 600);
         frame.getContentPane().add(con.view, BorderLayout.CENTER);
         frame.getContentPane().add(con.view.getMenuBar(), BorderLayout.NORTH);
+        frame.getContentPane().add(con.view.getTextArea(), BorderLayout.SOUTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 	}

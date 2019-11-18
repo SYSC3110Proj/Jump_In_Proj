@@ -1,6 +1,5 @@
 package gamePieces;
 
-import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class NewFox implements PropertyChangeListener {
 				add(new GridPoint(4,3));
 			}}) ;
 	
-	public NewFox(GridPoint head, GridPoint tail) {
+	public NewFox(GridPoint head, GridPoint tail, String name) {
 		if (!VALID_FOX_LOCATIONS.contains(head)) {
 			throw new IllegalArgumentException("Head is not at a valid location");
 		}
@@ -71,11 +70,13 @@ public class NewFox implements PropertyChangeListener {
 		}
 		
 		this.head = new Token(head, PieceType.FOX);
+		this.head.setName(name);
 		this.tail = new Token(tail, PieceType.FOX);
+		this.tail.setName(name);
 	}
 	
 	
-	public NewFox(GridPoint head, Direction orientation) {
+	public NewFox(GridPoint head, Direction orientation, String name) {
 		
 		if (!VALID_FOX_LOCATIONS.contains(head)) {
 			throw new IllegalArgumentException("Head is not at a valid location");
@@ -98,9 +99,9 @@ public class NewFox implements PropertyChangeListener {
 		}
 		
 		this.head = new Token(head, PieceType.FOX);
-		this.head.setName("foxHead");
+		this.head.setName(name);
 		this.tail = new Token(tailLocation, PieceType.FOX);
-		this.tail.setName("foxTail");
+		this.tail.setName(name);
 		this.orientation = orientation;
 	}
 	
@@ -239,9 +240,4 @@ public class NewFox implements PropertyChangeListener {
 	public String toString() {
 		return "NewFox [head=" + head + ", tail=" + tail + ", orientation=" + orientation + "]";
 	}
-
-	
-	
-	
-	
 }

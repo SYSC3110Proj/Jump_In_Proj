@@ -2,10 +2,14 @@ package mvc.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JButton;
 import javax.swing.JToggleButton;
+import javax.swing.border.Border;
 
 import gamePieces.GridPoint;
 import gamePieces.Token;
@@ -41,7 +45,7 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 	
 	@Override
 	public void setText(String str) {
-		super.setText("" + gridLocation.y + "," + gridLocation.x + ": " + str);
+		super.setText(str);
 	}
 	
 	
@@ -69,14 +73,14 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 	public void propertyChange(PropertyChangeEvent evt) {
 		Token newToken = (Token) evt.getNewValue();
 		
-		if (newToken != null) {
-			this.setText(newToken.getPieceType().toString());
-		} else {
-			this.setText("empty");
+		if (newToken != null && newToken.getName() != null) {
+			this.setText(newToken.getName());
 		}
-	}
-	
-	
-	
-	
+		else if(newToken != null && newToken.getName() == null){
+			this.setText(newToken.getPieceType().toString());
+		}
+		else {
+			this.setText("");
+		}
+	}	
 }
