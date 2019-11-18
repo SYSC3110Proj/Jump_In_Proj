@@ -113,7 +113,7 @@ public class NewFox implements PropertyChangeListener {
 	}
 	
 	//Moves the head to the specified location, if valid, and positions the tail accordingly based on this new location and current orientation.
-	//@ param  newloc  The new GridPoint location of the head.
+	//@param  newloc  The new GridPoint location of the head.
 	public void moveHead(GridPoint newLoc) {
 		// TODO: add checks
 		if (this.orientation == Direction.NORTH) {
