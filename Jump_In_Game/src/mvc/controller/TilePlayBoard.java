@@ -42,11 +42,13 @@ public class TilePlayBoard implements Cloneable{
 		}
 		
 		// set the locations of the Holes
+		
 		board.getTileAt(0, 0).setHole(true);
 		board.getTileAt(0, 4).setHole(true);
 		board.getTileAt(2, 2).setHole(true);
 		board.getTileAt(4, 0).setHole(true);
 		board.getTileAt(4, 4).setHole(true);
+		
 		
 		// Add Mushrooms
 		this.addMushroom(new GridPoint(0, 4));
