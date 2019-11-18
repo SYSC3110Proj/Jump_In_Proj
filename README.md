@@ -17,11 +17,13 @@ Author:Zewen Chen,Craig Worthington
 Author:Ruixuan Ni,Craig Worthington
 * Direction.java: Enum file for valid gamepiece movement and orientations  
 Author:Ruixuan Ni
-* Fox.java: Main object for Fox gamepiece  
+* NewFox.java: Main object for Fox gamepiece  
 Author: Mika Argyle
 * Rabbit.java: Main object for Rabbit gamepiece  
 Author: Mika Argyle
-* Square.java: Main object for the each square on the game board  
+* Tile.java: Main object for the each square on the game board  
+Author: Zewen Chen
+* Board.java: Main object for the each square on the game board  
 Author: Zewen Chen
 
 Test code:
