@@ -7,8 +7,14 @@ package gamePieces;
 
 public class Rabbit extends Token {
 	
+	private static final long serialVersionUID = 4304558624413697278L;
 	private RabbitColour colour;
-	
+		
+	/**
+	 * Constructor for rabbit
+	 * @param location the starting location of the rabbit
+	 * @param str the name of the rabbit
+	 */
 	public Rabbit(GridPoint location, String str) {
 		super(location, PieceType.RABBIT);
 		super.setPieceType(PieceType.RABBIT);
@@ -21,6 +27,15 @@ public class Rabbit extends Token {
 		} else if (str.equals("rabbit3")) {
 			this.colour = RabbitColour.GREY;
 		} 
+	}
+	
+	/**
+	 * Copy constructor for Rabbit
+	 * @param rabbit the rabbit to make a deep copy of
+	 */
+	public Rabbit(Rabbit rabbit) {
+		super((Token) rabbit);
+		this.colour = rabbit.colour;
 	}
 	
 	/**

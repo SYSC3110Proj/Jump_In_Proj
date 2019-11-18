@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import gamePieces.*;
+import tree.MovementData;
 
 public class TilePlayBoard implements Cloneable{
 
@@ -112,6 +113,34 @@ public class TilePlayBoard implements Cloneable{
 		}
 	}
 	/**
+	 * @return the rabbits
+	 */
+	public ArrayList<Rabbit> getRabbits() {
+		return rabbits;
+	}
+
+	/**
+	 * @param rabbits the rabbits to set
+	 */
+	public void setRabbits(ArrayList<Rabbit> rabbits) {
+		this.rabbits = rabbits;
+	}
+
+	/**
+	 * @return the foxes
+	 */
+	public ArrayList<NewFox> getFoxes() {
+		return foxes;
+	}
+
+	/**
+	 * @param foxes the foxes to set
+	 */
+	public void setFoxes(ArrayList<NewFox> foxes) {
+		this.foxes = foxes;
+	}
+
+	/**
 	 * Add a PropertyChangeListener to observe this class
 	 * @param pcl the PropertyChangeListener to observe this class
 	 */
@@ -148,16 +177,19 @@ public class TilePlayBoard implements Cloneable{
 	 * Test for win condition by checking if all rabbits are in holes
 	 */
 	private void checkWinState() {
-		//System.out.println("old win state: " + this.winState);
-		//System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
 		boolean prevWinState = this.winState;
 		boolean nowWinState = true;
+		
 		for(Rabbit r: rabbits) {
 			nowWinState &= r.atHole();
 		}
+		
 		this.winState = nowWinState;
 		support.firePropertyChange("winState", prevWinState, this.winState); // send the propertyChange
-		
+	}
+
+	public boolean getWinState() {
+		return this.winState;
 	}
 
 	/**
@@ -233,12 +265,21 @@ public class TilePlayBoard implements Cloneable{
 	}
 	
 	/**
+	 * Move a rabbit token to a new location without making any checks first (for solver)
+	 * @param rabbit the rabbit token to be moved
+	 * @param newLoc the new point for the rabbit to move to
+	 */
+	public void moveRabbitNoChecks(Rabbit rabbit, GridPoint newLoc) {
+		this.moveToken(rabbit, newLoc);
+	}
+	
+	/**
 	 * Test if a rabbit can jump in a certain direction
 	 * @param rabbit The rabbit to be moved
 	 * @param direction The direction to test the jump
 	 * @return True if the rabbit is able to jump in that direction
 	 */
-	private boolean testJumpDirection(Rabbit rabbit, Direction direction) {
+	public boolean testJumpDirection(Rabbit rabbit, Direction direction) {
 		if (rabbit == null || direction == null) {
 			return false;
 		}
@@ -296,7 +337,7 @@ public class TilePlayBoard implements Cloneable{
 		return null;
 	}
 	
-	private boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
+	public boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
 		for (int i = 0; i < path.size(); ++i) {
 			// Test if the tile is occupied by a token other than the given fox
 			if (path.get(i).isOccupied()) {
@@ -317,7 +358,7 @@ public class TilePlayBoard implements Cloneable{
 	 * @param endPoint the ending point for the fox movement
 	 * @return ArrayList with all the tiles along the path
 	 */
-	private ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
 		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 		Direction direction = startPoint.getDirectionTo(endPoint);
 		
@@ -352,10 +393,14 @@ public class TilePlayBoard implements Cloneable{
 	public boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
 		Direction movementDirection = fox.getHead().getLocation().getDirectionTo(newHeadLocation);
 		
-		if(movementDirection != null) {
-			if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
-				// test if head and tail share same row as the new location
-				if (fox.getHead().getRow() == newHeadLocation.getRow() && fox.getTail().getRow() == newHeadLocation.getRow()) { 
+		if (movementDirection == null) {
+			return false;
+		}
+		
+		if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
+			// test if head and tail share same row as the new location
+			if (fox.getHead().getRow() == newHeadLocation.getRow() && fox.getTail().getRow() == newHeadLocation.getRow()) { 
+
 				
 					// Get the location that the tail of the fox would be moved to
 					GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
@@ -402,7 +447,6 @@ public class TilePlayBoard implements Cloneable{
 	 * @param fox the fox to be moved
 	 * @param newLocation the new location on the board for the head of the fox to be moved to
 	 */
-	// TODO: implement this function
 	public void moveFox(NewFox fox, GridPoint newLocation) {
 		// If the fox can move
 		if (testValidFoxMove(fox, newLocation)) {
@@ -448,6 +492,41 @@ public class TilePlayBoard implements Cloneable{
 			after.add(record);
 			moveToken(record.getPiece(), record.getLastLoc());
 			before.pop();
+		}
+	}
+	
+	/**
+	 * Move a fox to a new location without performing any checks (for solver)
+	 * @param fox the fox to move
+	 * @param newLocation the new location to move the fox to
+	 */
+	public void moveFoxNoChecks(NewFox fox, GridPoint newLocation) {
+		// If the fox is moving backwards, move the tail first
+		if (fox.getHead().getLocation().getDirectionTo(newLocation) != fox.getOrientation()) {
+			this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+			this.moveToken(fox.getHead(), newLocation);
+		} else { // else move the head first
+			this.moveToken(fox.getHead(), newLocation);
+			this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+		}
+	}
+	
+	/**
+	 * Execute a move based on the given MovementData object
+	 * @param move
+	 */
+	public void executeMove(MovementData move) {
+		if (move.getToken().getPieceType() == PieceType.RABBIT) {
+			// TODO: add more conditions to prevent errors
+			if (this.rabbits.contains(board.getTileAt(move.getToken().getLocation()).getToken())) {
+				Rabbit rabbitToMove = this.rabbits.get(this.rabbits.indexOf(this.board.getTileAt(move.getToken().getLocation()).getToken()));
+				this.moveRabbitNoChecks(rabbitToMove, move.getNewLocation());
+			} else {
+				System.err.println("Rabbit cannot be found!");
+			}
+		} else if (move.getToken().getPieceType() == PieceType.FOX) {
+			NewFox foxToMove = this.getFoxAtLocation(move.getToken().getLocation());
+			this.moveFoxNoChecks(foxToMove, move.getNewLocation());
 		}
 	}
 	

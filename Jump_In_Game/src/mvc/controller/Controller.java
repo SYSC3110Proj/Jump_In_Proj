@@ -3,6 +3,10 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JToggleButton;
 
@@ -15,6 +19,9 @@ import gamePieces.NewFox;
 import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import mvc.view.*;
+import tree.FullPathNode;
+import tree.MovementData;
+import tree.Node;
 import gamePieces.Tile;
 
 /** 
@@ -223,6 +230,77 @@ public class Controller {
 		return null;
 	}
 	
+	/**
+	 * Get list of all moves available to the player from the board's current state 
+	 * @return The list of all moves from the current state available to the player
+	 */
+	public ArrayList<MovementData> getAllMovesFromCurrentState() {
+		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
+		
+		// For each rabbit, test each jump direction to see if there is a valid move that can be made
+		for (Rabbit rabbit : this.game.getRabbits())  {
+			for (Direction dir : Direction.values()) {
+				if (this.game.testJumpDirection(rabbit, dir)) { // If a valid move for a rabbit can be made in the given direction
+					possibleMoves.add(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir))); // add it to the list of possible moves
+				}
+			}
+		}
+		
+		// For each fox, it can only move in its row
+		for (NewFox fox : this.game.getFoxes()) {
+			for (GridPoint newFoxLocation : fox.getValidMoveLocations()) { // For every valid fox movement location
+				if (this.game.testValidFoxMove(fox, newFoxLocation)) {
+					possibleMoves.add(new MovementData(fox.getHead(), newFoxLocation));
+				}
+			}
+		}
+		
+		return possibleMoves;
+	}
+	
+	public ArrayList<MovementData> findSolution() {
+		ArrayList<MovementData> solution = new ArrayList<MovementData>();
+		Queue<FullPathNode> queue = new LinkedList<FullPathNode>();
+		FullPathNode currNode;
+		
+		// Initialize the queue with one node for each possible move from the initial state
+		for (MovementData move : this.getAllMovesFromCurrentState()) {
+			FullPathNode newNode = new FullPathNode();
+			newNode.addMove(new MovementData(move));
+			queue.add(newNode);
+		}
+		
+		while (true) {
+			currNode = queue.poll();
+			
+			// execute all moves to set board in that state
+			for (MovementData move : currNode.getMovesFromInit()) {
+				this.game.executeMove(move);
+			}
+			
+			// If this move gets the board into a win state, exit
+			if (this.game.getWinState() == true) {
+				solution = currNode.getMovesFromInit();
+				break;
+			}
+			
+			// Add new nodes into queue that are valid moves from this state
+			for (MovementData move : this.getAllMovesFromCurrentState()) {
+				FullPathNode node = new FullPathNode(currNode);
+				node.addMove(move);
+				queue.add(node);
+			}
+				
+			// Roll back the board to its initial state
+			for (int i = currNode.getMovesFromInit().size() - 1; i >= 0; --i) {
+				this.game.executeMove(currNode.getMovesFromInit().get(i).getInverseMove());
+			}
+		}
+		
+		
+		return solution;
+	}
+	
 	public static void main(String[] args) {
 		Controller con = new Controller();
 		
@@ -233,6 +311,7 @@ public class Controller {
         frame.getContentPane().add(con.view.getMenuBar(), BorderLayout.NORTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        con.findSolution();
 	}
 	
 
