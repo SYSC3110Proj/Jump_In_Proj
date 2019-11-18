@@ -3,6 +3,8 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -34,30 +36,33 @@ import gamePieces.Tile;
 public class Controller {
 	
 	private TilePlayBoard game;
-	private View view;
+	private View boardView;
 	boolean select;
 	private String name;
-	
 	private Tile sourceTile, destTile;
-	
 	private GridPoint sourcePoint, destPoint;
 	private GridButton sourceButton;
+	private boolean isSolving;
+	private PropertyChangeSupport support;
 	
 	public Controller() {
 		this.game = new TilePlayBoard();
-		this.view = new View();
+		this.boardView = new View();
+		this.support = new PropertyChangeSupport(this);
 		
-		this.game.addPropertyChangeListener(this.view); // Have view observe game
+		this.game.addPropertyChangeListener(this.boardView); // Have view observe game
+		this.isSolving = false;
 		
 		for (int row = 0; row < 5; ++row) {
 			for (int col = 0; col < 5; ++col) {
-				this.game.getBoard().getTileAt(row, col).addPropertyChangeListener(this.view.getButton()[row][col]); // Have each button observe their corresponding grid in the model
+				this.game.getBoard().getTileAt(row, col).addPropertyChangeListener(this.boardView.getButton()[row][col]); // Have each button observe their corresponding grid in the model
+				this.addPropertyChangeListener(this.boardView.getButton()[row][col]); // Have the button observe the controller
 			}
 		}
 		
 		this.select = false;
 		
-		this.view.initButton(game.getBoardName(), new ActionListener() {
+		this.boardView.initButton(game.getBoardName(), new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				// If the player is currently in the selection phase
@@ -65,27 +70,16 @@ public class Controller {
 					name = ((GridButton) e.getSource()).getText();
 					sourceTile = game.getBoard().getTileAt((((GridButton) e.getSource()).getGridLocation()));
 					
-					//System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
-					//System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
-					
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
-					
-					//System.out.println("sourceTile = " + sourceTile);
-					//System.out.println("sourcePoint = " + sourcePoint);
 					
 					select = true;
 				} else {	// If the player is in the movement phase
 					if (name != null) {
-
 						// Test if the player is trying to move a hole or mushroom
 						if (sourceTile.getToken() != null && sourceTile.getToken().getPieceType() != PieceType.MUSHROOM) {
-							
 							destTile = game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation());
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
-							
-							//System.out.println("destTile = " + destTile);
-							//System.out.println("destPoint = " + destPoint);
 							
 							if (sourceTile.getToken().getPieceType() == PieceType.RABBIT) {
 								moveRabbit();
@@ -96,30 +90,63 @@ public class Controller {
 							// Toggle both buttons to show as off
 							sourceButton.setSelected(false);
 							((GridButton) e.getSource()).setSelected(false);
-							
 						}
 					}
 					select = false;
-//					if (game.checkWinState()) {
-//						view.popWin();	
-//					}
 				}
 			}
 		});
 		
-		view.initMenu(new ActionListener() {
+		boardView.initMenu(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(e.getActionCommand().equals("undo")) {
+				if (e.getActionCommand().equals("undo")) {
 					game.undo();
-				}
-				else if(e.getActionCommand().equals("redo")) {
+				} else if (e.getActionCommand().equals("redo")) {
 					game.redo();
 				}
-				
 			}
 		});
+		
+		boardView.initHintButton(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(findSolution().toString());
+			}
+		});
+		
+		
 	}
 	
+	/**
+	 * Add a PropertyChangeListener to observe this class
+	 * @param pcl the PropertyChangeListener to observe this class
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		this.support.addPropertyChangeListener(pcl);
+	}
+	
+	/**
+	 * Remove a PropertyChangeListener
+	 * @param pcl the PropertyChangeListener already observing this class
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener pcl) {
+		this.support.removePropertyChangeListener(pcl);
+	}
+	
+	/**
+	 * @return the isSolving
+	 */
+	public boolean isSolving() {
+		return isSolving;
+	}
+
+	/**
+	 * @param isSolving the isSolving to set
+	 */
+	public void setSolving(boolean isSolving) {
+		this.support.firePropertyChange("isSolving", this.isSolving, isSolving);
+		this.isSolving = isSolving;
+	}
+
 	/**
 	 * Logic for moving a rabbit
 	 */
@@ -262,6 +289,8 @@ public class Controller {
 		Queue<FullPathNode> queue = new LinkedList<FullPathNode>();
 		FullPathNode currNode;
 		
+//		this.setSolving(true);
+		
 		// Initialize the queue with one node for each possible move from the initial state
 		for (MovementData move : this.getAllMovesFromCurrentState()) {
 			FullPathNode newNode = new FullPathNode();
@@ -296,6 +325,7 @@ public class Controller {
 			}
 		}
 		
+		this.setSolving(false);
 		
 		return solution;
 	}
@@ -306,10 +336,12 @@ public class Controller {
 		JFrame frame=new JFrame("Jump-In");
         frame.setLayout(new BorderLayout());
         frame.setBounds(500, 500, 500, 500);
-        frame.getContentPane().add(con.view, BorderLayout.CENTER);
-        frame.getContentPane().add(con.view.getMenuBar(), BorderLayout.NORTH);
+        frame.getContentPane().add(con.boardView, BorderLayout.CENTER);
+        frame.getContentPane().add(con.boardView.getMenuBar(), BorderLayout.NORTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        
+        con.findSolution();
 	}
 	
 

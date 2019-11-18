@@ -17,6 +17,7 @@ import gamePieces.Token;
 public class GridButton extends JToggleButton implements PropertyChangeListener {
 	
 	private boolean isHole;
+	private boolean waitingForSolver = false;
 	private GridPoint gridLocation;	// location in the grid of the button
 	
 	// TODO: add comments, add constructor with just point
@@ -69,15 +70,36 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 		this.gridLocation = location;
 	}
 
+	/**
+	 * @return the waitingForSolver
+	 */
+	public boolean isWaitingForSolver() {
+		return waitingForSolver;
+	}
+
+	/**
+	 * @param waitingForSolver set waitingForSolver flag
+	 */
+	public void setWaitingForSolver(boolean waitingForSolver) {
+		this.waitingForSolver = waitingForSolver;
+	}
+
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		Token newToken = (Token) evt.getNewValue();
 		
-		if (newToken != null) {
-			this.setText(newToken.getPieceType().toString());
-		} else {
-			this.setText("empty");
+		if (evt.getPropertyName().equalsIgnoreCase("isSolving")) { // PropertyChange Handler for enabling isSolving
+			this.waitingForSolver = (boolean) evt.getNewValue();
+		} else if (evt.getPropertyName().equalsIgnoreCase("token") && this.waitingForSolver == false) { // PropertyChange handler for token change
+			Token newToken = (Token) evt.getNewValue();
+			if (newToken != null) {
+				this.setText(newToken.getPieceType().toString());
+			} else {
+				this.setText("empty");
+			}
 		}
+		
+		
+		
 	}
 	
 	

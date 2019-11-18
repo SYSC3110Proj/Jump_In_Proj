@@ -459,12 +459,10 @@ public class TilePlayBoard implements Cloneable{
 				this.moveToken(fox.getHead(), newLocation);
 				this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
 			}
-			
-			
 		} 
-		/*else {
-			throw new IllegalArgumentException("Illegal fox move");
-		}*/
+//		else {
+//			throw new IllegalArgumentException("Illegal fox move");
+//		}
 	}
 	
 	public void redo() {

@@ -31,6 +31,7 @@ public class View extends JPanel implements PropertyChangeListener {
 	private JMenuBar menuBar;
 	private JMenuItem undo;
 	private JMenuItem redo;
+	private JButton hint;
 	
 	public View() {
 		super();
@@ -40,9 +41,11 @@ public class View extends JPanel implements PropertyChangeListener {
 		menuBar = new JMenuBar();
 		undo = new JMenuItem("undo");
 		redo = new JMenuItem("redo");
+		hint = new JButton("Hint");
 		
 		menuBar.add(undo);
 		menuBar.add(redo);
+		menuBar.add(hint);
 		
 		//use JButton to make a 5x5 board
 		button = new GridButton[5][5];
@@ -60,6 +63,10 @@ public class View extends JPanel implements PropertyChangeListener {
 	public void initMenu(ActionListener listener) {
 		undo.addActionListener(listener);
 		redo.addActionListener(listener);
+	}
+	
+	public void initHintButton(ActionListener actionListener) {
+		this.hint.addActionListener(actionListener);		
 	}
 	
 	public JMenuBar getMenuBar() {
@@ -116,4 +123,6 @@ public class View extends JPanel implements PropertyChangeListener {
 		}
 		
 	}
+
+
 }
