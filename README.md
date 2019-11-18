@@ -49,12 +49,12 @@ If you want to restart the game, just click the restart button in the top menu b
 this button would set the whole game to its original statue
 
 ## Changes and Design
-1.Delete the Command.java,CommandWord.java,Parser.java and Game.java:  
-When using GUI, there is no need to read player's input value.   
-2.Create Rabbit.java:     
-Make each piece more clear in the code.   
-3.Fix several bugs in PlayBoard.java.  
-4.Make MVC structure for the gui:  
-PlayBoard in this structure is a model, we add a view to show all the panel, menu and dialog we need, and add a control class to deal with all action events, determine which view should be shown in the JFrame.  
+1. Refactor all the playboard (done by Craig Worthington)
+2. To implement the undo and redo function, we created two stacks in FilePlayBoard class: one to record the movements made by player and ther other one recording the undo movements.
+3. To implement the solver, we add a dfs package, including class Choice and DSF:   
+  * create an arrayList for the possible move of each rabbits, like(rabbit1, north)
+  * clone the TilePlayBoard as the playboard of solver, when a possibility is proved impossible, undo the move and return to last level.   * a stack is used to recording each movement to make sure when return to last level, the solver will continue to try other   possibilities instead of repeating trying to prove ways that are proved impossible.
+  * boolean[][] is created for make sure that rabbits are not repeating meaningless movements.
+  * The while loop will end when the solver is found, or there seems to have no solvent.
 
 ## Known Issues
