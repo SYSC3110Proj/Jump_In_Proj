@@ -3,6 +3,9 @@ package gamePieces;
 import java.awt.Point;
 import java.io.Serializable;
 
+/**
+ * The GridPoint class 
+ */
 public class GridPoint extends Point implements Serializable {
 	
 
