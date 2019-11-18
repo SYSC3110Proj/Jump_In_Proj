@@ -122,8 +122,6 @@ public class TilePlayBoard {
 	 * Test for win condition by checking if all rabbits are in holes
 	 */
 	private void checkWinState() {
-		System.out.println("old win state: " + this.winState);
-		System.out.println("new win state: " + (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole()));
 		support.firePropertyChange("winState", this.winState, (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole())); // send the propertyChange
 		this.winState = (rabbits.get(0).atHole() && rabbits.get(1).atHole() && rabbits.get(2).atHole());
 	}

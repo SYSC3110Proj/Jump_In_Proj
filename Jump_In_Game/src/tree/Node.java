@@ -8,6 +8,7 @@ public class Node<T> {
 	private List<Node<T>> children = new ArrayList<Node<T>>();
 	private Node<T> parent = null;
 	private T data = null;
+	private boolean isDiscovered;
 	
 	/**
 	 * Constructor for a new node
@@ -16,6 +17,7 @@ public class Node<T> {
 	public Node(T data) {
 		this.children = new ArrayList<Node<T>>();
 		this.data = data;
+		this.isDiscovered = false;
 	}
 	
 	/**
@@ -27,8 +29,16 @@ public class Node<T> {
 		this.children = new ArrayList<Node<T>>();
 		this.data = data;
 		this.parent = parent;
+		this.isDiscovered = false;
 	}
 	
+	/**
+	 * @return the parent
+	 */
+	public Node<T> getParent() {
+		return parent;
+	}
+
 	/**
 	 * Set the parent for this node
 	 * @param parent The parent node for this node
@@ -56,6 +66,11 @@ public class Node<T> {
 		this.children.add(child);
 	}
 	
+	/**
+	 * Test if this node has a child
+	 * @param child the child to test
+	 * @return true if this node has a child node that matches the argument
+	 */
 	public boolean hasChild(Node<T> child) {
 		return this.children.contains(child) ? true : false;
 	}
@@ -84,6 +99,20 @@ public class Node<T> {
 		this.data = data;
 	}
 	
+	/**
+	 * @return the isDiscovered
+	 */
+	public boolean isDiscovered() {
+		return isDiscovered;
+	}
+
+	/**
+	 * @param isDiscovered the isDiscovered to set
+	 */
+	public void setDiscovered(boolean isDiscovered) {
+		this.isDiscovered = isDiscovered;
+	}
+
 	/**
 	 * Check if this node is the root
 	 * @return True if the node is the root, false otherwise
@@ -114,28 +143,11 @@ public class Node<T> {
 	public void removeParent() {
 		this.parent = null;
 	}
-
-	@Override
+	
 	public String toString() {
-		String parentString = "";
-		String childrenString = "";
+		String dataString = this.data == null ? "null" : this.getData().toString();
 		
-		if (this.isRoot()) {
-			parentString = "Root";
-		} else {
-			parentString = this.parent.toString();
-		}
-		
-		if (this.isLeaf()) {
-			childrenString = "leaf";
-		} else {
-			childrenString = this.children.toString();
-		}
-		
-		
-		
-		String dataString = this.data.toString();
-		return "Node [parent=" + parentString + ", data=" + dataString + ", children=" + childrenString + "]";
+		return "Node [data=" + dataString + ", isDiscovered=" + this.isDiscovered + "]";
 	}
 
 }

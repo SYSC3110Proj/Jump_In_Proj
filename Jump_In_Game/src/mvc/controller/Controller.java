@@ -282,48 +282,69 @@ public class Controller {
 		return false;
 	}
 	
+	
+	public void () {
+		
+	}
+	
 	/**
 	 * Create a tree of possible moves using a breadth first search pattern
 	 */
 	public void findSolution() {
 		Node<MovementData> treeRoot = new Node<MovementData>(null);	// root of the tree is null
-		
 		Node<MovementData> currNode = treeRoot;
-		Queue<Node<MovementData>> movesToTest = new LinkedList<Node<MovementData>>();
+		Queue<Node<MovementData>> queue = new LinkedList<Node<MovementData>>();
 		
 		// Add all the possible moves from the root position as child nodes to the root
 		for (MovementData move : this.getAllMoves(treeRoot)) {
 			treeRoot.addChild(move);
-			movesToTest.add(treeRoot.getChildren().get(treeRoot.getChildren().size()-1));
+			queue.add(treeRoot.getChildren().get(treeRoot.getChildren().size()-1));
 		}
 		
-		System.out.println(treeRoot);
-		System.out.println(movesToTest);
+		treeRoot.setDiscovered(true);
 		
+		System.out.println(treeRoot);
+		System.out.println(queue.toString());
+		
+		currNode = queue.poll();
 		
 		// Add all possible moves as a child node of the current node
 		
-//		while (true) {
-//			// Get the list of all moves from this location
-//			ArrayList<MovementData> childMoves = this.getAllMoves(currNode);
-//			
-//			if (this.checkListOfMovesForWin(childMoves) == true) {
-//				// TODO: do something here to get the winning move
-//				break; // exit from the loop
-//			}
-//			
-//			// Add child nodes of the possible moves to the current node
-//			for (MovementData move : childMoves) {
-//				currNode.addChild(move);
-//				movesToTest.add(currNode.getChildren().get(currNode.getChildren().size()-1));
-//			}
-//			
-//			// Reverse the move 
-//			
-//			currNode = movesToTest.poll();
-//			
-//			
-//		}
+		while (true) {
+			System.out.println("Current node = " + currNode.toString());
+			
+			Node<MovementData> tempNode = currNode;
+			
+			
+			
+			
+			// Execute the current move in the queue
+			this.game.executeMove(currNode.getData());
+			
+			if (this.game.getWinState() == true) {
+				System.out.println("GAME WON!");
+				return;
+			}
+			
+			// Get the list of all possible moves from this node
+			ArrayList<MovementData> childMoves = this.getAllMoves(currNode);
+			
+			// Add child nodes of the possible moves to the current node
+			for (MovementData move : childMoves) {
+				currNode.addChild(move);
+				queue.add(currNode.getChildren().get(currNode.getChildren().size()-1));
+			}
+			
+			// Set the current node as discovered
+			currNode.setDiscovered(true);
+			
+			// Reverse the move
+			this.game.executeMove(currNode.getData().getInverseMove());
+			
+			currNode = queue.poll(); // Move the controller ahead one
+			
+			
+		}
 		
 	}
 	

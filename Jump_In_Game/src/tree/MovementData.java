@@ -46,7 +46,11 @@ public class MovementData {
 		this.newLocation = newLocation;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "MovementData [token=" + token + ", newLocation=" + newLocation + "]";
+	}
+
 	public MovementData getInverseMove() {
 		MovementData inverseMove = new MovementData(new Token(this.token), new GridPoint(this.newLocation));
 		
