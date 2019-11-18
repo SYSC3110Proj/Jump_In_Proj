@@ -438,7 +438,6 @@ public class TilePlayBoard implements Cloneable{
 					}
 				}
 			}
-		}
 		return false;
 	}
 	
