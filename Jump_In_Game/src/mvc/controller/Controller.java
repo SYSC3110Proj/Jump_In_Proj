@@ -217,59 +217,11 @@ public class Controller {
 		return null;
 	}
 	
-	public void moveForwardAndBack() {
-		Rabbit rabbitToMove = this.game.getRabbits().get(0);
-		MovementData rabbitMoveToMake = new MovementData(this.game.getRabbits().get(0), new GridPoint(2, 3));
-		MovementData foxMoveToMake = new MovementData(this.game.getBoard().getTileAt(new GridPoint(1, 1)).getToken(), new GridPoint(3, 1));
-		
-		
-		try {
-			TimeUnit.SECONDS.sleep(1);
-			this.game.executeMove(rabbitMoveToMake);
-			TimeUnit.SECONDS.sleep(1);
-			this.game.executeMove(foxMoveToMake);
-			TimeUnit.SECONDS.sleep(1);
-			this.game.executeMove(rabbitMoveToMake.getInverseMove());
-			TimeUnit.SECONDS.sleep(1);
-			this.game.executeMove(foxMoveToMake.getInverseMove());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
-	
-//	public ArrayList<MovementData> getAllMoves(Node currNode) {
-//		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
-//		
-//		// For each rabbit, test each jump direction to see if there is a valid move that can be made
-//		for (Rabbit rabbit : this.game.getRabbits())  {
-//			for (Direction dir : Direction.values()) {
-//				if (this.game.testJumpDirection(rabbit, dir)) { // If a valid move for a rabbit can be made in the given direction
-//					possibleMoves.add(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir))); // add it to the list of possible moves
-//				}
-//			}
-//		}
-//		
-//		// For each fox, it can only move in its row
-//		for (NewFox fox : this.game.getFoxes()) {
-//			System.out.println(this.game.getFoxes().toString());
-//			for (GridPoint newFoxLocation : fox.getValidMoveLocations()) { // For every valid fox movement location
-//				if (this.game.testValidFoxMove(fox, newFoxLocation)) {
-//					possibleMoves.add(new MovementData(fox.getHead(), newFoxLocation));
-//				}
-//			}
-//		}
-//		
-//		return possibleMoves;
-//	}
-	
 	/**
-	 * Get list of all moves from the current state
-	 * @return
+	 * Get list of all moves available to the player from the board's current state 
+	 * @return The list of all moves from the current state available to the player
 	 */
-	public ArrayList<MovementData> getAllMoves() {
+	public ArrayList<MovementData> getAllMovesFromCurrentState() {
 		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
 		
 		// For each rabbit, test each jump direction to see if there is a valid move that can be made
@@ -283,8 +235,6 @@ public class Controller {
 		
 		// For each fox, it can only move in its row
 		for (NewFox fox : this.game.getFoxes()) {
-			System.out.println(fox.toString());
-			System.out.println(fox.getValidMoveLocations().toString());
 			for (GridPoint newFoxLocation : fox.getValidMoveLocations()) { // For every valid fox movement location
 				if (this.game.testValidFoxMove(fox, newFoxLocation)) {
 					possibleMoves.add(new MovementData(fox.getHead(), newFoxLocation));
@@ -295,98 +245,19 @@ public class Controller {
 		return possibleMoves;
 	}
 	
-	/**
-	 * Check a list of moves to see if any will create a win state
-	 * @param listOfMoves the list of moves to test
-	 * @return true if any of the moves will create a win
-	 */
-	public boolean checkListOfMovesForWin(ArrayList<MovementData> listOfMoves) {
-		for (MovementData move : listOfMoves) {
-			this.game.executeMove(move);
-			if (this.game.getWinState() == true) {
-				System.out.println("Winning move = " + move.toString());
-				return true;
-			} else {
-				this.game.executeMove(move.getInverseMove());
-			}
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Create a tree of possible moves using a breadth first search pattern
-	 */
-	public void findSolution() {
-		Node<MovementData> treeRoot = new Node<MovementData>(null);	// root of the tree is null
-		Node<MovementData> currNode = treeRoot;
-		Queue<Node<MovementData>> queue = new LinkedList<Node<MovementData>>();
-		
-		// Add all the possible moves from the root position as child nodes to the root
-		for (MovementData move : this.getAllMoves(treeRoot)) {
-			treeRoot.addChild(move);
-			queue.add(treeRoot.getChildren().get(treeRoot.getChildren().size()-1));
-		}
-		
-		treeRoot.setDiscovered(true);
-		
-		System.out.println(treeRoot);
-		System.out.println(queue.toString());
-		
-		currNode = queue.poll();
-		
-		// Add all possible moves as a child node of the current node
-		
-		while (true) {
-			System.out.println("Current node = " + currNode.toString());
-			
-			Node<MovementData> tempNode = currNode;
-			
-			
-			
-			// Execute the current move in the queue
-			this.game.executeMove(currNode.getData());
-			
-			if (this.game.getWinState() == true) {
-				System.out.println("GAME WON!");
-				return;
-			}
-			
-			// Get the list of all possible moves from this node
-			ArrayList<MovementData> childMoves = this.getAllMoves(currNode);
-			
-			// Add child nodes of the possible moves to the current node
-			for (MovementData move : childMoves) {
-				currNode.addChild(move);
-				queue.add(currNode.getChildren().get(currNode.getChildren().size()-1));
-			}
-			
-			// Set the current node as discovered
-			currNode.setDiscovered(true);
-			
-			// Reverse the move
-			this.game.executeMove(currNode.getData().getInverseMove());
-			
-			currNode = queue.poll(); // Move the controller ahead one
-			
-			
-		}
-		
-	}
-	
-	public ArrayList<MovementData> findSolutionFullPathNode() {
+	public ArrayList<MovementData> findSolution() {
 		ArrayList<MovementData> solution = new ArrayList<MovementData>();
 		Queue<FullPathNode> queue = new LinkedList<FullPathNode>();
 		FullPathNode currNode;
 		
 		// Initialize the queue with one node for each possible move from the initial state
-		for (MovementData move : this.getAllMoves()) {
+		for (MovementData move : this.getAllMovesFromCurrentState()) {
 			FullPathNode newNode = new FullPathNode();
 			newNode.addMove(new MovementData(move));
 			queue.add(newNode);
 		}
 		
-		for(int temp = 0; temp < 2; ++temp) {
+		while (true) {
 			currNode = queue.poll();
 			
 			// execute all moves to set board in that state
@@ -400,10 +271,8 @@ public class Controller {
 				break;
 			}
 			
-			System.out.println(this.getAllMoves());
-			
 			// Add new nodes into queue that are valid moves from this state
-			for (MovementData move : this.getAllMoves()) {
+			for (MovementData move : this.getAllMovesFromCurrentState()) {
 				FullPathNode node = new FullPathNode(currNode);
 				node.addMove(move);
 				queue.add(node);
@@ -428,8 +297,7 @@ public class Controller {
         frame.getContentPane().add(con.view);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        
-        System.out.println(con.findSolutionFullPathNode().toString());
+        con.findSolution();
 	}
 	
 

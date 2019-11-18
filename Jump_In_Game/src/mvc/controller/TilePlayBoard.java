@@ -359,6 +359,10 @@ public class TilePlayBoard {
 	public boolean testValidFoxMove(NewFox fox, GridPoint newHeadLocation) {
 		Direction movementDirection = fox.getHead().getLocation().getDirectionTo(newHeadLocation);
 		
+		if (movementDirection == null) {
+			return false;
+		}
+		
 		if (movementDirection.equals(Direction.EAST) || movementDirection.equals(Direction.WEST)) {	// if fox is horizontal
 			// test if head and tail share same row as the new location
 			if (fox.getHead().getRow() == newHeadLocation.getRow() && fox.getTail().getRow() == newHeadLocation.getRow()) { 

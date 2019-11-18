@@ -184,8 +184,7 @@ public class Token implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Token [location=" + location + ", name=" + name + ", pieceType=" + pieceType + ", support=" + support
-				+ "]";
+		return "Token [location=" + location + ", name=" + name + ", pieceType=" + pieceType + "]";
 	}
 
 	

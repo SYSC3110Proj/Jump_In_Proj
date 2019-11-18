@@ -146,6 +146,9 @@ public class NewFox implements PropertyChangeListener {
 			}
 		}
 		
+		// Remove the current head location from the list
+		validMoveLocations.remove(this.head.getLocation());
+		
 		return validMoveLocations;
 	}
 	

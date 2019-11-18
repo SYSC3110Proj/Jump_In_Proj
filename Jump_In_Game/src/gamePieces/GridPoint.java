@@ -87,8 +87,10 @@ public class GridPoint extends Point implements Serializable {
 			throw new IllegalArgumentException("newLocation is not in a directly north, south, east or west of this point");
 		}
 	}
-	
+
+	@Override
 	public String toString() {
-		return ("row=" + this.getRow() + ", col=" + this.getCol());
+		return "GridPoint [row=" + this.getRow() + ", col=" + this.getCol() + "]";
 	}
+	
 }
