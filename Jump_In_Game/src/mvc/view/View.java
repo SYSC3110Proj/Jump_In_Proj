@@ -1,5 +1,6 @@
 package mvc.view;
 
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -7,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -103,6 +105,38 @@ public class View extends JPanel implements PropertyChangeListener {
 		
 		dialog.setVisible(true);
 		
+	}
+	
+	 /** Returns an ImageIcon, or null if the path was invalid. */
+    protected static ImageIcon createImageIcon(String path, String description) {
+    	
+        java.net.URL imgURL = View.class.getClass().getResource(path);
+        System.out.println(imgURL);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL, description);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }
+	
+	public void showLoadingDialog(ActionListener actionListener) {
+		JDialog dialog = new JDialog();
+		dialog.setTitle("Solving...");
+		dialog.setBounds(this.getX(), this.getY(), 300, 100);
+		dialog.setModal(true);
+		dialog.setLayout(new FlowLayout());
+		
+		JLabel loadingLabel = new JLabel("Solving...", JLabel.CENTER);
+		
+		
+		JButton cancel = new JButton("Cancel");
+		
+		cancel.addActionListener(actionListener);
+		
+		dialog.add(loadingLabel);
+		dialog.add(cancel);
+		dialog.setVisible(true);
 	}
 	
 	//write name on buttons

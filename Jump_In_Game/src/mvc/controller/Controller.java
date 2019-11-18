@@ -3,6 +3,7 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import gamePieces.Tile;
  * 
  */
 
-public class Controller {
+public class Controller implements PropertyChangeListener {
 	
 	private TilePlayBoard game;
 	private View boardView;
@@ -43,6 +44,7 @@ public class Controller {
 	private GridPoint sourcePoint, destPoint;
 	private GridButton sourceButton;
 	private boolean isSolving;
+	private boolean solverStopFlag = false;
 	private PropertyChangeSupport support;
 	
 	public Controller() {
@@ -109,6 +111,12 @@ public class Controller {
 		
 		boardView.initHintButton(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				boardView.showLoadingDialog(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						System.out.println("in here");
+						solverStopFlag = true;
+					}
+				});
 				System.out.println(findSolution().toString());
 			}
 		});
@@ -284,11 +292,26 @@ public class Controller {
 		return possibleMoves;
 	}
 	
+	/**
+	 * @return the solverStopFlag
+	 */
+	public boolean isSolverStopFlag() {
+		return solverStopFlag;
+	}
+
+	/**
+	 * @param solverStopFlag the solverStopFlag to set
+	 */
+	public void setSolverStopFlag(boolean solverStopFlag) {
+		this.solverStopFlag = solverStopFlag;
+	}
+
 	public ArrayList<MovementData> findSolution() {
 		ArrayList<MovementData> solution = new ArrayList<MovementData>();
 		Queue<FullPathNode> queue = new LinkedList<FullPathNode>();
 		FullPathNode currNode;
 		
+		System.out.println("Starting solver...");
 //		this.setSolving(true);
 		
 		// Initialize the queue with one node for each possible move from the initial state
@@ -303,6 +326,11 @@ public class Controller {
 			
 			// execute all moves to set board in that state
 			for (MovementData move : currNode.getMovesFromInit()) {
+				if (this.isSolverStopFlag()) {
+					this.setSolverStopFlag(false);
+					return null;
+				}
+				
 				this.game.executeMove(move);
 			}
 			
@@ -314,6 +342,10 @@ public class Controller {
 			
 			// Add new nodes into queue that are valid moves from this state
 			for (MovementData move : this.getAllMovesFromCurrentState()) {
+				if (this.isSolverStopFlag()) {
+					this.setSolverStopFlag(false);
+					return null;
+				}
 				FullPathNode node = new FullPathNode(currNode);
 				node.addMove(move);
 				queue.add(node);
@@ -321,6 +353,10 @@ public class Controller {
 				
 			// Roll back the board to its initial state
 			for (int i = currNode.getMovesFromInit().size() - 1; i >= 0; --i) {
+				if (this.isSolverStopFlag()) {
+					this.setSolverStopFlag(false);
+					return null;
+				}
 				this.game.executeMove(currNode.getMovesFromInit().get(i).getInverseMove());
 			}
 		}
@@ -328,6 +364,14 @@ public class Controller {
 		this.setSolving(false);
 		
 		return solution;
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals("cancelSolver")) {
+			this.setSolverStopFlag((boolean) evt.getNewValue());
+		}
+		
 	}
 	
 	public static void main(String[] args) {
@@ -340,9 +384,9 @@ public class Controller {
         frame.getContentPane().add(con.boardView.getMenuBar(), BorderLayout.NORTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        
-        con.findSolution();
 	}
+
+	
 	
 
 }
