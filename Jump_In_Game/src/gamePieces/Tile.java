@@ -49,7 +49,9 @@ public class Tile {
 	 * @param isHole the isHole to set
 	 */
 	public void setHole(boolean isHole) {
+		
 		this.isHole = isHole;
+		
 	}
 
 	/**
