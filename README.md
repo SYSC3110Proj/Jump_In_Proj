@@ -9,7 +9,7 @@
 ## Deliverables
 
 Source code:
-* PlayBoard.java: Model for the game board  
+* TilePlayBoard.java: Model for the game board  
 Author:Ruixuan Ni
 * View.java: The view of game of a game board  
 Author:Zewen Chen,Craig Worthington
