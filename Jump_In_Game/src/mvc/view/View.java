@@ -1,5 +1,6 @@
 package mvc.view;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /** 
  * The view class creates the menu and user interface, with buttons and action listeners, so that the user can interact with
@@ -31,6 +33,9 @@ public class View extends JPanel implements PropertyChangeListener {
 	private JMenuBar menuBar;
 	private JMenuItem undo;
 	private JMenuItem redo;
+	private JMenuItem getSolution;
+	
+	private JTextArea textArea;
 	
 	public View() {
 		super();
@@ -40,9 +45,15 @@ public class View extends JPanel implements PropertyChangeListener {
 		menuBar = new JMenuBar();
 		undo = new JMenuItem("undo");
 		redo = new JMenuItem("redo");
+		getSolution = new JMenuItem("get solution");
+		getSolution.setActionCommand("solve");
 		
 		menuBar.add(undo);
 		menuBar.add(redo);
+		menuBar.add(getSolution);
+		
+		textArea = new JTextArea();
+		textArea.setPreferredSize(new Dimension(500, 100));
 		
 		//use JButton to make a 5x5 board
 		button = new GridButton[5][5];
@@ -60,6 +71,7 @@ public class View extends JPanel implements PropertyChangeListener {
 	public void initMenu(ActionListener listener) {
 		undo.addActionListener(listener);
 		redo.addActionListener(listener);
+		getSolution.addActionListener(listener);
 	}
 	
 	public JMenuBar getMenuBar() {
@@ -108,6 +120,10 @@ public class View extends JPanel implements PropertyChangeListener {
 			}
 		}
 	}
+	
+	public JTextArea getTextArea() {
+		return this.textArea;
+	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -117,3 +133,4 @@ public class View extends JPanel implements PropertyChangeListener {
 		
 	}
 }
+

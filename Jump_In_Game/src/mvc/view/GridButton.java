@@ -45,7 +45,7 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 	
 	@Override
 	public void setText(String str) {
-		super.setText("" + gridLocation.y + "," + gridLocation.x + ": " + str);
+		super.setText(str);
 	}
 	
 	
@@ -73,14 +73,14 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 	public void propertyChange(PropertyChangeEvent evt) {
 		Token newToken = (Token) evt.getNewValue();
 		
-		if (newToken != null) {
-			this.setText(newToken.getPieceType().toString());
-		} else {
-			this.setText("empty");
+		if (newToken != null && newToken.getName() != null) {
+			this.setText(newToken.getName());
 		}
-	}
-	
-	
-	
-	
+		else if(newToken != null && newToken.getName() == null){
+			this.setText(newToken.getPieceType().toString());
+		}
+		else {
+			this.setText("");
+		}
+	}	
 }

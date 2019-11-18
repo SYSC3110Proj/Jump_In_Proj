@@ -27,6 +27,7 @@ public class Rabbit extends Token {
 		} else if (str.equals("rabbit3")) {
 			this.colour = RabbitColour.GREY;
 		} 
+		super.setName(str);
 	}
 	
 	/**
