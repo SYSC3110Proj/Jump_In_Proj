@@ -59,3 +59,9 @@ this button would set the whole game to its original statue
   * The while loop will end when the solver is found, or there seems to have no solvent.
 
 ## Known Issues
+
+## Test solved puzzles
+
+There are a few puzzles passed the solver unit test. Puzzle picture is include in the puzzle folder.
+￼
+￼
