@@ -17,6 +17,15 @@ public class MovementData {
 		this.token = new Token(token);
 		this.newLocation = newLocation;
 	}
+	
+	/**
+	 * Copy constructor for MovementData
+	 * @param move the old movement data
+	 */
+	public MovementData(MovementData move) {
+		this.token = new Token(move.getToken());
+		this.newLocation = new GridPoint(move.getNewLocation());
+	}
 
 	/**
 	 * @return the token

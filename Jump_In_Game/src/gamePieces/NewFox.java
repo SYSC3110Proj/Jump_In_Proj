@@ -15,9 +15,9 @@ public class NewFox implements PropertyChangeListener {
 	private Direction orientation;
 	
 	private static final int MIN_ROW = 0;
-	private static final int MAX_ROW = 0;
+	private static final int MAX_ROW = 4;
 	private static final int MIN_COL = 0;
-	private static final int MAX_COL = 0;
+	private static final int MAX_COL = 4;
 	
 	
 	// List of all valid GridPoints that a fox can be placed in
@@ -121,6 +121,10 @@ public class NewFox implements PropertyChangeListener {
 		} 
 	}
 	
+	/**
+	 * Get the list of all valid moves that can be made for the head of this fox
+	 * @return ArrayList<GridPoint> of all valid moves for the fox head
+	 */
 	public ArrayList<GridPoint> getValidMoveLocations() {
 		ArrayList<GridPoint> validMoveLocations = new ArrayList<GridPoint>();
 		

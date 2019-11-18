@@ -201,6 +201,15 @@ public class TilePlayBoard {
 	}
 	
 	/**
+	 * Move a rabbit token to a new location without making any checks first (for solver)
+	 * @param rabbit the rabbit token to be moved
+	 * @param newLoc the new point for the rabbit to move to
+	 */
+	public void moveRabbitNoChecks(Rabbit rabbit, GridPoint newLoc) {
+		this.moveToken(rabbit, newLoc);
+	}
+	
+	/**
 	 * Test if a rabbit can jump in a certain direction
 	 * @param rabbit The rabbit to be moved
 	 * @param direction The direction to test the jump
@@ -398,7 +407,6 @@ public class TilePlayBoard {
 	 * @param fox the fox to be moved
 	 * @param newLocation the new location on the board for the head of the fox to be moved to
 	 */
-	// TODO: implement this function
 	public void moveFox(NewFox fox, GridPoint newLocation) {
 		// If the fox can move
 		if (testValidFoxMove(fox, newLocation) == true) {
@@ -420,6 +428,22 @@ public class TilePlayBoard {
 	}
 	
 	/**
+	 * Move a fox to a new location without performing any checks (for solver)
+	 * @param fox the fox to move
+	 * @param newLocation the new location to move the fox to
+	 */
+	public void moveFoxNoChecks(NewFox fox, GridPoint newLocation) {
+		// If the fox is moving backwards, move the tail first
+		if (fox.getHead().getLocation().getDirectionTo(newLocation) != fox.getOrientation()) {
+			this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+			this.moveToken(fox.getHead(), newLocation);
+		} else { // else move the head first
+			this.moveToken(fox.getHead(), newLocation);
+			this.moveToken(fox.getTail(), NewFox.getTheoreticalNewTailLocation(newLocation, fox.getOrientation()));
+		}
+	}
+	
+	/**
 	 * Execute a move based on the given MovementData object
 	 * @param move
 	 */
@@ -428,13 +452,13 @@ public class TilePlayBoard {
 			// TODO: add more conditions to prevent errors
 			if (this.rabbits.contains(board.getTileAt(move.getToken().getLocation()).getToken())) {
 				Rabbit rabbitToMove = this.rabbits.get(this.rabbits.indexOf(this.board.getTileAt(move.getToken().getLocation()).getToken()));
-				this.moveRabbit(rabbitToMove, move.getNewLocation());
+				this.moveRabbitNoChecks(rabbitToMove, move.getNewLocation());
 			} else {
 				System.err.println("Rabbit cannot be found!");
 			}
 		} else if (move.getToken().getPieceType() == PieceType.FOX) {
 			NewFox foxToMove = this.getFoxAtLocation(move.getToken().getLocation());
-			this.moveFox(foxToMove, move.getNewLocation());
+			this.moveFoxNoChecks(foxToMove, move.getNewLocation());
 		}
 	}
 	

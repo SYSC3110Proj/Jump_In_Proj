@@ -18,6 +18,7 @@ import gamePieces.NewFox;
 import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import mvc.view.*;
+import tree.FullPathNode;
 import tree.MovementData;
 import tree.Node;
 import gamePieces.Tile;
@@ -239,7 +240,36 @@ public class Controller {
 		
 	}
 	
-	public ArrayList<MovementData> getAllMoves(Node currNode) {
+//	public ArrayList<MovementData> getAllMoves(Node currNode) {
+//		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
+//		
+//		// For each rabbit, test each jump direction to see if there is a valid move that can be made
+//		for (Rabbit rabbit : this.game.getRabbits())  {
+//			for (Direction dir : Direction.values()) {
+//				if (this.game.testJumpDirection(rabbit, dir)) { // If a valid move for a rabbit can be made in the given direction
+//					possibleMoves.add(new MovementData(rabbit, this.game.getNearestJumpPoint(rabbit, dir))); // add it to the list of possible moves
+//				}
+//			}
+//		}
+//		
+//		// For each fox, it can only move in its row
+//		for (NewFox fox : this.game.getFoxes()) {
+//			System.out.println(this.game.getFoxes().toString());
+//			for (GridPoint newFoxLocation : fox.getValidMoveLocations()) { // For every valid fox movement location
+//				if (this.game.testValidFoxMove(fox, newFoxLocation)) {
+//					possibleMoves.add(new MovementData(fox.getHead(), newFoxLocation));
+//				}
+//			}
+//		}
+//		
+//		return possibleMoves;
+//	}
+	
+	/**
+	 * Get list of all moves from the current state
+	 * @return
+	 */
+	public ArrayList<MovementData> getAllMoves() {
 		ArrayList<MovementData> possibleMoves = new ArrayList<MovementData>();
 		
 		// For each rabbit, test each jump direction to see if there is a valid move that can be made
@@ -253,6 +283,8 @@ public class Controller {
 		
 		// For each fox, it can only move in its row
 		for (NewFox fox : this.game.getFoxes()) {
+			System.out.println(fox.toString());
+			System.out.println(fox.getValidMoveLocations().toString());
 			for (GridPoint newFoxLocation : fox.getValidMoveLocations()) { // For every valid fox movement location
 				if (this.game.testValidFoxMove(fox, newFoxLocation)) {
 					possibleMoves.add(new MovementData(fox.getHead(), newFoxLocation));
@@ -282,11 +314,6 @@ public class Controller {
 		return false;
 	}
 	
-	
-	public void () {
-		
-	}
-	
 	/**
 	 * Create a tree of possible moves using a breadth first search pattern
 	 */
@@ -314,7 +341,6 @@ public class Controller {
 			System.out.println("Current node = " + currNode.toString());
 			
 			Node<MovementData> tempNode = currNode;
-			
 			
 			
 			
@@ -348,6 +374,51 @@ public class Controller {
 		
 	}
 	
+	public ArrayList<MovementData> findSolutionFullPathNode() {
+		ArrayList<MovementData> solution = new ArrayList<MovementData>();
+		Queue<FullPathNode> queue = new LinkedList<FullPathNode>();
+		FullPathNode currNode;
+		
+		// Initialize the queue with one node for each possible move from the initial state
+		for (MovementData move : this.getAllMoves()) {
+			FullPathNode newNode = new FullPathNode();
+			newNode.addMove(new MovementData(move));
+			queue.add(newNode);
+		}
+		
+		for(int temp = 0; temp < 2; ++temp) {
+			currNode = queue.poll();
+			
+			// execute all moves to set board in that state
+			for (MovementData move : currNode.getMovesFromInit()) {
+				this.game.executeMove(move);
+			}
+			
+			// If this move gets the board into a win state, exit
+			if (this.game.getWinState() == true) {
+				solution = currNode.getMovesFromInit();
+				break;
+			}
+			
+			System.out.println(this.getAllMoves());
+			
+			// Add new nodes into queue that are valid moves from this state
+			for (MovementData move : this.getAllMoves()) {
+				FullPathNode node = new FullPathNode(currNode);
+				node.addMove(move);
+				queue.add(node);
+			}
+				
+			// Roll back the board to its initial state
+			for (int i = currNode.getMovesFromInit().size() - 1; i >= 0; --i) {
+				this.game.executeMove(currNode.getMovesFromInit().get(i).getInverseMove());
+			}
+		}
+		
+		
+		return solution;
+	}
+	
 	public static void main(String[] args) {
 		Controller con = new Controller();
 		
@@ -358,7 +429,7 @@ public class Controller {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         
-        con.findSolution();
+        System.out.println(con.findSolutionFullPathNode().toString());
 	}
 	
 
