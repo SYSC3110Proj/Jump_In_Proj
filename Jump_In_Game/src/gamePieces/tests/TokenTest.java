@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+/**
+ * The TokenTest class will contain tests for the Token class.
+ */
 public class TokenTest {
 	
 	/**
