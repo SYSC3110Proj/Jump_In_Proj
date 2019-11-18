@@ -5,7 +5,6 @@ import java.util.Stack;
 
 import gamePieces.Direction;
 import gamePieces.GridPoint;
-import gamePieces.PieceType;
 import mvc.controller.Record;
 import mvc.controller.TilePlayBoard;
 
