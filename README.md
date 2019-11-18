@@ -9,7 +9,7 @@
 ## Deliverables
 
 Source code:
-* TilePlayBoard.java: Model for the game board  
+* Board.java: Model for the game board  
 Author:Ruixuan Ni
 * View.java: The view of game of a game board  
 Author:Zewen Chen,Craig Worthington
@@ -23,7 +23,9 @@ Author: Mika Argyle
 Author: Mika Argyle
 * Tile.java: Main object for the each square on the game board  
 Author: Zewen Chen
-* Board.java: Main object for the each square on the game board  
+* Token.java: Main object for each token on the game board  
+Author: Zewen Chen
+* Token.java: Main object for each token on the game board  
 Author: Zewen Chen
 
 Test code:
