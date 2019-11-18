@@ -57,6 +57,7 @@ this button would set the whole game to its original statue
 
 ## Test solved puzzles
 
-There are a few puzzles passed the solver unit test. Puzzle picture is include in the puzzle folder.
+Puzzles constructors in TilePlayBoard class distinguish by integer variable.
+There are three puzzles in solver test class passed sucessfully.
 ￼
 ￼
