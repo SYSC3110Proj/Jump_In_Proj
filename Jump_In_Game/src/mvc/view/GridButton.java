@@ -14,6 +14,11 @@ import javax.swing.border.Border;
 import gamePieces.GridPoint;
 import gamePieces.Token;
 
+/**
+ * The GridButton class includes the location of the grid button, methods to set whether the button is a hole and what text is
+ * displayed in the button.
+ */
+
 public class GridButton extends JToggleButton implements PropertyChangeListener {
 	
 	private boolean isHole;
