@@ -34,7 +34,7 @@ Test code:
 * RabbitTest.java:Test of Rabbit class
 * GridPointTest.java:Test of GridPoint class 
 * RecordTest.java:Test of Record class
-* TilePlayBoardTest.java:Test of TilePlayBoard class. 
+* TilePlayBoardTest.java:Test of TilePlayBoard class.   
 Author:Tiantian Lin
 
 UML Diagram:     
