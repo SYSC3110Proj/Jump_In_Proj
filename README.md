@@ -27,7 +27,7 @@ Author: Zewen Chen
 * PieceType.java: contains all the possible types of pieces.
 
 Test code:
-* PlayBoardTest.java:Test of PlayBoard class
+* BoardTest.java:Test of PlayBoard class
 * FoxTest.java:Test of Fox class
 * RabbitTest.java:Test of Rabbit class
 * SquareTest.java:Test of Square class 
