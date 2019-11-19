@@ -13,7 +13,7 @@ Source code:
 Author:Ruixuan Ni
 * View.java: The view of game of a game board  
 Author:Zewen Chen,Craig Worthington
-* Control.java: Main file of dealing with the clicking events delivered from view, and operating the play board  
+* Controller.java: Main file of dealing with the clicking events delivered from view, and operating the play board  
 Author:Ruixuan Ni,Craig Worthington
 * Direction.java: Enum file for valid gamepiece movement and orientations  
 Author:Ruixuan Ni
@@ -25,6 +25,8 @@ Author: Mika Argyle
 Author: Zewen Chen
 * Token.java: Main object for each token on the game board  
 * PieceType.java: contains all the possible types of pieces.
+* GridButton.java: Main object for the grid buttons on the game board
+* Record.java: Records the movements of a token
 
 Test code:
 * BoardTest.java:Test of Board class
