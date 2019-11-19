@@ -30,7 +30,9 @@ Test code:
 * PlayBoardTest.java:Test of PlayBoard class
 * FoxTest.java:Test of Fox class
 * RabbitTest.java:Test of Rabbit class
-* SquareTest.java:Test of Square class  
+* SquareTest.java:Test of Square class 
+* RecordTest.java:Test of Record class
+* TilePlayBoardTest.java:Test of TilePlayBoard class
 Author:Tiantian Lin
 
 UML Diagram:     
