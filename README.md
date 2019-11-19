@@ -51,11 +51,12 @@ If you want to restart the game, just click the restart button in the top menu b
 this button would set the whole game to its original statue
 
 ## Changes and Design
-1. Refactor all the playboard (done by Craig Worthington)
+1. Refactor the game model to use a more object-oriented approach. The play board consists of a 5x5 grid of tiles, and the pieces are represented by "Tokens". Each tile contains its own location on the board, and the token object that occupies its space (if no token occupies the space, it is considered null). The Token class contains info about the type of piece it is (Mushroom, Fox, Rabbit), as well as its location. The PlayBoard class contains the board, as well as the business logic to check if any given move is valid. (done by Craig Worthington)
 2. To implement the undo and redo function, we created two stacks in FilePlayBoard class: one to record the movements made by player and ther other one recording the undo movements.
-3. To implement the solver, we created a tree:   
+3. To implement the solver, a breadth first search was used to iterate through all possible moves for a given board state in order to find the solution with the smallest number of possible moves.   
   
 ## Known Issues
+The search algorithm is not as efficient as it could be, so for more difficult puzzles, it can take a long time to solve. 
 
 ## Test solved puzzles
 
