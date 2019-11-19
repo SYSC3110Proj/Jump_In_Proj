@@ -28,9 +28,9 @@ Author: Zewen Chen
 
 Test code:
 * BoardTest.java:Test of PlayBoard class
-* FoxTest.java:Test of Fox class
+* NewFoxTest.java:Test of Fox class
 * RabbitTest.java:Test of Rabbit class
-* SquareTest.java:Test of Square class 
+* GridPointTest.java:Test of GridPoint class 
 * RecordTest.java:Test of Record class
 * TilePlayBoardTest.java:Test of TilePlayBoard class
 Author:Tiantian Lin
