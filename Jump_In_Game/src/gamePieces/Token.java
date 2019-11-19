@@ -5,9 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
-/**
- *
- /*
+
 public class Token implements Serializable {
 	/**
 	 * The token class contains the location, name, and type of piece for each token, and the methods to get and set those variables.
