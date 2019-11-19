@@ -34,7 +34,7 @@ Test code:
 * RabbitTest.java:Test of Rabbit class
 * GridPointTest.java:Test of GridPoint class 
 * RecordTest.java:Test of Record class
-* TilePlayBoardTest.java:Test of TilePlayBoard class
+* TilePlayBoardTest.java:Test of TilePlayBoard class. 
 Author:Tiantian Lin
 
 UML Diagram:     
@@ -64,7 +64,7 @@ The search algorithm is not as efficient as it could be, so for more difficult p
 
 ## Test solved puzzles
 
-Puzzles constructors in TilePlayBoard class distinguish by integer variable.  
+Puzzles constructors in TilePlayBoard class are distinguished by integer variables.  
 There are three puzzles in solver test class passed sucessfully.
 ￼
 ￼
