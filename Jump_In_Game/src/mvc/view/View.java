@@ -11,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -31,8 +32,12 @@ public class View extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 	private GridButton[][] button;
 	private JMenuBar menuBar;
+	private JMenu edit;
+	private JMenu file;
 	private JMenuItem undo;
 	private JMenuItem redo;
+	private JMenuItem save;
+	private JMenuItem load;
 	private JMenuItem getSolution;
 	
 	private JTextArea textArea;
@@ -41,16 +46,24 @@ public class View extends JPanel implements PropertyChangeListener {
 		super();
 		this.setLayout(new GridLayout(5,5));
 		this.setBounds(300, 400, 500, 500);
-		
+		edit = new JMenu("game");
+		file = new JMenu("file");
 		menuBar = new JMenuBar();
+		menuBar.add(edit);
+		menuBar.add(file);
 		undo = new JMenuItem("undo");
 		redo = new JMenuItem("redo");
 		getSolution = new JMenuItem("get solution");
 		getSolution.setActionCommand("solve");
+		save = new JMenuItem("save");
+		load = new JMenuItem("load");
 		
-		menuBar.add(undo);
-		menuBar.add(redo);
-		menuBar.add(getSolution);
+		edit.add(undo);
+		edit.add(redo);
+		edit.add(getSolution);
+		
+		file.add(save);
+		file.add(load);
 		
 		textArea = new JTextArea();
 		textArea.setPreferredSize(new Dimension(500, 100));
