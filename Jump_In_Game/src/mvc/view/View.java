@@ -85,6 +85,8 @@ public class View extends JPanel implements PropertyChangeListener {
 		undo.addActionListener(listener);
 		redo.addActionListener(listener);
 		getSolution.addActionListener(listener);
+		save.addActionListener(listener);
+		load.addActionListener(listener);
 	}
 	
 	public JMenuBar getMenuBar() {
