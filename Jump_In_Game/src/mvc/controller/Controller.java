@@ -3,6 +3,14 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -240,7 +248,33 @@ public class Controller {
 		}
 		return null;
 	}
-	
+	public static void save(Serializable data, String file) {
+		try {
+			ObjectOutputStream output = new ObjectOutputStream(Files.newOutputStream(Paths.get(file)));
+			output.writeObject(data);
+			output.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public static Object load(Serializable data, String file) {
+		Object o=null;
+		try {
+			ObjectInputStream input = new ObjectInputStream(Files.newInputStream(Paths.get(file)));
+			o=input.readObject();
+			input.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return o;
+		
+	}
 	public static void main(String[] args) {
 		Controller con = new Controller();
 		
