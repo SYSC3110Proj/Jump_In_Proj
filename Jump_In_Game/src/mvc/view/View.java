@@ -11,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -31,9 +32,13 @@ public class View extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 	private GridButton[][] button;
 	private JMenuBar menuBar;
+	private JMenu file;
+	private JMenu edit;
 	private JMenuItem undo;
 	private JMenuItem redo;
 	private JMenuItem getSolution;
+	private JMenuItem save;
+	private JMenuItem load;
 	
 	private JTextArea textArea;
 	
@@ -43,13 +48,23 @@ public class View extends JPanel implements PropertyChangeListener {
 		this.setBounds(300, 400, 500, 500);
 		
 		menuBar = new JMenuBar();
+		file = new JMenu("file");
+		edit = new JMenu("edit");
 		undo = new JMenuItem("undo");
 		redo = new JMenuItem("redo");
 		getSolution = new JMenuItem("get solution");
 		getSolution.setActionCommand("solve");
+		save = new JMenuItem("save");
+		load = new JMenuItem("load");
 		
-		menuBar.add(undo);
-		menuBar.add(redo);
+		file.add(save);
+		file.add(load);
+		
+		edit.add(undo);
+		edit.add(redo);
+		
+		menuBar.add(file);
+		menuBar.add(edit);
 		menuBar.add(getSolution);
 		
 		textArea = new JTextArea();
@@ -72,6 +87,8 @@ public class View extends JPanel implements PropertyChangeListener {
 		undo.addActionListener(listener);
 		redo.addActionListener(listener);
 		getSolution.addActionListener(listener);
+		save.addActionListener(listener);
+		load.addActionListener(listener);
 	}
 	
 	public JMenuBar getMenuBar() {

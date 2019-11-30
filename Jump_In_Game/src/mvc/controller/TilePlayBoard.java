@@ -49,7 +49,7 @@ public class TilePlayBoard implements Cloneable{
 		board.getTileAt(4, 0).setHole(true);
 		board.getTileAt(4, 4).setHole(true);
 		
-		this.setMushroom(1, 3);
+		/*this.setMushroom(1, 3);
 		this.setMushroom(4,2);
 		
 		this.setRabbit(0, 3);
@@ -57,7 +57,7 @@ public class TilePlayBoard implements Cloneable{
 		this.setRabbit(4,1);
 		
 		this.setFox(new GridPoint(3,1), Direction.SOUTH);
-		this.setFox(new GridPoint(3,4), Direction.EAST);
+		this.setFox(new GridPoint(3,4), Direction.EAST);*/
 	}
 	
 	public TilePlayBoard(TilePlayBoard playBoard) {
@@ -65,6 +65,7 @@ public class TilePlayBoard implements Cloneable{
 		
 		this.rabbits = new ArrayList<Rabbit>();
 		this.foxes = new ArrayList<NewFox>();
+		this.mushrooms = new ArrayList<Token>();
 		this.winState = false;
 		
 		this.before = new Stack<Record>();
@@ -86,7 +87,9 @@ public class TilePlayBoard implements Cloneable{
 		board.getTileAt(4, 4).setHole(true);
 		
 		// Add Mushrooms
-		this.mushrooms = playBoard.getMushrooms();
+		for(int i=0; i<playBoard.getMushrooms().size(); i++) {
+			this.setMushroom(playBoard.getMushrooms().get(i).getRow(), playBoard.getMushrooms().get(i).getCol());
+		}
 		
 		// Add Rabbits
 		for(int i=1; i<=playBoard.getRabbitNum(); i++) {
@@ -103,9 +106,10 @@ public class TilePlayBoard implements Cloneable{
 	public void setMushroom(int row, int col) {
 		
 		Token mushroom = new Token(new GridPoint(row, col), PieceType.MUSHROOM);
+		int num=this.mushrooms.size();
 		mushroom.setName("mushroom");
 		this.mushrooms.add(mushroom);
-		board.getTileAt(this.mushrooms.get(this.mushrooms.size()-1).getLocation()).setToken(this.mushrooms.get(0));
+		board.getTileAt(this.mushrooms.get(num).getLocation()).setToken(this.mushrooms.get(num));
 		
 	}
 	
@@ -128,6 +132,7 @@ public class TilePlayBoard implements Cloneable{
 		int num=this.rabbits.size()+1;
 		this.rabbits.add(new Rabbit(new GridPoint(row, col), "rabbit"+ num));
 		board.getTileAt(this.rabbits.get(num-1).getLocation()).setToken(this.rabbits.get(num-1));
+		
 	}
 
 	/**

@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JToggleButton;
 
+import org.xml.sax.SAXException;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -127,6 +129,17 @@ public class Controller {
 					}
 					view.getTextArea().setText(text);
 				}
+				else if(e.getActionCommand().equals("save")) {
+					XMLHandler handler = new XMLHandler(game);
+					try {
+						handler.toXMLFile();
+					} catch (SAXException e1) {
+						e1.printStackTrace();
+					}
+				}
+				else if(e.getActionCommand().equals("load")) {
+					
+				}
 				
 			}
 		});
@@ -210,35 +223,6 @@ public class Controller {
 			System.out.println("Something went wrong!");
 			System.err.println(error);
 		}
-	}
-	
-	//row1, col1 of original position and row2, col2 of destination
-	private Direction getDirection(GridPoint source, GridPoint dest) {
-		// Check if new destination is in line with the source
-		if (source.getRow() != dest.getRow() && source.getCol() != dest.getCol()) {
-			return null;
-		}
-		
-		// Check if the destination is the same point as the source
-		if (source.equals(dest)) {
-			return null;
-		}
-		
-		// If source and dest are on same row
-		if (source.getRow() == dest.getRow()) {
-			if (source.getCol() > dest.getCol()) {
-				return Direction.WEST;
-			} else {
-				return Direction.EAST;
-			}
-		} else if (source.getCol() == dest.getCol()) { // If source and dest are in same column
-			if (source.getRow() > dest.getRow()) {
-				return Direction.NORTH;
-			} else {
-				return Direction.SOUTH;
-			}
-		}
-		return null;
 	}
 	
 	public static void main(String[] args) {
