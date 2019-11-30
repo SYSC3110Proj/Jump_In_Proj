@@ -74,7 +74,9 @@ public class View extends JPanel implements PropertyChangeListener {
 		for(int row = 0; row < 5; row++) {
 			for(int col = 0; col < 5; col++) {
 				button[row][col] = new GridButton(row, col);
-				this.add(button[row][col]);
+				
+					this.add(button[row][col]);
+				
 			}
 		}
 		
@@ -130,7 +132,11 @@ public class View extends JPanel implements PropertyChangeListener {
 		for(int row = 0; row < 5; row++) {
 			for(int col = 0; col < 5; col++) {
 				button[row][col].setName(row + ","+ col);
-				button[row][col].setText(chess[row][col]);
+				if(button[row][col].isHole()) {
+					button[row][col].setText("Hole");
+				}else {
+					button[row][col].setText(chess[row][col]);
+				}
 				button[row][col].addActionListener(listener);
 			}
 		}

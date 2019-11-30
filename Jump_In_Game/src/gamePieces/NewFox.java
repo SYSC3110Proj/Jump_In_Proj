@@ -2,6 +2,7 @@ package gamePieces;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * for constructing instances of itself, and methods to determine where it is, where it can be, and to actually move it.
  */
 
-public class NewFox implements PropertyChangeListener {
+public class NewFox  implements PropertyChangeListener,Serializable  {
 	
 	private Token head;
 	private Token tail;
