@@ -33,13 +33,9 @@ public class View extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 	private GridButton[][] button;
 	private JMenuBar menuBar;
-	private JMenu edit;
-	private JMenu file;
-	private JMenuItem undo;
-	private JMenuItem redo;
-	private JMenuItem save;
-	private JMenuItem load;
-	private JMenuItem getSolution;
+	private JMenu edit, file, startWith;
+	private JMenuItem undo, redo, save, load, getSolution;
+	private JMenuItem game1, game2, game3;
 	
 	private JTextArea textArea;
 	
@@ -50,14 +46,18 @@ public class View extends JPanel implements PropertyChangeListener {
 		edit = new JMenu("game");
 		file = new JMenu("file");
 		menuBar = new JMenuBar();
-		menuBar.add(edit);
 		menuBar.add(file);
+		menuBar.add(edit);
 		undo = new JMenuItem("undo");
 		redo = new JMenuItem("redo");
+		startWith = new JMenu("start with");
 		getSolution = new JMenuItem("get solution");
 		getSolution.setActionCommand("solve");
 		save = new JMenuItem("save");
 		load = new JMenuItem("load");
+		game1 = new JMenuItem("game1");
+		game2 = new JMenuItem("game2");
+		game3 = new JMenuItem("game3");
 		
 		edit.add(undo);
 		edit.add(redo);
@@ -65,6 +65,10 @@ public class View extends JPanel implements PropertyChangeListener {
 		
 		file.add(save);
 		file.add(load);
+		
+		startWith.add(game1);
+		startWith.add(game2);
+		startWith.add(game3);
 		
 		textArea = new JTextArea();
 		textArea.setPreferredSize(new Dimension(500, 100));

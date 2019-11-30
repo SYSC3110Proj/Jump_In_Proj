@@ -53,9 +53,52 @@ public class Controller {
 	private GridButton sourceButton;
 	
 	public Controller() {
-		this.game = new TilePlayBoard(1);
+		this.game = new TilePlayBoard();
 		this.view = new View();
 		
+		view.initMenu(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals("undo")) {
+					game.undo();
+				}
+				else if(e.getActionCommand().equals("redo")) {
+					game.redo();
+				}
+				else if(e.getActionCommand().equals("solve")) {
+					solve = new Solver(game);
+					ArrayList<MovementData> solvent = solve.findSolution();
+					String text = "";
+					for(int i=0; i<solvent.size(); i++) {
+						MovementData temp = solvent.get(i);
+						text += "move" + temp.getToken().getName() + " to (" + 
+						temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
+					}
+					
+					view.getTextArea().setText(text);
+				}
+				else if(e.getActionCommand().equals("save")) {
+					TilePlayBoard.save(game.getBoard(), "saveDoc");
+				}
+				else if(e.getActionCommand().equals("load")) {
+					TilePlayBoard.load("saveDoc");
+					// need a method in game to reset the board
+				}
+				else if(e.getActionCommand().equals("game1")) {
+					
+				}
+				else if(e.getActionCommand().equals("game2")) {
+					
+				}
+				else if(e.getActionCommand().equals("game3")) {
+					
+				}
+				
+			}
+		});
+	}
+	
+	private void initButtons() {
+
 		this.game.addPropertyChangeListener(this.view); // Have view observe game
 		
 		for (int row = 0; row < 5; ++row) {
@@ -114,37 +157,6 @@ public class Controller {
 //					}
 				}
 				view.updateButton(game.getBoardName());
-			}
-		});
-		
-		view.initMenu(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(e.getActionCommand().equals("undo")) {
-					game.undo();
-				}
-				else if(e.getActionCommand().equals("redo")) {
-					game.redo();
-				}
-				else if(e.getActionCommand().equals("solve")) {
-					solve = new Solver(game);
-					ArrayList<MovementData> solvent = solve.findSolution();
-					String text = "";
-					for(int i=0; i<solvent.size(); i++) {
-						MovementData temp = solvent.get(i);
-						text += "move" + temp.getToken().getName() + " to (" + 
-						temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
-					}
-					
-					view.getTextArea().setText(text);
-				}
-				else if(e.getActionCommand().equals("save")) {
-					game.save(game.getBoard(), "saveDoc");
-				}
-				else if(e.getActionCommand().equals("load")) {
-					game.load("saveDoc");
-					// need a method in game to reset the board
-				}
-				
 			}
 		});
 	}
