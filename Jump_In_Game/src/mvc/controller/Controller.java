@@ -86,6 +86,11 @@ public class Controller {
 				}
 				else if(e.getActionCommand().equals("game1")) {
 					XMLHandler handler = new XMLHandler(1);
+					try {
+						handler.importXMLFile();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 					game = handler.getBoard();
 					initButtons();
 				}

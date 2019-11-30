@@ -37,6 +37,7 @@ public class TilePlayBoard  implements Serializable{
 		
 		this.rabbits = new ArrayList<Rabbit>();
 		this.foxes = new ArrayList<NewFox>();
+		this.mushrooms = new ArrayList<Token>();
 		this.winState = false;
 		
 		this.support = new PropertyChangeSupport(this);
@@ -56,29 +57,7 @@ public class TilePlayBoard  implements Serializable{
 	}
 	
 	public TilePlayBoard(TilePlayBoard playBoard) {
-		this.board = new Board();
-		
-		this.rabbits = new ArrayList<Rabbit>();
-		this.foxes = new ArrayList<NewFox>();
-		this.winState = false;
-		
-		this.before = new Stack<Record>();
-		this.after = new Stack<Record>();
-		
-		this.support = new PropertyChangeSupport(this);
-		
-		for (int row = 0; row < 5; row++) { // row
-			for (int col = 0; col < 5; col++) { // column
-				board.setTileAt(row, col, new Tile(new GridPoint(row, col), null, false));
-			}
-		}
-		
-		// set the locations of the Holes
-		board.getTileAt(0, 0).setHole(true);
-		board.getTileAt(0, 4).setHole(true);
-		board.getTileAt(2, 2).setHole(true);
-		board.getTileAt(4, 0).setHole(true);
-		board.getTileAt(4, 4).setHole(true);
+		this();
 		
 		// Add Mushrooms
 		for(int i=0; i<playBoard.getMushrooms().size(); i++) {

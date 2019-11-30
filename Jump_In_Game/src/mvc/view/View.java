@@ -45,12 +45,13 @@ public class View extends JPanel implements PropertyChangeListener {
 		this.setBounds(300, 400, 500, 500);
 		edit = new JMenu("game");
 		file = new JMenu("file");
+		startWith = new JMenu("start with");
 		menuBar = new JMenuBar();
 		menuBar.add(file);
 		menuBar.add(edit);
+		menuBar.add(startWith);
 		undo = new JMenuItem("undo");
 		redo = new JMenuItem("redo");
-		startWith = new JMenu("start with");
 		getSolution = new JMenuItem("get solution");
 		getSolution.setActionCommand("solve");
 		save = new JMenuItem("save");
@@ -94,6 +95,9 @@ public class View extends JPanel implements PropertyChangeListener {
 		getSolution.addActionListener(listener);
 		save.addActionListener(listener);
 		load.addActionListener(listener);
+		game1.addActionListener(listener);
+		game2.addActionListener(listener);
+		game3.addActionListener(listener);
 	}
 	
 	public JMenuBar getMenuBar() {
