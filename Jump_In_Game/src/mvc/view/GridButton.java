@@ -41,7 +41,7 @@ public class GridButton extends JToggleButton implements PropertyChangeListener 
 			this.isHole = false;
 		}
 		
-		this.setText("" + row + "," + col);
+		//this.setText("" + row + "," + col);
 		
 		if (this.isHole) {
 			this.setBackground(new Color(139,69,19));

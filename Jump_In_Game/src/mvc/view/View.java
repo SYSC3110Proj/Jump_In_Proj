@@ -143,7 +143,11 @@ public class View extends JPanel implements PropertyChangeListener {
 				button[row][col].setName(row + ","+ col);
 				if(button[row][col].isHole()) {
 					button[row][col].setText("Hole");
-				}else if(chess[row][col].equals("rabbit1") ){
+				}
+				else if(!chess[row][col].equals("")) {
+					button[row][col].setText(chess[row][col]);
+				}
+				/*else if(chess[row][col].equals("rabbit1") ){
 					button[row][col].setIcon (new ImageIcon( "whiterabbit.png"));
 				}
 				else if(chess[row][col].equals("rabbit2") ){
@@ -160,7 +164,7 @@ public class View extends JPanel implements PropertyChangeListener {
 				}
 				else {
 					button[row][col].setText(chess[row][col]);
-				}
+				}*/
 				button[row][col].addActionListener(listener);
 			}
 		}

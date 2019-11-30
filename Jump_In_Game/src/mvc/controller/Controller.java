@@ -3,22 +3,9 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.TimeUnit;
 
-import javax.swing.JToggleButton;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import gamePieces.Direction;
@@ -27,7 +14,7 @@ import gamePieces.NewFox;
 import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import mvc.view.*;
-import tree.FullPathNode;
+
 import tree.MovementData;
 import gamePieces.Tile;
 
