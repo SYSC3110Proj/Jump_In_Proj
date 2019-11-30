@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -134,7 +135,22 @@ public class View extends JPanel implements PropertyChangeListener {
 				button[row][col].setName(row + ","+ col);
 				if(button[row][col].isHole()) {
 					button[row][col].setText("Hole");
-				}else {
+				}else if(chess[row][col].equals("rabbit1") ){
+					button[row][col].setIcon (new ImageIcon( "whiterabbit.png"));
+				}
+				else if(chess[row][col].equals("rabbit2") ){
+					button[row][col].setIcon (new ImageIcon( "greyrabbit.png"));
+				}
+				else if(chess[row][col].equals("rabbit3") ){
+					button[row][col].setIcon (new ImageIcon( "brownrabbit.png"));
+				}
+				else if(chess[row][col].equals("fox1")||chess[row][col].equals("fox2") ){
+					button[row][col].setIcon (new ImageIcon( "fox.png"));
+				}
+				else if(chess[row][col].equals("mushroom") ){
+					button[row][col].setIcon (new ImageIcon( "mushroom2.png"));
+				}
+				else {
 					button[row][col].setText(chess[row][col]);
 				}
 				button[row][col].addActionListener(listener);
@@ -147,7 +163,26 @@ public class View extends JPanel implements PropertyChangeListener {
 				button[row][col].setName(row + ","+ col);
 				if(button[row][col].isHole()&& chess[row][col].isEmpty()) {
 					button[row][col].setText("Hole");
-				}else {
+					button[row][col].setIcon(null); 
+				}else if(chess[row][col].equals("rabbit1") ){
+					button[row][col].setIcon (new ImageIcon( "whiterabbit.png"));
+				}
+				else if(chess[row][col].equals("rabbit2") ){
+					button[row][col].setIcon (new ImageIcon( "greyrabbit.png"));
+				}
+				else if(chess[row][col].equals("rabbit3") ){
+					button[row][col].setIcon (new ImageIcon( "brownrabbit.png"));
+				}
+				else if(chess[row][col].equals("fox1")||chess[row][col].equals("fox2") ){
+					button[row][col].setIcon (new ImageIcon( "fox.png"));
+				}
+				else if(chess[row][col].equals("mushroom") ){
+					button[row][col].setIcon (new ImageIcon( "mushroom2.png"));
+				}
+				else if(chess[row][col].isEmpty()) {
+					button[row][col].setIcon(null);
+				}
+				else {
 					button[row][col].setText(chess[row][col]);
 				}
 			}
