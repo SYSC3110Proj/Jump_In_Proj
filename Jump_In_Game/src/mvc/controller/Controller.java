@@ -42,14 +42,56 @@ public class Controller {
 	private String name;
 	
 	private Tile sourceTile, destTile;
-	
+	private XMLHandler handler;
 	private GridPoint sourcePoint, destPoint;
 	private GridButton sourceButton;
 	
 	public Controller() {
 		this.game = new TilePlayBoard();
 		this.view = new View();
+		handler = new XMLHandler(game);
 		
+		view.initMenu(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals("undo")) {
+					game.undo();
+				}
+				else if(e.getActionCommand().equals("redo")) {
+					game.redo();
+				}
+				else if(e.getActionCommand().equals("solve")) {
+					solve = new Solver(game);
+					ArrayList<MovementData> solvent = solve.findSolution();
+					String text = "";
+					for(int i=0; i<solvent.size(); i++) {
+						MovementData temp = solvent.get(i);
+						text += "move" + temp.getToken().getName() + " to (" + 
+						temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
+					}
+					view.getTextArea().setText(text);
+				}
+				else if(e.getActionCommand().equals("save")) {
+					try {
+						handler.toXMLFile();
+					} catch (SAXException e1) {
+						e1.printStackTrace();
+					}
+				}
+				else if(e.getActionCommand().equals("load")) {
+					try {
+						handler.importXMLFile();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					game = handler.getBoard();
+					initButtons();
+				}
+				
+			}
+		});
+	}
+	
+	private void initButtons() {
 		this.game.addPropertyChangeListener(this.view); // Have view observe game
 		
 		for (int row = 0; row < 5; ++row) {
@@ -107,40 +149,6 @@ public class Controller {
 //						view.popWin();	
 //					}
 				}
-			}
-		});
-		
-		view.initMenu(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(e.getActionCommand().equals("undo")) {
-					game.undo();
-				}
-				else if(e.getActionCommand().equals("redo")) {
-					game.redo();
-				}
-				else if(e.getActionCommand().equals("solve")) {
-					solve = new Solver(game);
-					ArrayList<MovementData> solvent = solve.findSolution();
-					String text = "";
-					for(int i=0; i<solvent.size(); i++) {
-						MovementData temp = solvent.get(i);
-						text += "move" + temp.getToken().getName() + " to (" + 
-						temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
-					}
-					view.getTextArea().setText(text);
-				}
-				else if(e.getActionCommand().equals("save")) {
-					XMLHandler handler = new XMLHandler(game);
-					try {
-						handler.toXMLFile();
-					} catch (SAXException e1) {
-						e1.printStackTrace();
-					}
-				}
-				else if(e.getActionCommand().equals("load")) {
-					
-				}
-				
 			}
 		});
 	}
