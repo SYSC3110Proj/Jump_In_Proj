@@ -52,7 +52,7 @@ public class TilePlayBoard  implements Serializable{
 		board.getTileAt(0, 4).setHole(true);
 		board.getTileAt(2, 2).setHole(true);
 		board.getTileAt(4, 0).setHole(true);
-		board.getTileAt(4, 4).setHole(true);	
+		board.getTileAt(4, 4).setHole(true);
 	}
 	
 	public TilePlayBoard(TilePlayBoard playBoard) {

@@ -53,44 +53,51 @@ public class Controller {
 	private GridButton sourceButton;
 	
 	public Controller() {
-		this.game = new TilePlayBoard();
 		this.view = new View();
 		
 		view.initMenu(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getActionCommand().equals("undo")) {
-					game.undo();
+					if(game != null) game.undo();
 				}
 				else if(e.getActionCommand().equals("redo")) {
-					game.redo();
+					if(game != null) game.redo();
 				}
 				else if(e.getActionCommand().equals("solve")) {
-					solve = new Solver(game);
-					ArrayList<MovementData> solvent = solve.findSolution();
-					String text = "";
-					for(int i=0; i<solvent.size(); i++) {
-						MovementData temp = solvent.get(i);
-						text += "move" + temp.getToken().getName() + " to (" + 
-						temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
-					}
+					if(game!= null) {
+						solve = new Solver(game);
+						ArrayList<MovementData> solvent = solve.findSolution();
+						String text = "";
+						for(int i=0; i<solvent.size(); i++) {
+							MovementData temp = solvent.get(i);
+							text += "move" + temp.getToken().getName() + " to (" + 
+									temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
+						}
 					
-					view.getTextArea().setText(text);
+						view.getTextArea().setText(text);
+					}
 				}
 				else if(e.getActionCommand().equals("save")) {
-					TilePlayBoard.save(game.getBoard(), "saveDoc");
+					if(game != null) TilePlayBoard.save(game.getBoard(), "saveDoc");
 				}
 				else if(e.getActionCommand().equals("load")) {
-					TilePlayBoard.load("saveDoc");
+					if(game != null) TilePlayBoard.load("saveDoc");
 					// need a method in game to reset the board
 				}
 				else if(e.getActionCommand().equals("game1")) {
-					
+					XMLHandler handler = new XMLHandler(1);
+					game = handler.getBoard();
+					initButtons();
 				}
 				else if(e.getActionCommand().equals("game2")) {
-					
+					XMLHandler handler = new XMLHandler(2);
+					game = handler.getBoard();
+					initButtons();
 				}
 				else if(e.getActionCommand().equals("game3")) {
-					
+					XMLHandler handler = new XMLHandler(3);
+					game = handler.getBoard();
+					initButtons();
 				}
 				
 			}
@@ -240,36 +247,6 @@ public class Controller {
 			System.err.println(error);
 		}
 	}
-	
-	//row1, col1 of original position and row2, col2 of destination
-	private Direction getDirection(GridPoint source, GridPoint dest) {
-		// Check if new destination is in line with the source
-		if (source.getRow() != dest.getRow() && source.getCol() != dest.getCol()) {
-			return null;
-		}
-		
-		// Check if the destination is the same point as the source
-		if (source.equals(dest)) {
-			return null;
-		}
-		
-		// If source and dest are on same row
-		if (source.getRow() == dest.getRow()) {
-			if (source.getCol() > dest.getCol()) {
-				return Direction.WEST;
-			} else {
-				return Direction.EAST;
-			}
-		} else if (source.getCol() == dest.getCol()) { // If source and dest are in same column
-			if (source.getRow() > dest.getRow()) {
-				return Direction.NORTH;
-			} else {
-				return Direction.SOUTH;
-			}
-		}
-		return null;
-	}
-	
 	
 	public static void main(String[] args) {
 		Controller con = new Controller();
