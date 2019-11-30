@@ -23,7 +23,7 @@ public class TilePlayBoard implements Cloneable{
 	/**
 	 * Constructor for PlayBoard class
 	 */
-	public TilePlayBoard(int num) {
+	public TilePlayBoard() {
 		this.board = new Board();
 		
 		this.before = new Stack<Record>();
@@ -31,6 +31,7 @@ public class TilePlayBoard implements Cloneable{
 		
 		this.rabbits = new ArrayList<Rabbit>();
 		this.foxes = new ArrayList<NewFox>();
+		this.mushrooms = new ArrayList<Token>();
 		this.winState = false;
 		
 		this.support = new PropertyChangeSupport(this);
@@ -48,84 +49,15 @@ public class TilePlayBoard implements Cloneable{
 		board.getTileAt(4, 0).setHole(true);
 		board.getTileAt(4, 4).setHole(true);
 		
-		if(num==1) {
-			// Add Mushrooms
-			this.mushrooms = new ArrayList<Token>(2);
-			this.mushrooms.add(new Token(new GridPoint(2, 3), PieceType.MUSHROOM));//1,3
-			this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));//4,2
-			board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
-			board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
-			
-			for(int i=0; i<mushrooms.size(); i++) {
-				this.mushrooms.get(i).setName("mushroom");
-			}
-			
-			// Add Rabbits
-			this.rabbits.add(new Rabbit(new GridPoint(1,3), "rabbit1"));//0,3
-			this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit2"));//2,4
-			//this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));//4,1
-			
-			board.getTileAt(this.rabbits.get(0).getLocation()).setToken(this.rabbits.get(0));
-			board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
-			//board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
-			
-			// Set Foxes
-			this.setFox(new GridPoint(3, 1), Direction.SOUTH, "fox1");//3,1
-			this.setFox(new GridPoint(3, 4), Direction.EAST, "fox2");//3,4
-		}
-		else if(num==2) {
-			// Add Mushrooms
-			this.mushrooms = new ArrayList<Token>(2);
-			this.mushrooms.add(new Token(new GridPoint(2, 3), PieceType.MUSHROOM));//1,3
-			this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));//4,2
-			board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
-			board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
-			
-			for(int i=0; i<mushrooms.size(); i++) {
-				this.mushrooms.get(i).setName("mushroom");
-			}
-			
-			// Add Rabbits
-			this.rabbits.add(new Rabbit(new GridPoint(1,3), "rabbit1"));//0,3
-			this.rabbits.add(new Rabbit(new GridPoint(2,4), "rabbit2"));//2,4
-			this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));//4,1
-
-			board.getTileAt(this.rabbits.get(0).getLocation()).setToken(this.rabbits.get(0));
-			board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
-			board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
-
-			// Set Foxes
-			this.setFox(new GridPoint(3, 1), Direction.SOUTH, "fox1");//3,1
-			this.setFox(new GridPoint(3, 4), Direction.EAST, "fox2");//3,4
-		}
+		this.setMushroom(1, 3);
+		this.setMushroom(4,2);
 		
-		else if (num==3) {
-			// Add Mushrooms
-			this.mushrooms = new ArrayList<Token>(2);
-			this.mushrooms.add(new Token(new GridPoint(3, 0), PieceType.MUSHROOM));//3,0
-			this.mushrooms.add(new Token(new GridPoint(1, 2), PieceType.MUSHROOM));//1,2
-			board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
-			board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
-
-			for(int i=0; i<mushrooms.size(); i++) {
-				this.mushrooms.get(i).setName("mushroom");
-			}
-
-			// Add Rabbits
-			this.rabbits.add(new Rabbit(new GridPoint(0,1), "rabbit1"));//0,1
-			this.rabbits.add(new Rabbit(new GridPoint(4,2), "rabbit2"));//4,2
-			//this.rabbits.add(new Rabbit(new GridPoint(4,1), "rabbit3"));//4,1
-
-			board.getTileAt(this.rabbits.get(0).getLocation()).setToken(this.rabbits.get(0));
-			board.getTileAt(this.rabbits.get(1).getLocation()).setToken(this.rabbits.get(1));
-			//board.getTileAt(this.rabbits.get(2).getLocation()).setToken(this.rabbits.get(2));
-
-			// Set Foxes
-			//this.setFox(new GridPoint(3, 1), Direction.SOUTH, "fox1");//3,1
-			//this.setFox(new GridPoint(3, 4), Direction.EAST, "fox2");//3,4
-
-		}
+		this.setRabbit(0, 3);
+		this.setRabbit(2,4);
+		this.setRabbit(4,1);
 		
+		this.setFox(new GridPoint(3,1), Direction.SOUTH);
+		this.setFox(new GridPoint(3,4), Direction.EAST);
 	}
 	
 	public TilePlayBoard(TilePlayBoard playBoard) {
@@ -154,15 +86,7 @@ public class TilePlayBoard implements Cloneable{
 		board.getTileAt(4, 4).setHole(true);
 		
 		// Add Mushrooms
-		this.mushrooms = new ArrayList<Token>(2);
-		this.mushrooms.add(new Token(new GridPoint(2, 3), PieceType.MUSHROOM));
-		this.mushrooms.add(new Token(new GridPoint(4, 2), PieceType.MUSHROOM));
-		board.getTileAt(this.mushrooms.get(0).getLocation()).setToken(this.mushrooms.get(0));
-		board.getTileAt(this.mushrooms.get(1).getLocation()).setToken(this.mushrooms.get(1));
-		
-		for(int i=0; i<mushrooms.size(); i++) {
-			this.mushrooms.get(i).setName("mushroom");
-		}
+		this.mushrooms = playBoard.getMushrooms();
 		
 		// Add Rabbits
 		for(int i=1; i<=playBoard.getRabbitNum(); i++) {
@@ -172,9 +96,24 @@ public class TilePlayBoard implements Cloneable{
 		
 		//add foxes
 		for(int i=0; i<playBoard.getFoxNum(); i++) {
-			this.setFox(new GridPoint(playBoard.getFox(i).getHead().getRow(), playBoard.getFox(i).getHead().getCol()), playBoard.getFox(i).getOrientation(), playBoard.getFox(i).getHead().getName());
+			this.setFox(new GridPoint(playBoard.getFox(i).getHead().getRow(), playBoard.getFox(i).getHead().getCol()), playBoard.getFox(i).getOrientation());
 		}
 	}
+	
+	public void setMushroom(int row, int col) {
+		
+		Token mushroom = new Token(new GridPoint(row, col), PieceType.MUSHROOM);
+		mushroom.setName("mushroom");
+		this.mushrooms.add(mushroom);
+		board.getTileAt(this.mushrooms.get(this.mushrooms.size()-1).getLocation()).setToken(this.mushrooms.get(0));
+		
+	}
+	
+	public ArrayList<Token> getMushrooms() {
+		return this.mushrooms;
+	}
+	
+	
 	/**
 	 * @return the rabbits
 	 */
@@ -185,8 +124,10 @@ public class TilePlayBoard implements Cloneable{
 	/**
 	 * @param rabbits the rabbits to set
 	 */
-	public void setRabbits(ArrayList<Rabbit> rabbits) {
-		this.rabbits = rabbits;
+	public void setRabbit(int row, int col) {
+		int num=this.rabbits.size()+1;
+		this.rabbits.add(new Rabbit(new GridPoint(row, col), "rabbit"+ num));
+		board.getTileAt(this.rabbits.get(num-1).getLocation()).setToken(this.rabbits.get(num-1));
 	}
 
 	/**
@@ -268,13 +209,11 @@ public class TilePlayBoard implements Cloneable{
 		}
 		return null;
 	}
-
 	
-
-	
-	public void setFox(GridPoint foxHead, Direction direction, String name) {
+	public void setFox(GridPoint foxHead, Direction direction) {
 		if (NewFox.getValidFoxLocations().contains(foxHead)) {
-			foxes.add(new NewFox(foxHead, direction, name));
+			int num = this.getFoxNum()+1;
+			foxes.add(new NewFox(foxHead, direction, "fox" + num));
 			NewFox newlyAddedFox = this.foxes.get(this.foxes.size() - 1);
 			
 			// Add the fox tokens to the game board

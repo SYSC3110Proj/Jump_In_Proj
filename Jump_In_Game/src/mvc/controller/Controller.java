@@ -45,7 +45,7 @@ public class Controller {
 	private GridButton sourceButton;
 	
 	public Controller() {
-		this.game = new TilePlayBoard(1);
+		this.game = new TilePlayBoard();
 		this.view = new View();
 		
 		this.game.addPropertyChangeListener(this.view); // Have view observe game
