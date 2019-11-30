@@ -133,7 +133,15 @@ public class Controller {
 						text += "move" + temp.getToken().getName() + " to (" + 
 						temp.getNewLocation().getRow() + "," + temp.getNewLocation().getCol() + ")\n";
 					}
+					
 					view.getTextArea().setText(text);
+				}
+				else if(e.getActionCommand().equals("save")) {
+					game.save(game.getBoard(), "saveDoc");
+				}
+				else if(e.getActionCommand().equals("load")) {
+					game.load("saveDoc");
+					// need a method in game to reset the board
 				}
 				
 			}
@@ -248,33 +256,8 @@ public class Controller {
 		}
 		return null;
 	}
-	public static void save(Serializable data, String file) {
-		try {
-			ObjectOutputStream output = new ObjectOutputStream(Files.newOutputStream(Paths.get(file)));
-			output.writeObject(data);
-			output.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	public static Object load(Serializable data, String file) {
-		Object o=null;
-		try {
-			ObjectInputStream input = new ObjectInputStream(Files.newInputStream(Paths.get(file)));
-			o=input.readObject();
-			input.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return o;
-		
-	}
+	
+	
 	public static void main(String[] args) {
 		Controller con = new Controller();
 		

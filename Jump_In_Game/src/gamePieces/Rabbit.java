@@ -1,11 +1,13 @@
 package gamePieces;
 
+import java.io.Serializable;
+
 /** 
  * The rabbit class is used to create rabbits of a given name with given coordinates.
  * @author Mika Argyle
  */
 
-public class Rabbit extends Token {
+public class Rabbit extends Token  implements Serializable {
 	
 	private static final long serialVersionUID = 4304558624413697278L;
 	private RabbitColour colour;

@@ -1,6 +1,8 @@
 package gamePieces;
 
-public class Board {
+import java.io.Serializable;
+
+public class Board  implements Serializable {
 	private Tile[][] grid;
 	
 	public Board() {

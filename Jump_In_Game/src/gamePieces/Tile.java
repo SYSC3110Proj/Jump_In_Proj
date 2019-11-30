@@ -2,8 +2,9 @@ package gamePieces;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 
-public class Tile {
+public class Tile  implements Serializable {
 	private final GridPoint location;
 	private boolean isHole;
 	private Token token;

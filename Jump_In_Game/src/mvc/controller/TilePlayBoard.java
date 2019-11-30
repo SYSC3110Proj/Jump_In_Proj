@@ -2,13 +2,19 @@ package mvc.controller;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Stack;
 
 import gamePieces.*;
 import tree.MovementData;
 
-public class TilePlayBoard implements Cloneable{
+public class TilePlayBoard  implements Serializable{
 
 	private Board board;
 	private ArrayList<Rabbit> rabbits;
@@ -622,6 +628,35 @@ public class TilePlayBoard implements Cloneable{
 	
 	public Record getUndoInfo() {
 		return after.peek();
+	}
+	public static void save(Serializable data, String file) {
+		try {
+			ObjectOutputStream output = new ObjectOutputStream(Files.newOutputStream(Paths.get(file)));
+			output.writeObject(data);
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static Object load(String file) {
+		Object o=null;
+		try {
+			ObjectInputStream input = new ObjectInputStream(Files.newInputStream(Paths.get(file)));
+			o=input.readObject();
+			input.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return o;
+		
+	}
+	public void resetBoard(Board b) {
+		this.board=b;
 	}
 	
 }
