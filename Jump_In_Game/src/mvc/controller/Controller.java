@@ -113,6 +113,7 @@ public class Controller {
 //						view.popWin();	
 //					}
 				}
+				view.updateButton(game.getBoardName());
 			}
 		});
 		
