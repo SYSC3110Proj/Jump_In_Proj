@@ -141,7 +141,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		for(int row = 0; row < 5; row++) {
 			for(int col = 0; col < 5; col++) {
 				button[row][col].setName(row + ","+ col);
-				if(button[row][col].isHole()) {
+				if(button[row][col].isHole()&&chess[row][col].isEmpty()) {
 					button[row][col].setText("Hole");
 				}
 				else if(!chess[row][col].equals("")) {
@@ -158,7 +158,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		for(int row = 0; row < 5; row++) {
 			for(int col = 0; col < 5; col++) {
 				button[row][col].setName(row + ","+ col);
-				if(button[row][col].isHole()) {
+				if(button[row][col].isHole()&&chess[row][col].isEmpty()) {
 					button[row][col].setText("Hole");
 				}
 				else if(!chess[row][col].equals("")) {
