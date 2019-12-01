@@ -3,10 +3,15 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.beans.XMLEncoder;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+
+import org.xml.sax.SAXException;
 
 import gamePieces.Direction;
 import gamePieces.GridPoint;
@@ -65,11 +70,25 @@ public class Controller {
 					}
 				}
 				else if(e.getActionCommand().equals("save")) {
-					if(game != null) TilePlayBoard.save(game.getBoard(), "saveDoc");
+					XMLHandler handler = new XMLHandler(4);
+					try {
+						handler.setBoard(game);
+						handler.toXMLFile("123");
+					} catch (SAXException e1) {
+						e1.printStackTrace();
+					}
 				}
 				else if(e.getActionCommand().equals("load")) {
-					if(game != null) TilePlayBoard.load("saveDoc");
-					// need a method in game to reset the board
+					XMLHandler handler = new XMLHandler(4);
+					try {
+						handler.importXMLFileByName("123");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					game = handler.getBoard();
+					//view.updateButton(game.getBoardName());
+					initButtons();
 				}
 				else if(e.getActionCommand().equals("game1")) {
 					XMLHandler handler = new XMLHandler(1);
@@ -239,6 +258,8 @@ public class Controller {
 			System.err.println(error);
 		}
 	}
+	
+
 	
 	public static void main(String[] args) {
 		Controller con = new Controller();
