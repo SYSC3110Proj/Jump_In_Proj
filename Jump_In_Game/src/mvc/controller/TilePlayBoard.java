@@ -574,6 +574,7 @@ public class TilePlayBoard  implements Serializable{
 		return o;
 		
 	}
+	
 	public void resetBoard(Board b) {
 		this.board=b;
 	}
