@@ -13,6 +13,7 @@ public class GridPoint extends Point implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5307179390555155123L;
+	
 
 	/**
 	 * Constructor for GridPoint
