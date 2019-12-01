@@ -548,7 +548,9 @@ public class TilePlayBoard  implements Serializable{
 	public Record getUndoInfo() {
 		return after.peek();
 	}
-	public static void save(Serializable data, String file) {
+	/*
+	 * public static void save(Serializable data, String file) {
+	 
 		try {
 			ObjectOutputStream output = new ObjectOutputStream(Files.newOutputStream(Paths.get(file)));
 			output.writeObject(data);
@@ -557,9 +559,11 @@ public class TilePlayBoard  implements Serializable{
 			e.printStackTrace();
 		}
 		
-	}
+	}*/
 	
-	public static Object load(String file) {
+	/*
+	 * public static Object load(String file) {
+	 
 		Object o=null;
 		try {
 			ObjectInputStream input = new ObjectInputStream(Files.newInputStream(Paths.get(file)));
@@ -573,9 +577,7 @@ public class TilePlayBoard  implements Serializable{
 		}
 		return o;
 		
-	}
-	public void resetBoard(Board b) {
-		this.board=b;
-	}
+	}*/
+	
 	
 }

@@ -11,12 +11,19 @@ import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 
 /** 
  * The view class creates the menu and user interface, with buttons and action listeners, so that the user can interact with
@@ -35,7 +42,7 @@ public class View extends JPanel implements PropertyChangeListener {
 	private JMenuBar menuBar;
 	private JMenu edit, file, startWith;
 	private JMenuItem undo, redo, save, load, getSolution;
-	private JMenuItem game1, game2, game3;
+	private JMenuItem game1, game2, game3,buildgame;
 	
 	private JTextArea textArea;
 	
@@ -47,9 +54,11 @@ public class View extends JPanel implements PropertyChangeListener {
 		file = new JMenu("file");
 		startWith = new JMenu("start with");
 		menuBar = new JMenuBar();
+		buildgame = new JMenuItem("build game");
 		menuBar.add(file);
 		menuBar.add(edit);
 		menuBar.add(startWith);
+		menuBar.add(buildgame);
 		undo = new JMenuItem("undo");
 		redo = new JMenuItem("redo");
 		getSolution = new JMenuItem("get solution");
@@ -98,6 +107,8 @@ public class View extends JPanel implements PropertyChangeListener {
 		game1.addActionListener(listener);
 		game2.addActionListener(listener);
 		game3.addActionListener(listener);
+		buildgame.addActionListener(listener);
+		
 	}
 	
 	public JMenuBar getMenuBar() {
@@ -115,12 +126,13 @@ public class View extends JPanel implements PropertyChangeListener {
 	//and quit the game when press quit
 	public void popWin() {
 		JDialog dialog = new JDialog();
+		JTextField txet1= new JTextField();
 		dialog.setTitle("Win!");
 		dialog.setBounds(600, 500, 300, 100);
 		dialog.setModal(true);
 		dialog.setLayout(new FlowLayout());
 		
-		JLabel win = new JLabel("Congratulations, you have won the game.");
+		JLabel win = new JLabel("please entern coordinate");
 		JButton quit = new JButton("quit");
 		
 		quit.addActionListener(new ActionListener() {
@@ -135,6 +147,15 @@ public class View extends JPanel implements PropertyChangeListener {
 		dialog.setVisible(true);
 		
 	}
+	
+   public void popBuilderControl(){
+	   BuilderControl bc= new BuilderControl();
+	   JDialog dialog = new JDialog();
+	   dialog.add(bc);
+	   dialog.setBounds(600, 5000, 550, 300);
+	   dialog.setVisible(true);
+   }
+
 	
 	//write name on buttons
 	public void initButton(String[][] chess, ActionListener listener) {

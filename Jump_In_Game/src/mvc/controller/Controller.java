@@ -110,6 +110,9 @@ public class Controller {
 					game = handler.getBoard();
 					initButtons();
 				}
+				else if(e.getActionCommand().equals("build game")) {
+					view.popBuilderControl();
+				}
 				
 			}
 		});
