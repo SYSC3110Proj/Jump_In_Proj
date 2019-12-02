@@ -65,7 +65,7 @@ public class Solver {
 			queue.add(newNode);
 		}
 		
-		while (true) {
+		while (!queue.isEmpty()) {
 			currNode = queue.poll();
 			
 			// execute all moves to set board in that state

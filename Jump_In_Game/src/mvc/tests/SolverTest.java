@@ -48,8 +48,9 @@ public class SolverTest {
 		
 		
 		TilePlayBoard board2 = new TilePlayBoard();
-		board2.setMushroom(3,0);
+		board2.setMushroom(0,3);
 		board2.setMushroom(1,2);
+		board2.setMushroom(3,2);
 		board2.setRabbit(0,1);
 		board2.setRabbit(4,2);
 		Solver solve2 =  new Solver(board2);
