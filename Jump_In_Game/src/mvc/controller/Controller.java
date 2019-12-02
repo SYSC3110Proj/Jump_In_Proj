@@ -43,10 +43,16 @@ public class Controller {
 		view.initMenu(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getActionCommand().equals("undo")) {
-					if(game != null) game.undo();
+					if(game != null) {
+						game.undo();
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("redo")) {
-					if(game != null) game.redo();
+					if(game != null) {
+						game.redo();
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("solve")) {
 					if(game!= null) {
