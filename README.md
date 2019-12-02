@@ -26,7 +26,7 @@ Author: Zewen Chen
 * Token.java: Main object for each token on the game board  
 * PieceType.java: contains all the possible types of pieces.
 * GridButton.java: Main object for the grid buttons on the game board
-* Record.java: Records the movements of a token
+* Record.java: Records the movements of a token   
 Author: Craig Worthington
 * XMLHanlder.java: Used to store/load games to/from XML files   
 Author: Ruixuan Ni
