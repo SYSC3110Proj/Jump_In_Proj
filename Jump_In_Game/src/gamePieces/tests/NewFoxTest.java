@@ -10,14 +10,7 @@ import gamePieces.NewFox;
 
 public class NewFoxTest {
 
-	@Test
-	public void testNewFoxGridPointGridPointString() {
-		NewFox instance = new NewFox(new GridPoint(1, 1), new GridPoint(1, 2),"fox1");
-		assertEquals(1, instance.getHead().getRow());
-		assertEquals(1, instance.getHead().getCol());
-		assertEquals(1, instance.getTail().getRow());
-		assertEquals(2, instance.getTail().getCol());
-	}
+	
 
 	@Test
 	public void testNewFoxGridPointDirectionString() {
