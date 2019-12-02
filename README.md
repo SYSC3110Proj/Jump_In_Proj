@@ -27,6 +27,9 @@ Author: Zewen Chen
 * PieceType.java: contains all the possible types of pieces.
 * GridButton.java: Main object for the grid buttons on the game board
 * Record.java: Records the movements of a token
+Author: Craig Worthington
+* XMLHanlder.java: Used to store/load games to/from XML files
+Author: Ruixuan Ni
 
 Test code:
 * BoardTest.java:Test of Board class
@@ -46,18 +49,20 @@ Author:Zewen Chen
 ### 1. Start the game:
 Start the game by running the Control.java file
 
-The game will start with a default layout
+There are three default games, player can press "start with" and choose a default game
 ### 2. Play the game
 To move pieces, just select the pieces and then click the desitinate square
 pieces would move to the desitination if possible
 
-If you want to restart the game, just click the restart button in the top menu bar
-this button would set the whole game to its original statue
+if you want to save current state, just press file->save, the saved board can be load to view by file->load
 
+you can redo/undo your movements by press game->redo/undo
+
+if you want to see the solution, just press game->get solution, the detailed steps would be shown on the text field under the board
 ## Changes and Design
-1. Refactor the game model to use a more object-oriented approach. The play board consists of a 5x5 grid of tiles, and the pieces are represented by "Tokens". Each tile contains its own location on the board, and the token object that occupies its space (if no token occupies the space, it is considered null). The Token class contains info about the type of piece it is (Mushroom, Fox, Rabbit), as well as its location. The PlayBoard class contains the board, as well as the business logic to check if any given move is valid. (done by Craig Worthington)
-2. To implement the undo and redo function, we created two stacks in FilePlayBoard class: one to record the movements made by player and ther other one recording the undo movements.
-3. To implement the solver, a breadth first search was used to iterate through all possible moves for a given board state in order to find the solution with the smallest number of possible moves.   
+1. To save/load files, we created a new class XMLHandler, and use this class to transfer board to XML files/load XML files to set new boards. In XML files, we saved the row and column of each pieces
+2. Remove a large amount of duplicate codes in Controller
+3. Add new functions in gui
   
 ## Known Issues
 The search algorithm is not as efficient as it could be, so for more difficult puzzles, it can take a long time to solve. 
