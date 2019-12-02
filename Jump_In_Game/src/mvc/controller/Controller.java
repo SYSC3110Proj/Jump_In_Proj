@@ -85,8 +85,14 @@ public class Controller {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					setGame(handler.getBoard());
-					initButtons();
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("game1")) {
 					XMLHandler handler = new XMLHandler();
@@ -95,8 +101,14 @@ public class Controller {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					setGame(handler.getBoard());
-					initButtons();
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("game2")) {
 					XMLHandler handler = new XMLHandler();
@@ -105,8 +117,14 @@ public class Controller {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					setGame(handler.getBoard());
-					initButtons();
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("game3")) {
 					XMLHandler handler = new XMLHandler();
@@ -115,8 +133,14 @@ public class Controller {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					setGame(handler.getBoard());
-					initButtons();
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
 				}
 				
 			}
