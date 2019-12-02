@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import org.xml.sax.SAXException;
@@ -111,7 +112,23 @@ public class Controller {
 					initButtons();
 				}
 				else if(e.getActionCommand().equals("build game")) {
-					view.popBuilderControl();
+					BuilderWindow bc= new BuilderWindow();
+					   JDialog dialog = new JDialog();
+					   dialog.add(bc);
+					   dialog.setBounds(300, 50, 550, 350);
+					   dialog.setVisible(true);
+					   bc.confirm(new ActionListener () {
+						   public void actionPerformed(ActionEvent e) {
+							   //System.out.print("test");
+							   System.out.print(bc.getXr1()+" "+ bc.getYr1());
+							   int x =Integer.parseInt(bc.getXr1());
+							   int y = Integer.parseInt(bc.getYr1());
+							   game.setRabbit(x, y);
+							   //game.setRabbit(Integer.parseInt(bc.getXr1()),Integer.parseInt(bc.getYr1()));
+							   //initButtons();
+							  
+						   } 
+					   });
 				}
 				
 			}

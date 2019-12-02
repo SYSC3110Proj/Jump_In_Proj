@@ -149,11 +149,7 @@ public class View extends JPanel implements PropertyChangeListener {
 	}
 	
    public void popBuilderControl(){
-	   BuilderControl bc= new BuilderControl();
-	   JDialog dialog = new JDialog();
-	   dialog.add(bc);
-	   dialog.setBounds(600, 5000, 550, 300);
-	   dialog.setVisible(true);
+	   
    }
 
 	
