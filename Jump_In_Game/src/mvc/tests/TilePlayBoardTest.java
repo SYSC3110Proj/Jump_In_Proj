@@ -77,11 +77,11 @@ public class TilePlayBoardTest {
 		TilePlayBoard instance = new TilePlayBoard();
 		instance.setRabbit(0,3);
 		instance.setMushroom(1,3);
-		instance.moveRabbit(instance.getRabbits().get(0), new GridPoint(2,3));
+		instance.moveRabbit(instance.getRabbit(0), new GridPoint(2,3));
 		instance.undo();
 		instance.redo();
-		assertEquals(2,instance.getRabbits().get(0).getRow());
-		assertEquals(3,instance.getRabbits().get(0).getCol());
+		assertEquals(2,instance.getRabbit(0).getRow());
+		assertEquals(3,instance.getRabbit(0).getCol());
 		
 	}
 
@@ -92,8 +92,8 @@ public class TilePlayBoardTest {
 		instance.setMushroom(1,3);
 		instance.moveRabbit(instance.getRabbits().get(0), new GridPoint(2,3));
 		instance.undo();
-		assertEquals(0,instance.getRabbits().get(0).getRow());
-		assertEquals(3,instance.getRabbits().get(0).getCol());
+		assertEquals(0,instance.getRabbit(0).getRow());
+		assertEquals(3,instance.getRabbit(0).getCol());
 		
 	}
 

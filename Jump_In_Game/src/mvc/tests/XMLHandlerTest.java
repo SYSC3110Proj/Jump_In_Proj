@@ -39,9 +39,9 @@ public class XMLHandlerTest {
 		h2.importXMLFileByName("test");
 		
 		
-		assertEquals(true,board.getRabbits().get(0).equals(h2.getBoard().getRabbits().get(0)));
-		assertEquals(true,board.getRabbits().get(0).equals(h2.getBoard().getRabbits().get(0)));
-		assertEquals(true,board.getRabbits().get(0).equals(h2.getBoard().getRabbits().get(0)));
+		assertEquals(true,board.getRabbit(0).equals(h2.getBoard().getRabbit(0)));
+		assertEquals(true,board.getRabbit(0).equals(h2.getBoard().getRabbit(0)));
+		assertEquals(true,board.getRabbit(0).equals(h2.getBoard().getRabbit(0)));
 		assertEquals(true,board.getRabbit(1).equals(h2.getBoard().getRabbit(1)));
 		assertEquals(true,board.getRabbit(2).equals(h2.getBoard().getRabbit(2)));
 		assertEquals(true,board.getFox(0).equals(h2.getBoard().getFox(0)));
