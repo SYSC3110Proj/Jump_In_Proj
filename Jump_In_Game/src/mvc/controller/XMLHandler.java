@@ -69,12 +69,12 @@ public class XMLHandler extends DefaultHandler{
 				
 				attr.clear();
 				handler.startElement("", "", "row", attr);
-				handler.characters((board.getRabbit(i).getRow()+"").toCharArray(), 0, 1);
+				handler.characters((board.getRabbits().get(i).getRow()+"").toCharArray(), 0, 1);
 				handler.endElement("", "", "row");
 				
 				attr.clear();
 				handler.startElement("", "", "col", attr);
-				handler.characters((board.getRabbit(i).getCol()+"").toCharArray(), 0, 1);
+				handler.characters((board.getRabbits().get(i).getCol()+"").toCharArray(), 0, 1);
 				handler.endElement("", "", "col");
 				
 				handler.endElement("", "", "rabbit");	
@@ -87,17 +87,17 @@ public class XMLHandler extends DefaultHandler{
 				
 				attr.clear();
 				handler.startElement("", "", "row", attr);
-				handler.characters((board.getFox(i).getHead().getRow()+"").toCharArray(), 0, 1);
+				handler.characters((board.getFoxes().get(i).getHead().getRow()+"").toCharArray(), 0, 1);
 				handler.endElement("", "", "row");
 				
 				attr.clear();
 				handler.startElement("", "", "col", attr);
-				handler.characters((board.getFox(i).getHead().getCol()+"").toCharArray(), 0, 1);
+				handler.characters((board.getFoxes().get(i).getHead().getCol()+"").toCharArray(), 0, 1);
 				handler.endElement("", "", "col");
 				
 				attr.clear();
 				handler.startElement("", "", "direction", attr);
-				handler.characters((board.getFox(i).getOrientation().ordinal()+"").toCharArray(), 0, 1);
+				handler.characters((board.getFoxes().get(i).getOrientation().ordinal()+"").toCharArray(), 0, 1);
 				handler.endElement("", "", "direction");
 				
 				handler.endElement("", "", "fox");	

@@ -34,7 +34,7 @@ public class TilePlayBoardTest {
 		TilePlayBoard instance = new TilePlayBoard();
 		instance.setRabbit(0, 3);
 		instance.setMushroom(1, 3);
-		Rabbit r1 = instance.getRabbit(0);
+		Rabbit r1 = instance.getRabbits().get(0);
 		instance.moveRabbit(r1, new GridPoint(2,3));
 		assertEquals(2,r1.getRow());
 		assertEquals(3,r1.getCol());
@@ -45,7 +45,7 @@ public class TilePlayBoardTest {
 		TilePlayBoard instance = new TilePlayBoard();
 		instance.setMushroom(1,3);
 		instance.setRabbit(0,3);
-		GridPoint p = instance.getNearestJumpPoint(instance.getRabbit(0), Direction.SOUTH);
+		GridPoint p = instance.getNearestJumpPoint(instance.getRabbits().get(0), Direction.SOUTH);
 		assertEquals(2,p.getRow());
 		assertEquals(3,p.getCol());
 		
@@ -77,11 +77,11 @@ public class TilePlayBoardTest {
 		TilePlayBoard instance = new TilePlayBoard();
 		instance.setRabbit(0,3);
 		instance.setMushroom(1,3);
-		instance.moveRabbit(instance.getRabbit(0), new GridPoint(2,3));
+		instance.moveRabbit(instance.getRabbits().get(0), new GridPoint(2,3));
 		instance.undo();
 		instance.redo();
-		assertEquals(2,instance.getRabbit(0).getRow());
-		assertEquals(3,instance.getRabbit(0).getCol());
+		assertEquals(2,instance.getRabbits().get(0).getRow());
+		assertEquals(3,instance.getRabbits().get(0).getCol());
 		
 	}
 
@@ -90,10 +90,10 @@ public class TilePlayBoardTest {
 		TilePlayBoard instance = new TilePlayBoard();
 		instance.setRabbit(0,3);
 		instance.setMushroom(1,3);
-		instance.moveRabbit(instance.getRabbit(0), new GridPoint(2,3));
+		instance.moveRabbit(instance.getRabbits().get(0), new GridPoint(2,3));
 		instance.undo();
-		assertEquals(0,instance.getRabbit(0).getRow());
-		assertEquals(3,instance.getRabbit(0).getCol());
+		assertEquals(0,instance.getRabbits().get(0).getRow());
+		assertEquals(3,instance.getRabbits().get(0).getCol());
 		
 	}
 
@@ -104,19 +104,6 @@ public class TilePlayBoardTest {
 		assertEquals(false,instance.isWin());
 	}
 
-	/*@Test
-	public void testGetRabbitNum() {
-		TilePlayBoard instance = new TilePlayBoard();
-		instance.setRabbit(1, 1);
-		assertEquals(1,instance.getRabbitNum());
-	}
-
-	@Test
-	public void testGetFoxNum() {
-		TilePlayBoard instance = new TilePlayBoard();
-		instance.setFox(new GridPoint(2,1), Direction.SOUTH);
-		assertEquals(1,instance.getFoxNum());
-	}*/
 
 	/**
 	 * Add two method test save(),load(),and resetboard()

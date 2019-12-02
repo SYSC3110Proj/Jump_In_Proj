@@ -111,26 +111,11 @@ public class TilePlayBoard  implements Serializable{
 	}
 
 	/**
-	 * @param rabbits the rabbits to set
-	 */
-	public void setRabbits(ArrayList<Rabbit> rabbits) {
-		this.rabbits = rabbits;
-	}
-
-	/**
 	 * @return the foxes
 	 */
 	public ArrayList<NewFox> getFoxes() {
 		return foxes;
 	}
-
-	/**
-	 * @param foxes the foxes to set
-	 */
-	public void setFoxes(ArrayList<NewFox> foxes) {
-		this.foxes = foxes;
-	}
-
 	/**
 	 * Add a PropertyChangeListener to observe this class
 	 * @param pcl the PropertyChangeListener to observe this class
@@ -331,7 +316,7 @@ public class TilePlayBoard  implements Serializable{
 		return null;
 	}
 	
-	public boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
+	private boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
 		for (int i = 0; i < path.size(); ++i) {
 			// Test if the tile is occupied by a token other than the given fox
 			if (path.get(i).isOccupied()) {
@@ -352,7 +337,7 @@ public class TilePlayBoard  implements Serializable{
 	 * @param endPoint the ending point for the fox movement
 	 * @return ArrayList with all the tiles along the path
 	 */
-	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+	private ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
 		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 		Direction direction = startPoint.getDirectionTo(endPoint);
 		
@@ -435,8 +420,7 @@ public class TilePlayBoard  implements Serializable{
 		return false;
 	}
 	
-	
-	private boolean isValidFoxLoc(GridPoint foxHead) {
+	 private boolean isValidFoxLoc(GridPoint foxHead) {
 		return (!foxHead.equals(new GridPoint(0,0)) && !foxHead.equals(new GridPoint(4,0))
 		&& !foxHead.equals(new GridPoint(4,4)) && !foxHead.equals(new GridPoint(0,4)));
 	}
@@ -549,14 +533,7 @@ public class TilePlayBoard  implements Serializable{
 		return winState;
 	}
 	
-	/*public int getRabbitNum() {
-		return rabbits.size();
-	}
 	
-	public int getFoxNum() {
-		return foxes.size();
-	}
-	*/
 	public Record getUndoInfo() {
 		return after.peek();
 	}
