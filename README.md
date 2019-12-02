@@ -69,7 +69,7 @@ if you want to see the solution, just press game->get solution, the detailed ste
 5. Make gamepieces setable in TilePlayBoard class and edit the solver-test to make differrent puzzles' gamepieces visable
   
 ## Known Issues
-
+The jar file should be put in file with game1.xml, game2.xml, game3.xml, or it won't be able to load default games.
 
 
 ￼
