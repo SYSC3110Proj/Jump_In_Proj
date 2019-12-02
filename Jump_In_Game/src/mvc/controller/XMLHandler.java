@@ -52,7 +52,7 @@ public class XMLHandler extends DefaultHandler{
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			
-			Result result = new StreamResult(str + "xml");
+			Result result = new StreamResult(str + ".xml");
 			handler.setResult(result);
 			
 			AttributesImpl attr = new AttributesImpl();
@@ -145,7 +145,7 @@ public class XMLHandler extends DefaultHandler{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
 		
-		saxParser.parse(new File(name+"xml"), this);
+		saxParser.parse(new File(name+".xml"), this);
 		
     }
     
@@ -203,7 +203,6 @@ public class XMLHandler extends DefaultHandler{
     	super.characters(ch, start, length);
     	
     	String text = new String(ch, start, length);
-    	System.out.println(text);
     	
 		if(isRow) {
 			row = Integer.parseInt(text);
@@ -221,6 +220,26 @@ public class XMLHandler extends DefaultHandler{
     
     public TilePlayBoard getBoard() {
     	return this.board;
+    }
+    
+    public static void main(String[] args) {
+    	TilePlayBoard board2 = new TilePlayBoard();
+    	//board2.setMushroom(0, 4);
+    	board2.setMushroom(3, 2);
+    	//board2.setMushroom(4, 0);
+    	board2.setRabbit(1, 3);
+    	board2.setRabbit(4, 3);
+    	board2.setRabbit(2, 4);
+    	board2.setFox(new GridPoint(1,1), Direction.EAST);
+    	board2.setFox(new GridPoint(3,1), Direction.SOUTH);
+    	XMLHandler handler2 = new XMLHandler();
+    	handler2.setBoard(board2);
+    	try {
+			handler2.toXMLFile("game3");
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
 }

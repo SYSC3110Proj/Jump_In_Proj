@@ -575,8 +575,11 @@ public class TilePlayBoard  implements Serializable{
 		
 	}
 	
-	public void resetBoard(Board b) {
-		this.board=b;
+	public void restart() {
+		while(!before.isEmpty()) {
+			this.undo();
+			if(this.winState) this.winState = false;
+		}
 	}
 	
 }

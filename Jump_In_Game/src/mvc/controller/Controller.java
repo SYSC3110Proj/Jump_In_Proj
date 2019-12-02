@@ -47,6 +47,13 @@ public class Controller {
 	public Controller() {
 		this.view = new View();
 		
+		view.initRestart(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				game.restart();
+				view.getDialog().dispose();
+			}
+		});
+		
 		view.initMenu(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getActionCommand().equals("undo")) {

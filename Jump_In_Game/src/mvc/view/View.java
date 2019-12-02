@@ -37,6 +37,9 @@ public class View extends JPanel implements PropertyChangeListener {
 	private JMenuItem undo, redo, save, load, getSolution;
 	private JMenuItem game1, game2, game3;
 	
+	private JDialog dialog;
+	private JButton restart;
+	
 	private JTextArea textArea;
 	
 	public View() {
@@ -59,6 +62,9 @@ public class View extends JPanel implements PropertyChangeListener {
 		game1 = new JMenuItem("game1");
 		game2 = new JMenuItem("game2");
 		game3 = new JMenuItem("game3");
+		
+		restart = new JButton("restart");
+		dialog = new JDialog();
 		
 		edit.add(undo);
 		edit.add(redo);
@@ -111,10 +117,17 @@ public class View extends JPanel implements PropertyChangeListener {
 		return button;
 	}
 	
+	public void initRestart(ActionListener listener) {
+		restart.addActionListener(listener);
+	}
+	
+	public JDialog getDialog() {
+		return dialog;
+	}
+	
 	//when all rabbits are in the hole, pop a dialog of greeting
 	//and quit the game when press quit
 	public void popWin() {
-		JDialog dialog = new JDialog();
 		dialog.setTitle("Win!");
 		dialog.setBounds(600, 500, 300, 100);
 		dialog.setModal(true);
@@ -131,6 +144,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		
 		dialog.add(win);
 		dialog.add(quit);
+		dialog.add(restart);
 		
 		dialog.setVisible(true);
 		
