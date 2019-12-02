@@ -78,7 +78,8 @@ public class GridPoint extends Point implements Serializable {
 			} else {
 				return null;
 			}
-		} else if (this.getCol() == newLocation.getCol()) {
+		} 
+		else if (this.getCol() == newLocation.getCol()) {
 			if (this.getRow() < newLocation.getRow()) {
 				return Direction.SOUTH;
 			} else if (this.getRow() > newLocation.getRow()) {

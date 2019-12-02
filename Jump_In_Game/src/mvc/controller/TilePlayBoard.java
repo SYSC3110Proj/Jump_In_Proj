@@ -247,7 +247,9 @@ public class TilePlayBoard  implements Serializable{
 				&& this.getNearestJumpPoint(rabbit, rabbit.getLocation().getDirectionTo(newLoc)).equals(newLoc) 
 				&& (!board.getTileAt(newLoc).isOccupied())) {
 			this.moveToken(rabbit, newLoc);
-		} else {
+		} 
+		else {
+			System.out.println(rabbit.getRow() + "," + rabbit.getCol() + "->" + newLoc.getRow() + "," + newLoc.getCol());
 			return;
 		}
 	}

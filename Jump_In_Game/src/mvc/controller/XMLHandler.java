@@ -21,17 +21,11 @@ import gamePieces.Direction;
 import gamePieces.GridPoint;
 
 public class XMLHandler extends DefaultHandler{
-	private TilePlayBoard board;
-	/**
-	 * @param board the board to set
-	 */
-	public void setBoard(TilePlayBoard board) {
-		this.board = board;
-	}
-
+	
 	private boolean isRabbit, isFox, isMushroom, isRow, isCol, isDirec;
 	private int row, col;
 	private Direction direc;
+	private TilePlayBoard board;
 	
 	public XMLHandler() {
 		board = new TilePlayBoard();
@@ -41,6 +35,13 @@ public class XMLHandler extends DefaultHandler{
 		isRow = false;
 		isCol = false;
 		isDirec = false;
+	}
+
+	/**
+	 * @param board the board to set
+	 */
+	public void setBoard(TilePlayBoard board) {
+		this.board = board;
 	}
 	
     public void toXMLFile(String str) throws SAXException {
