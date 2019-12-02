@@ -149,7 +149,7 @@ public class TilePlayBoardTest {
 		//board.moveRabbit(r2, new GridPoint(2,2));
 		board.save(board, "test");
 		board.load("test");
-		XMLHandler h1 = new XMLHandler(1);
+		XMLHandler h1 = new XMLHandler();
 		h1.setBoard(board);
 		TilePlayBoard newboard = h1.getBoard();
 		
@@ -157,25 +157,7 @@ public class TilePlayBoardTest {
 	}
 
 	
-	@Test
-	public void testResetBoard() {
-		
-		TilePlayBoard board = new TilePlayBoard();
-		board.setMushroom(2, 3);
-		board.setMushroom(4, 2);
-		board.setFox(new GridPoint(3,1),Direction.SOUTH);
-		board.setFox(new GridPoint(3,4),Direction.EAST);
-		board.setRabbit(1,3);
-		board.setRabbit(2,4);
-		board.setRabbit(4,1);
-		
-		Board reset = new Board();
-		board.resetBoard(reset);
-		board.getBoard();
-		
-		assertEquals(true,reset.equals(board.getBoard()));
-		
-	}
+	
 
 
 	
