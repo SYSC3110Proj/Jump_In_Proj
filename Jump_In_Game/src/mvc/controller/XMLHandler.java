@@ -22,6 +22,13 @@ import gamePieces.GridPoint;
 
 public class XMLHandler extends DefaultHandler{
 	private TilePlayBoard board;
+	/**
+	 * @param board the board to set
+	 */
+	public void setBoard(TilePlayBoard board) {
+		this.board = board;
+	}
+
 	private int num;
 	private boolean isRabbit, isFox, isMushroom, isRow, isCol, isDirec;
 	private int row, col;
@@ -104,12 +111,12 @@ public class XMLHandler extends DefaultHandler{
 				
 				attr.clear();
 				handler.startElement("", "", "row", attr);
-				handler.characters((board.getRabbit(i).getRow()+"").toCharArray(), 0, 1);
+				handler.characters((board.getMushrooms().get(i).getRow()+"").toCharArray(), 0, 1);
 				handler.endElement("", "", "row");
 				
 				attr.clear();
 				handler.startElement("", "", "col", attr);
-				handler.characters((board.getRabbit(i).getCol()+"").toCharArray(), 0, 1);
+				handler.characters((board.getMushrooms().get(i).getCol()+"").toCharArray(), 0, 1);
 				handler.endElement("", "", "col");
 				
 				handler.endElement("", "", "mushroom");	
@@ -125,12 +132,21 @@ public class XMLHandler extends DefaultHandler{
 		}
     }
     
+ 
+    
     public void importXMLFile() throws Exception{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
-		//MyHandler2 handler2 = new MyHandler2();
+		
 		saxParser.parse(new File("game" + num + ".xml"), this);
-		//ArrayList<BuddyInfo> book1 = handler2.book;
+		
+    }
+    public void importXMLFileByName(String name) throws Exception{
+    	SAXParserFactory factory = SAXParserFactory.newInstance();
+		SAXParser saxParser = factory.newSAXParser();	
+		
+		saxParser.parse(new File(name+"xml"), this);
+		
     }
     
     public void readSAX(File f) throws Exception{

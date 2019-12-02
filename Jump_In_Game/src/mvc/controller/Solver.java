@@ -53,6 +53,7 @@ public class Solver {
 	}
 	
 	public ArrayList<MovementData> findSolution() {
+		
 		ArrayList<MovementData> solution = new ArrayList<MovementData>();
 		Queue<FullPathNode> queue = new LinkedList<FullPathNode>();
 		FullPathNode currNode;

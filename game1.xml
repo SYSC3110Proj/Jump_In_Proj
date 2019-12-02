@@ -22,11 +22,11 @@
 <direction>2</direction>
 </fox>
 <mushroom id="0">
-<row>0</row>
+<row>1</row>
 <col>3</col>
 </mushroom>
 <mushroom id="1">
-<row>2</row>
-<col>4</col>
+<row>4</row>
+<col>2</col>
 </mushroom>
 </Pieces>
