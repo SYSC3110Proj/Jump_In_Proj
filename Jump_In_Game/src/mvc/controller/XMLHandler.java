@@ -29,14 +29,12 @@ public class XMLHandler extends DefaultHandler{
 		this.board = board;
 	}
 
-	private int num;
 	private boolean isRabbit, isFox, isMushroom, isRow, isCol, isDirec;
 	private int row, col;
 	private Direction direc;
 	
-	public XMLHandler(int num) {
+	public XMLHandler() {
 		board = new TilePlayBoard();
-		this.num = num;
 		isRabbit = false;
 		isFox = false;
 		isMushroom = false;
@@ -133,14 +131,16 @@ public class XMLHandler extends DefaultHandler{
     }
     
  
-    
-    public void importXMLFile() throws Exception{
+    //import default games with number
+    public void importXMLFile(int num) throws Exception{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
 		
 		saxParser.parse(new File("game" + num + ".xml"), this);
 		
     }
+    
+    //import saved games with name
     public void importXMLFileByName(String name) throws Exception{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
