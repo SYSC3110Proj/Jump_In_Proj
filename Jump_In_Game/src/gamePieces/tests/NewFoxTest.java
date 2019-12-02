@@ -1,8 +1,12 @@
-package gamePieces;
+package gamePieces.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import gamePieces.Direction;
+import gamePieces.GridPoint;
+import gamePieces.NewFox;
 
 public class NewFoxTest {
 
