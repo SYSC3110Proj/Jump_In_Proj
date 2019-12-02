@@ -74,4 +74,13 @@ public class Rabbit extends Token  implements Serializable {
 	public void setColour(RabbitColour colour) {
 		this.colour = colour;
 	}	
+	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+    	if(o == null) return false;
+    	if(!(o instanceof Rabbit))return false;
+    	Rabbit r = (Rabbit) o;
+    	return (r.getName().equals(this.getName())&& r.getLocation().equals(this.location));
+	}
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><Pieces>
+<rabbit id="0">
+<row>0</row>
+<col>1</col>
+</rabbit>
+<rabbit id="1">
+<row>4</row>
+<col>2</col>
+</rabbit>
+<mushroom id="0">
+<row>0</row>
+<col>3</col>
+</mushroom>
+<mushroom id="1">
+<row>1</row>
+<col>2</col>
+</mushroom>
+<mushroom id="2">
+<row>3</row>
+<col>2</col>
+</mushroom>
+</Pieces>

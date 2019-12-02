@@ -252,4 +252,18 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 	public String toString() {
 		return "NewFox [head=" + head + ", tail=" + tail + ", orientation=" + orientation + "]";
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+    	if(o == null) return false;
+    	if(!(o instanceof NewFox))return false;
+    	NewFox r = (NewFox) o;
+    	
+    	return (r.getHead().getLocation().equals(this.getHead().getLocation())
+    			&& r.getHead().getPieceType().equals(this.getHead().getPieceType())
+    			&& r.getHead().getName().equals(this.getHead().getName())
+    			&& r.getOrientation().equals(this.getOrientation()));
+	}
+	
 }
