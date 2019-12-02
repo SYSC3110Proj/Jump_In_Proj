@@ -28,7 +28,7 @@ Author: Zewen Chen
 * GridButton.java: Main object for the grid buttons on the game board
 * Record.java: Records the movements of a token
 Author: Craig Worthington
-* XMLHanlder.java: Used to store/load games to/from XML files
+* XMLHanlder.java: Used to store/load games to/from XML files   
 Author: Ruixuan Ni
 
 Test code:
@@ -37,7 +37,7 @@ Test code:
 * RabbitTest.java:Test of Rabbit class
 * GridPointTest.java:Test of GridPoint class 
 * RecordTest.java:Test of Record class
-* TilePlayBoardTest.java:Test of TilePlayBoard class.   
+* TilePlayBoardTest.java:Test of TilePlayBoard class.       
 Author:Tiantian Lin
 
 UML Diagram:     
