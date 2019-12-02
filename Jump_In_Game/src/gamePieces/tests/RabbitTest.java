@@ -31,5 +31,14 @@ public class RabbitTest {
 		Rabbit instance = new Rabbit(new GridPoint(0,0),"rabbit1");
 		assertEquals(true,instance.atHole());
 	}
+	public void testequal() {
+		Rabbit instance = new Rabbit(new GridPoint(0,0),"rabbit1");
+		Rabbit instance2 = new Rabbit(new GridPoint(0,0),"rabbit1");
+		assertEquals(true,instance.equals(instance2));
+		
+		Rabbit instance3 = new Rabbit(new GridPoint(1,0),"rabbit1");
+		assertEquals(false,instance.equals(instance2));
+	}
+
 
 }
