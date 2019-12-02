@@ -202,7 +202,7 @@ public class TilePlayBoard  implements Serializable{
 	
 	public void setFox(GridPoint foxHead, Direction direction) {
 		int num = foxes.size()+1;
-		if (NewFox.getValidFoxLocations().contains(foxHead)) {
+		if (isValidFoxLoc(foxHead)){
 			foxes.add(new NewFox(foxHead, direction, "fox" + num ));
 			NewFox newlyAddedFox = this.foxes.get(this.foxes.size() - 1);
 			
@@ -400,7 +400,7 @@ public class TilePlayBoard  implements Serializable{
 					GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
 				
 					// If the new theoretical head and tail locations of the fox are valid locations
-					if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+					if (isValidFoxLoc(newTailLocation) && isValidFoxLoc(newHeadLocation)) {
 						ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 					
 					// get the two points the farthest away from one another
@@ -418,7 +418,7 @@ public class TilePlayBoard  implements Serializable{
 					GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
 				
 					// If the new theoretical head and tail locations are valid locations
-					if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+					if (isValidFoxLoc(newTailLocation) && isValidFoxLoc(newHeadLocation)) {
 						ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 					
 						// get the two points farthest away from one another
@@ -433,6 +433,12 @@ public class TilePlayBoard  implements Serializable{
 				}
 			}
 		return false;
+	}
+	
+	
+	private boolean isValidFoxLoc(GridPoint foxHead) {
+		return (!foxHead.equals(new GridPoint(0,0)) && !foxHead.equals(new GridPoint(4,0))
+		&& !foxHead.equals(new GridPoint(4,4)) && !foxHead.equals(new GridPoint(0,4)));
 	}
 	
 	/**
