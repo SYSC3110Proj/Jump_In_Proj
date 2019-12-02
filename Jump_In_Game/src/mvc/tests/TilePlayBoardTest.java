@@ -124,8 +124,6 @@ public class TilePlayBoardTest {
 	 */
 	
 	
-	
-	
 	/*
 	  
 	  H  *   *   *   H 

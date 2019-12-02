@@ -137,16 +137,16 @@ public class XMLHandler extends DefaultHandler{
     public void importXMLFile() throws Exception{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
-		//MyHandler2 handler2 = new MyHandler2();
+		
 		saxParser.parse(new File("game" + num + ".xml"), this);
-		//ArrayList<BuddyInfo> book1 = handler2.book;
+		
     }
     public void importXMLFileByName(String name) throws Exception{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
-		//MyHandler2 handler2 = new MyHandler2();
+		
 		saxParser.parse(new File(name+"xml"), this);
-		//ArrayList<BuddyInfo> book1 = handler2.book;
+		
     }
     
     public void readSAX(File f) throws Exception{
