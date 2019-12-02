@@ -2,14 +2,10 @@ package mvc.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JButton;
 import javax.swing.JToggleButton;
-import javax.swing.border.Border;
 
 import gamePieces.GridPoint;
 import gamePieces.Token;
@@ -21,6 +17,10 @@ import gamePieces.Token;
 
 public class GridButton extends JToggleButton implements PropertyChangeListener {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean isHole;
 	private GridPoint gridLocation;	// location in the grid of the button
 	

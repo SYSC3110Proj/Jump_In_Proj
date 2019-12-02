@@ -3,19 +3,13 @@ package mvc.controller;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.XMLEncoder;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
 import org.xml.sax.SAXException;
 
-import gamePieces.Direction;
 import gamePieces.GridPoint;
-import gamePieces.NewFox;
 import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import mvc.view.*;
@@ -39,7 +33,7 @@ public class Controller {
 	boolean select;
 	private String name;
 	
-	private Tile sourceTile, destTile;
+	private Tile sourceTile;
 	private GridPoint sourcePoint, destPoint;
 	private GridButton sourceButton;
 	

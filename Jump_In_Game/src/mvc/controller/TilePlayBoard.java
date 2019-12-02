@@ -16,6 +16,10 @@ import tree.MovementData;
 
 public class TilePlayBoard  implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Board board;
 	private ArrayList<Rabbit> rabbits;
 	private ArrayList<NewFox> foxes;
@@ -575,13 +579,6 @@ public class TilePlayBoard  implements Serializable{
 		}
 		return o;
 		
-	}
-	
-	public void restart() {
-		while(!before.isEmpty()) {
-			this.undo();
-			if(this.winState) this.winState = false;
-		}
 	}
 	
 }
