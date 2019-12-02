@@ -47,13 +47,6 @@ public class Controller {
 	public Controller() {
 		this.view = new View();
 		
-		view.initRestart(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				game.restart();
-				view.getDialog().dispose();
-			}
-		});
-		
 		view.initMenu(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getActionCommand().equals("undo")) {
@@ -94,7 +87,6 @@ public class Controller {
 						e1.printStackTrace();
 					}
 					game = handler.getBoard();
-					//view.updateButton(game.getBoardName());
 					initButtons();
 				}
 				else if(e.getActionCommand().equals("game1")) {
@@ -152,15 +144,9 @@ public class Controller {
 					name = ((GridButton) e.getSource()).getText();
 					sourceTile = game.getBoard().getTileAt((((GridButton) e.getSource()).getGridLocation()));
 					
-					//System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
-					//System.out.println(game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation()).toString());
-					
 					sourcePoint = ((GridButton) e.getSource()).getGridLocation();
 					sourceButton = (GridButton) e.getSource();
-					
-					//System.out.println("sourceTile = " + sourceTile);
-					//System.out.println("sourcePoint = " + sourcePoint);
-					
+				
 					select = true;
 				} else {	// If the player is in the movement phase
 					if (name != null) {
@@ -170,9 +156,6 @@ public class Controller {
 							
 							destTile = game.getBoard().getTileAt(((GridButton) e.getSource()).getGridLocation());
 							destPoint = ((GridButton) e.getSource()).getGridLocation();
-							
-							//System.out.println("destTile = " + destTile);
-							//System.out.println("destPoint = " + destPoint);
 							
 							if (sourceTile.getToken().getPieceType() == PieceType.RABBIT) {
 								moveRabbit();

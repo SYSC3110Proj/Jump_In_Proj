@@ -222,24 +222,4 @@ public class XMLHandler extends DefaultHandler{
     	return this.board;
     }
     
-    public static void main(String[] args) {
-    	TilePlayBoard board2 = new TilePlayBoard();
-    	//board2.setMushroom(0, 4);
-    	board2.setMushroom(3, 2);
-    	//board2.setMushroom(4, 0);
-    	board2.setRabbit(1, 3);
-    	board2.setRabbit(4, 3);
-    	board2.setRabbit(2, 4);
-    	board2.setFox(new GridPoint(1,1), Direction.EAST);
-    	board2.setFox(new GridPoint(3,1), Direction.SOUTH);
-    	XMLHandler handler2 = new XMLHandler();
-    	handler2.setBoard(board2);
-    	try {
-			handler2.toXMLFile("game3");
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
 }

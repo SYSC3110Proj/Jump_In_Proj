@@ -245,10 +245,10 @@ public class TilePlayBoard  implements Serializable{
 		// Test all the conditions to ensure that rabbit can be moved!
 		if (this.testJumpDirection(rabbit, rabbit.getLocation().getDirectionTo(newLoc)) 
 				&& this.getNearestJumpPoint(rabbit, rabbit.getLocation().getDirectionTo(newLoc)).equals(newLoc) 
-				&& (board.getTileAt(newLoc).isOccupied()) == false) {
+				&& (!board.getTileAt(newLoc).isOccupied())) {
 			this.moveToken(rabbit, newLoc);
 		} else {
-			throw new IllegalArgumentException("Rabbit at " + rabbit.getLocation() + " cannot jump to " + newLoc);
+			return;
 		}
 	}
 	
