@@ -63,25 +63,6 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 				add(new GridPoint(4,3));
 			}}) ;
 	
-	/**Creates a NewFox object with a head location, tail location, and a name.*/
-	public NewFox(GridPoint head, GridPoint tail, String name) {
-		if (!VALID_FOX_LOCATIONS.contains(head)) {
-			throw new IllegalArgumentException("Head is not at a valid location");
-		}
-		
-		if (!VALID_FOX_LOCATIONS.contains(tail)) {
-			throw new IllegalArgumentException("Tail is not at a valid location");
-		}
-		
-		if ((int) head.distance(tail) != 1) {
-			throw new IllegalArgumentException("Head and tail must be next to each other");
-		}
-		
-		this.head = new Token(head, PieceType.FOX);
-		this.head.setName(name);
-		this.tail = new Token(tail, PieceType.FOX);
-		this.tail.setName(name);
-	}
 	
 	/**Creates a NewFox object with a head location, a direction (North, East, South, West) and a name.
 	*/
