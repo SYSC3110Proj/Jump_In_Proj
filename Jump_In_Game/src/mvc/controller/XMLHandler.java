@@ -63,7 +63,7 @@ public class XMLHandler extends DefaultHandler{
 			attr.clear();
 			
 			//store rabbits in XML
-			for(int i=0; i<board.getRabbitNum(); i++) {
+			for(int i=0; i<board.getRabbits().size(); i++) {
 				attr.addAttribute("", "", "id", "", String.valueOf(i));
 				handler.startElement("", "", "rabbit", attr);
 				
@@ -81,7 +81,7 @@ public class XMLHandler extends DefaultHandler{
 			}
 			
 			//store foxes in XML
-			for(int i=0; i<board.getFoxNum(); i++) {
+			for(int i=0; i<board.getFoxes().size(); i++) {
 				attr.addAttribute("", "", "id", "", String.valueOf(i));
 				handler.startElement("", "", "fox", attr);
 				

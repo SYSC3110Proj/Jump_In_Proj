@@ -104,7 +104,7 @@ public class TilePlayBoardTest {
 		assertEquals(false,instance.isWin());
 	}
 
-	@Test
+	/*@Test
 	public void testGetRabbitNum() {
 		TilePlayBoard instance = new TilePlayBoard();
 		instance.setRabbit(1, 1);
@@ -116,7 +116,7 @@ public class TilePlayBoardTest {
 		TilePlayBoard instance = new TilePlayBoard();
 		instance.setFox(new GridPoint(2,1), Direction.SOUTH);
 		assertEquals(1,instance.getFoxNum());
-	}
+	}*/
 
 	/**
 	 * Add two method test save(),load(),and resetboard()

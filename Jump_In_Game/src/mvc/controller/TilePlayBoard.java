@@ -69,13 +69,13 @@ public class TilePlayBoard  implements Serializable{
 		}
 				
 		// Add Rabbits
-		for(int i=1; i<=playBoard.getRabbitNum(); i++) {
+		for(int i=1; i<=playBoard.getRabbits().size(); i++) {
 			this.rabbits.add(new Rabbit(new GridPoint(playBoard.getRabbit(i-1).getRow(), playBoard.getRabbit(i-1).getCol()), "rabbit"+i));
 			board.getTileAt(this.rabbits.get(i-1).getLocation()).setToken(this.rabbits.get(i-1));
 		}
 				
 		//add foxes
-		for(int i=0; i<playBoard.getFoxNum(); i++) {
+		for(int i=0; i<playBoard.getFoxes().size(); i++) {
 			this.setFox(new GridPoint(playBoard.getFox(i).getHead().getRow(), playBoard.getFox(i).getHead().getCol()), playBoard.getFox(i).getOrientation());
 		}	
 	}
@@ -549,14 +549,14 @@ public class TilePlayBoard  implements Serializable{
 		return winState;
 	}
 	
-	public int getRabbitNum() {
+	/*public int getRabbitNum() {
 		return rabbits.size();
 	}
 	
 	public int getFoxNum() {
 		return foxes.size();
 	}
-	
+	*/
 	public Record getUndoInfo() {
 		return after.peek();
 	}
