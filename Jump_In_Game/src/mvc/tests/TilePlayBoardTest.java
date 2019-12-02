@@ -4,11 +4,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import gamePieces.Board;
 import gamePieces.Direction;
 import gamePieces.GridPoint;
 import gamePieces.NewFox;
 import gamePieces.Rabbit;
 import mvc.controller.TilePlayBoard;
+import mvc.controller.XMLHandler;
 
 /**
  * The TilePlayBoardTest class contains tests for all the methods in the TilePlayBoard class.
@@ -116,7 +118,67 @@ public class TilePlayBoardTest {
 		assertEquals(1,instance.getFoxNum());
 	}
 
+	/**
+	 * Add two method test save(),load(),and resetboard()
+	 * 
+	 */
 	
+	
+	
+	
+	/*
+	  
+	  H  *   *   *   H 
+	  *  *   *   R1  *
+	  *  f1  H   m1  R2
+	  *  f1  *   f2  f2
+	  H  R3  m2  *   H
+	  
+	  */
+	@Test
+	public void testSave() {
+		
+		TilePlayBoard board = new TilePlayBoard();
+		board.setMushroom(2, 3);
+		board.setMushroom(4, 2);
+		board.setFox(new GridPoint(3,1),Direction.SOUTH);
+		board.setFox(new GridPoint(3,4),Direction.EAST);
+		board.setRabbit(1,3);
+		board.setRabbit(2,4);
+		board.setRabbit(4,1);
+		
+		//Rabbit r2 = board.getRabbit(1);
+		//board.moveRabbit(r2, new GridPoint(2,2));
+		board.save(board, "test");
+		board.load("test");
+		XMLHandler h1 = new XMLHandler(1);
+		h1.setBoard(board);
+		TilePlayBoard newboard = h1.getBoard();
+		
+		assertEquals(true,board.equals(newboard));
+	}
+
+	
+	@Test
+	public void testResetBoard() {
+		
+		TilePlayBoard board = new TilePlayBoard();
+		board.setMushroom(2, 3);
+		board.setMushroom(4, 2);
+		board.setFox(new GridPoint(3,1),Direction.SOUTH);
+		board.setFox(new GridPoint(3,4),Direction.EAST);
+		board.setRabbit(1,3);
+		board.setRabbit(2,4);
+		board.setRabbit(4,1);
+		
+		Board reset = new Board();
+		board.resetBoard(reset);
+		board.getBoard();
+		
+		assertEquals(true,reset.equals(board.getBoard()));
+		
+	}
+
 
 	
 
