@@ -23,9 +23,6 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 	private static final int MIN_COL = 0;
 	private static final int MAX_COL = 4;
 	
-	
-	/** List of all valid GridPoints that a fox can be placed in */
-	
 	/**Creates a NewFox object with a head location, a direction (North, East, South, West) and a name.
 	*/
 	public NewFox(GridPoint head, Direction orientation, String name) {
@@ -99,6 +96,40 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 		validMoveLocations.remove(this.head.getLocation());
 		
 		return validMoveLocations;
+	}
+	
+	/**
+	 * Check if the given location is a valid location for the head of this fox
+	 * @param newHeadLocation the new location for the head of the fox
+	 * @return true if it is a valid location
+	 */
+	public boolean isValidMoveLocation(GridPoint newHeadLocation) {
+		if (this.orientation == Direction.NORTH) {
+			if (newHeadLocation.getCol() == this.getHead().getCol()) {
+				if (newHeadLocation.getRow() >= MIN_ROW && newHeadLocation.getRow() <= MAX_ROW - 1) {
+					return true;
+				}
+			}
+		} else if (this.orientation == Direction.SOUTH) {
+			if (newHeadLocation.getCol() == this.getHead().getCol()) {
+				if (newHeadLocation.getRow() >= MIN_ROW + 1 && newHeadLocation.getRow() <= MAX_ROW) {
+					return true;
+				}
+			}
+		} else if (this.orientation == Direction.EAST) {
+			if (newHeadLocation.getRow() == this.getHead().getRow()) {
+				if (newHeadLocation.getCol() >= MIN_COL + 1 && newHeadLocation.getCol() <= MAX_COL) {
+					return true;
+				}
+			}
+		} else if (this.orientation == Direction.EAST) {
+			if (newHeadLocation.getRow() == this.getHead().getRow()) {
+				if (newHeadLocation.getCol() >= MIN_COL && newHeadLocation.getCol() <= MAX_COL - 1) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**
