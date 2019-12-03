@@ -16,6 +16,10 @@ import tree.MovementData;
 
 public class TilePlayBoard  implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Board board;
 	private ArrayList<Rabbit> rabbits;
 	private ArrayList<NewFox> foxes;
@@ -65,13 +69,13 @@ public class TilePlayBoard  implements Serializable{
 		}
 				
 		// Add Rabbits
-		for(int i=1; i<=playBoard.getRabbitNum(); i++) {
+		for(int i=1; i<=playBoard.getRabbits().size(); i++) {
 			this.rabbits.add(new Rabbit(new GridPoint(playBoard.getRabbit(i-1).getRow(), playBoard.getRabbit(i-1).getCol()), "rabbit"+i));
 			board.getTileAt(this.rabbits.get(i-1).getLocation()).setToken(this.rabbits.get(i-1));
 		}
 				
 		//add foxes
-		for(int i=0; i<playBoard.getFoxNum(); i++) {
+		for(int i=0; i<playBoard.getFoxes().size(); i++) {
 			this.setFox(new GridPoint(playBoard.getFox(i).getHead().getRow(), playBoard.getFox(i).getHead().getCol()), playBoard.getFox(i).getOrientation());
 		}	
 	}
@@ -107,26 +111,11 @@ public class TilePlayBoard  implements Serializable{
 	}
 
 	/**
-	 * @param rabbits the rabbits to set
-	 */
-	public void setRabbits(ArrayList<Rabbit> rabbits) {
-		this.rabbits = rabbits;
-	}
-
-	/**
 	 * @return the foxes
 	 */
 	public ArrayList<NewFox> getFoxes() {
 		return foxes;
 	}
-
-	/**
-	 * @param foxes the foxes to set
-	 */
-	public void setFoxes(ArrayList<NewFox> foxes) {
-		this.foxes = foxes;
-	}
-
 	/**
 	 * Add a PropertyChangeListener to observe this class
 	 * @param pcl the PropertyChangeListener to observe this class
@@ -198,7 +187,7 @@ public class TilePlayBoard  implements Serializable{
 	
 	public void setFox(GridPoint foxHead, Direction direction) {
 		int num = foxes.size()+1;
-		if (NewFox.getValidFoxLocations().contains(foxHead)) {
+		if (isValidFoxLoc(foxHead)){
 			foxes.add(new NewFox(foxHead, direction, "fox" + num ));
 			NewFox newlyAddedFox = this.foxes.get(this.foxes.size() - 1);
 			
@@ -245,10 +234,12 @@ public class TilePlayBoard  implements Serializable{
 		// Test all the conditions to ensure that rabbit can be moved!
 		if (this.testJumpDirection(rabbit, rabbit.getLocation().getDirectionTo(newLoc)) 
 				&& this.getNearestJumpPoint(rabbit, rabbit.getLocation().getDirectionTo(newLoc)).equals(newLoc) 
-				&& (board.getTileAt(newLoc).isOccupied()) == false) {
+				&& (!board.getTileAt(newLoc).isOccupied())) {
 			this.moveToken(rabbit, newLoc);
-		} else {
-			throw new IllegalArgumentException("Rabbit at " + rabbit.getLocation() + " cannot jump to " + newLoc);
+		} 
+		else {
+			System.out.println(rabbit.getRow() + "," + rabbit.getCol() + "->" + newLoc.getRow() + "," + newLoc.getCol());
+			return;
 		}
 	}
 	
@@ -325,7 +316,7 @@ public class TilePlayBoard  implements Serializable{
 		return null;
 	}
 	
-	public boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
+	private boolean testNoObstructionsOnFoxPath(NewFox fox, ArrayList<Tile> path) {
 		for (int i = 0; i < path.size(); ++i) {
 			// Test if the tile is occupied by a token other than the given fox
 			if (path.get(i).isOccupied()) {
@@ -346,7 +337,7 @@ public class TilePlayBoard  implements Serializable{
 	 * @param endPoint the ending point for the fox movement
 	 * @return ArrayList with all the tiles along the path
 	 */
-	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+	private ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
 		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 		Direction direction = startPoint.getDirectionTo(endPoint);
 		
@@ -394,7 +385,7 @@ public class TilePlayBoard  implements Serializable{
 					GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
 				
 					// If the new theoretical head and tail locations of the fox are valid locations
-					if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+					if (isValidFoxLoc(newTailLocation) && isValidFoxLoc(newHeadLocation)) {
 						ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 					
 					// get the two points the farthest away from one another
@@ -412,7 +403,7 @@ public class TilePlayBoard  implements Serializable{
 					GridPoint newTailLocation = NewFox.getTheoreticalNewTailLocation(newHeadLocation, fox.getOrientation());
 				
 					// If the new theoretical head and tail locations are valid locations
-					if (NewFox.getValidFoxLocations().contains(newTailLocation) && NewFox.getValidFoxLocations().contains(newHeadLocation)) {
+					if (isValidFoxLoc(newTailLocation) && isValidFoxLoc(newHeadLocation)) {
 						ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 					
 						// get the two points farthest away from one another
@@ -427,6 +418,11 @@ public class TilePlayBoard  implements Serializable{
 				}
 			}
 		return false;
+	}
+	
+	 private boolean isValidFoxLoc(GridPoint foxHead) {
+		return (!foxHead.equals(new GridPoint(0,0)) && !foxHead.equals(new GridPoint(4,0))
+		&& !foxHead.equals(new GridPoint(4,4)) && !foxHead.equals(new GridPoint(0,4)));
 	}
 	
 	/**
@@ -537,47 +533,13 @@ public class TilePlayBoard  implements Serializable{
 		return winState;
 	}
 	
-	public int getRabbitNum() {
-		return rabbits.size();
-	}
-	
-	public int getFoxNum() {
-		return foxes.size();
-	}
 	
 	public Record getUndoInfo() {
 		return after.peek();
 	}
-	/*
-	 * public static void save(Serializable data, String file) {
-	 
-		try {
-			ObjectOutputStream output = new ObjectOutputStream(Files.newOutputStream(Paths.get(file)));
-			output.writeObject(data);
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}*/
 	
-	/*
-	 * public static Object load(String file) {
-	 
-		Object o=null;
-		try {
-			ObjectInputStream input = new ObjectInputStream(Files.newInputStream(Paths.get(file)));
-			o=input.readObject();
-			input.close();
-		} catch (IOException e) {
+	
+	}
 
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return o;
-		
-	}*/
 	
-	
-}
+

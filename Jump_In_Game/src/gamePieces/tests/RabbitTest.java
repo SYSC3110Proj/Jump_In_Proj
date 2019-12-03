@@ -2,11 +2,12 @@ package gamePieces.tests;
 
 import static org.junit.Assert.*;
 
+
 import org.junit.Test;
 
 import gamePieces.GridPoint;
 import gamePieces.Rabbit;
-import gamePieces.RabbitColour;
+
 
 /**
  * The RabbitTest class contains tests for all the methods in the rabbit class.
@@ -23,7 +24,7 @@ public class RabbitTest {
 		Rabbit instance = new Rabbit(new GridPoint(1,2),"rabbit1");
 		assertEquals(1,instance.getRow());
 		assertEquals(2,instance.getColumn());
-		assertEquals(RabbitColour.BROWN,instance.getColour());
+		assertEquals("rabbit1",instance.getName());
 	}
 	
 	public void testatHole() {
@@ -31,5 +32,14 @@ public class RabbitTest {
 		Rabbit instance = new Rabbit(new GridPoint(0,0),"rabbit1");
 		assertEquals(true,instance.atHole());
 	}
+	public void testequal() {
+		Rabbit instance = new Rabbit(new GridPoint(0,0),"rabbit1");
+		Rabbit instance2 = new Rabbit(new GridPoint(0,0),"rabbit1");
+		assertEquals(true,instance.equals(instance2));
+		
+		Rabbit instance3 = new Rabbit(new GridPoint(1,0),"rabbit1");
+		assertEquals(false,instance.equals(instance2));
+	}
+
 
 }

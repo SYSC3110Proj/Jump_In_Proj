@@ -8,6 +8,7 @@ import gamePieces.Direction;
 import gamePieces.GridPoint;
 import gamePieces.NewFox;
 import gamePieces.Rabbit;
+import gamePieces.Tile;
 import tree.FullPathNode;
 import tree.MovementData;
 
@@ -65,7 +66,7 @@ public class Solver {
 			queue.add(newNode);
 		}
 		
-		while (true) {
+		while (!queue.isEmpty()) {
 			currNode = queue.poll();
 			
 			// execute all moves to set board in that state

@@ -1,7 +1,6 @@
 package mvc.controller;
 
 import gamePieces.GridPoint;
-import gamePieces.PieceType;
 import gamePieces.Token;
 
 public class Record {

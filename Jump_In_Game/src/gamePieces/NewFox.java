@@ -26,70 +26,10 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 	
 	/** List of all valid GridPoints that a fox can be placed in */
 	
-	public static final List<GridPoint> VALID_FOX_LOCATIONS = Collections.unmodifiableList(
-			new ArrayList<GridPoint>() {
-				private static final long serialVersionUID = 4511043816701717338L;
-			{
-				add(new GridPoint(0,1));
-				add(new GridPoint(0,3));
-				add(new GridPoint(1,0));
-				add(new GridPoint(1,1));
-				add(new GridPoint(1,2));
-				add(new GridPoint(1,3));
-				add(new GridPoint(1,4));
-				add(new GridPoint(2,1));
-				add(new GridPoint(2,3));
-				add(new GridPoint(3,0));
-				add(new GridPoint(3,1));
-				add(new GridPoint(3,2));
-				add(new GridPoint(3,3));
-				add(new GridPoint(3,4));
-				add(new GridPoint(4,1));
-				add(new GridPoint(4,3));
-			}}) ;
-	
-	/**List of all valid GridPoints along the edge of the board*/
-	public static final List<GridPoint> FOX_BORDER_LOCATIONS = Collections.unmodifiableList(
-			new ArrayList<GridPoint>() {
-				private static final long serialVersionUID = -1912311069171602663L;
-			{
-				add(new GridPoint(0,1));
-				add(new GridPoint(0,3));
-				add(new GridPoint(1,0));
-				add(new GridPoint(1,4));
-				add(new GridPoint(3,0));
-				add(new GridPoint(3,4));
-				add(new GridPoint(4,1));
-				add(new GridPoint(4,3));
-			}}) ;
-	
-	/**Creates a NewFox object with a head location, tail location, and a name.*/
-	public NewFox(GridPoint head, GridPoint tail, String name) {
-		if (!VALID_FOX_LOCATIONS.contains(head)) {
-			throw new IllegalArgumentException("Head is not at a valid location");
-		}
-		
-		if (!VALID_FOX_LOCATIONS.contains(tail)) {
-			throw new IllegalArgumentException("Tail is not at a valid location");
-		}
-		
-		if ((int) head.distance(tail) != 1) {
-			throw new IllegalArgumentException("Head and tail must be next to each other");
-		}
-		
-		this.head = new Token(head, PieceType.FOX);
-		this.head.setName(name);
-		this.tail = new Token(tail, PieceType.FOX);
-		this.tail.setName(name);
-	}
-	
 	/**Creates a NewFox object with a head location, a direction (North, East, South, West) and a name.
 	*/
 	public NewFox(GridPoint head, Direction orientation, String name) {
 		
-		if (!VALID_FOX_LOCATIONS.contains(head)) {
-			throw new IllegalArgumentException("Head is not at a valid location");
-		}
 		
 		GridPoint tailLocation = null;
 		
@@ -101,10 +41,6 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 			tailLocation = new GridPoint(head.getRow(), head.getCol()-1);
 		} else if (orientation.equals(Direction.WEST)) {
 			tailLocation = new GridPoint(head.getRow(), head.getCol()+1);
-		}
-		
-		if (!VALID_FOX_LOCATIONS.contains(tailLocation)) {
-			throw new IllegalArgumentException("Tail cannot be located at " + tailLocation.toString());
 		}
 		
 		this.head = new Token(head, PieceType.FOX);
@@ -232,15 +168,20 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 	public void setOrientation(Direction orientation) {
 		this.orientation = orientation;
 	}
-	
-	
-	/**
-	 * @return the validFoxLocations
-	 */
-	public static List<GridPoint> getValidFoxLocations() {
-		return VALID_FOX_LOCATIONS;
-	}
-
+	/**List of all valid GridPoints along the edge of the board*/
+	public static final List<GridPoint> FOX_BORDER_LOCATIONS = Collections.unmodifiableList(
+			new ArrayList<GridPoint>() {
+				private static final long serialVersionUID = -1912311069171602663L;
+			{
+				add(new GridPoint(0,1));
+				add(new GridPoint(0,3));
+				add(new GridPoint(1,0));
+				add(new GridPoint(1,4));
+				add(new GridPoint(3,0));
+				add(new GridPoint(3,4));
+				add(new GridPoint(4,1));
+				add(new GridPoint(4,3));
+			}}) ;
 	/**
 	 * @return the foxBorderLocations
 	 */
@@ -248,8 +189,23 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 		return FOX_BORDER_LOCATIONS;
 	}
 
+
 	@Override
 	public String toString() {
 		return "NewFox [head=" + head + ", tail=" + tail + ", orientation=" + orientation + "]";
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+    	if(o == null) return false;
+    	if(!(o instanceof NewFox))return false;
+    	NewFox r = (NewFox) o;
+    	
+    	return (r.getHead().getLocation().equals(this.getHead().getLocation())
+    			&& r.getHead().getPieceType().equals(this.getHead().getPieceType())
+    			&& r.getHead().getName().equals(this.getHead().getName())
+    			&& r.getOrientation().equals(this.getOrientation()));
+	}
+	
 }

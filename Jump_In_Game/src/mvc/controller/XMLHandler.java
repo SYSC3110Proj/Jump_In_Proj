@@ -21,28 +21,27 @@ import gamePieces.Direction;
 import gamePieces.GridPoint;
 
 public class XMLHandler extends DefaultHandler{
-	private TilePlayBoard board;
-	/**
-	 * @param board the board to set
-	 */
-	public void setBoard(TilePlayBoard board) {
-		this.board = board;
-	}
-
-	private int num;
+	
 	private boolean isRabbit, isFox, isMushroom, isRow, isCol, isDirec;
 	private int row, col;
 	private Direction direc;
+	private TilePlayBoard board;
 	
-	public XMLHandler(int num) {
+	public XMLHandler() {
 		board = new TilePlayBoard();
-		this.num = num;
 		isRabbit = false;
 		isFox = false;
 		isMushroom = false;
 		isRow = false;
 		isCol = false;
 		isDirec = false;
+	}
+
+	/**
+	 * @param board the board to set
+	 */
+	public void setBoard(TilePlayBoard board) {
+		this.board = board;
 	}
 	
     public void toXMLFile(String str) throws SAXException {
@@ -54,7 +53,7 @@ public class XMLHandler extends DefaultHandler{
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			
-			Result result = new StreamResult(str + "xml");
+			Result result = new StreamResult(str + ".xml");
 			handler.setResult(result);
 			
 			AttributesImpl attr = new AttributesImpl();
@@ -64,7 +63,7 @@ public class XMLHandler extends DefaultHandler{
 			attr.clear();
 			
 			//store rabbits in XML
-			for(int i=0; i<board.getRabbitNum(); i++) {
+			for(int i=0; i<board.getRabbits().size(); i++) {
 				attr.addAttribute("", "", "id", "", String.valueOf(i));
 				handler.startElement("", "", "rabbit", attr);
 				
@@ -82,7 +81,7 @@ public class XMLHandler extends DefaultHandler{
 			}
 			
 			//store foxes in XML
-			for(int i=0; i<board.getFoxNum(); i++) {
+			for(int i=0; i<board.getFoxes().size(); i++) {
 				attr.addAttribute("", "", "id", "", String.valueOf(i));
 				handler.startElement("", "", "fox", attr);
 				
@@ -133,20 +132,22 @@ public class XMLHandler extends DefaultHandler{
     }
     
  
-    
-    public void importXMLFile() throws Exception{
+    //import default games with number
+    public void importXMLFile(int num) throws Exception{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
-		//MyHandler2 handler2 = new MyHandler2();
+		
 		saxParser.parse(new File("game" + num + ".xml"), this);
-		//ArrayList<BuddyInfo> book1 = handler2.book;
+		
     }
+    
+    //import saved games with name
     public void importXMLFileByName(String name) throws Exception{
     	SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();	
-		//MyHandler2 handler2 = new MyHandler2();
-		saxParser.parse(new File(name+"xml"), this);
-		//ArrayList<BuddyInfo> book1 = handler2.book;
+		
+		saxParser.parse(new File(name+".xml"), this);
+		
     }
     
     public void readSAX(File f) throws Exception{
@@ -203,7 +204,6 @@ public class XMLHandler extends DefaultHandler{
     	super.characters(ch, start, length);
     	
     	String text = new String(ch, start, length);
-    	System.out.println(text);
     	
 		if(isRow) {
 			row = Integer.parseInt(text);
