@@ -34,7 +34,7 @@ public class View extends JPanel implements PropertyChangeListener {
 	private JMenuBar menuBar;
 	private JMenu edit, file, startWith;
 	private JMenuItem undo, redo, save, load, getSolution;
-	private JMenuItem game1, game2, game3;
+	private JMenuItem game1, game2, game3, set;
 	
 	private JDialog dialog;
 	
@@ -60,6 +60,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		game1 = new JMenuItem("game1");
 		game2 = new JMenuItem("game2");
 		game3 = new JMenuItem("game3");
+		set = new JMenuItem("set");
 		
 		dialog = new JDialog();
 		
@@ -73,6 +74,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		startWith.add(game1);
 		startWith.add(game2);
 		startWith.add(game3);
+		startWith.add(set);
 		
 		textArea = new JTextArea();
 		textArea.setPreferredSize(new Dimension(500, 100));
@@ -101,6 +103,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		game1.addActionListener(listener);
 		game2.addActionListener(listener);
 		game3.addActionListener(listener);
+		set.addActionListener(listener);
 	}
 	
 	public JMenuBar getMenuBar() {
@@ -135,7 +138,6 @@ public class View extends JPanel implements PropertyChangeListener {
 		dialog.add(quit);
 		
 		dialog.setVisible(true);
-		
 	}
 	
 	//write name on buttons

@@ -231,7 +231,7 @@ public class BuilderWindow extends JPanel {
 		
 		
 	}
-	public void confirm(ActionListener l) {
+	public void initConfirm(ActionListener l) {
 		btnConfirm_1.addActionListener(l);
 	}
 	/**
