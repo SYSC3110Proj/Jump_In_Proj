@@ -197,7 +197,7 @@ public class Controller {
 					   dialog.add(bc);
 					   dialog.setBounds(300, 50, 550, 350);
 					   dialog.setVisible(true);
-					   bc.confirm(new ActionListener () {
+					   bc.initConfirm(new ActionListener () {
 						   public void actionPerformed(ActionEvent e) {
 							   //System.out.print("test");
 							   if(!bc.getXr1().isEmpty()&&!bc.getYr1().isEmpty()) {
