@@ -337,7 +337,7 @@ public class TilePlayBoard  implements Serializable{
 	 * @param endPoint the ending point for the fox movement
 	 * @return ArrayList with all the tiles along the path
 	 */
-	private ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
+	public ArrayList<Tile> getTilesAlongFoxPath(GridPoint startPoint, GridPoint endPoint) {
 		ArrayList<Tile> tilesInPath = new ArrayList<Tile>();
 		Direction direction = startPoint.getDirectionTo(endPoint);
 		
@@ -422,14 +422,16 @@ public class TilePlayBoard  implements Serializable{
 	
 	 private boolean isValidFoxLoc(GridPoint foxHead) {
 		return (!foxHead.equals(new GridPoint(0,0)) && !foxHead.equals(new GridPoint(4,0))
-		&& !foxHead.equals(new GridPoint(4,4)) && !foxHead.equals(new GridPoint(0,4)));
+		&& !foxHead.equals(new GridPoint(0,2)) && !foxHead.equals(new GridPoint(0,4))
+		&& !foxHead.equals(new GridPoint(4,4)) && !foxHead.equals(new GridPoint(4,2))
+		&& !foxHead.equals(new GridPoint(2,2)) && !foxHead.equals(new GridPoint(2,0)) && !foxHead.equals(new GridPoint(2,4)));
 	}
 	
 	/**
-	 * Move a fox to a new location
+		* Move a fox to a new location
 	 * @param fox the fox to be moved
-	 * @param newLocation the new location on the board for the head of the fox to be moved to
-	 */
+	* @param newLocation the new location on the board for the head of the fox to be moved to
+		*/
 	public void moveFox(NewFox fox, GridPoint newLocation) {
 		// If the fox can move
 		if (testValidFoxMove(fox, newLocation)) {
@@ -446,9 +448,6 @@ public class TilePlayBoard  implements Serializable{
 			
 			
 		} 
-		/*else {
-			throw new IllegalArgumentException("Illegal fox move");
-		}*/
 	}
 	
 	public void redo() {

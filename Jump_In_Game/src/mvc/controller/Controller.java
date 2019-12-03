@@ -10,7 +10,9 @@ import javax.swing.JFrame;
 
 import org.xml.sax.SAXException;
 
+import gamePieces.Direction;
 import gamePieces.GridPoint;
+import gamePieces.NewFox;
 import gamePieces.PieceType;
 import gamePieces.Rabbit;
 import mvc.view.*;
@@ -228,7 +230,7 @@ public class Controller {
 							if (sourceTile.getToken().getPieceType() == PieceType.RABBIT) {
 								game.moveRabbit((Rabbit)sourceTile.getToken(), destPoint);
 							} else if (sourceTile.getToken().getPieceType() == PieceType.FOX) {
-								game.moveFox(game.getFoxAtLocation(sourceTile.getLocation()), destPoint);
+								moveFox();
 							}
 							
 							// Toggle both buttons to show as off
@@ -243,6 +245,71 @@ public class Controller {
 				if(game.isWin()) view.popWin();
 			}
 		});
+	}
+	
+	/**
+	 * Logic for moving the fox
+	 */
+	private void moveFox() {
+		try {
+			NewFox foxToMove = game.getFoxAtLocation(sourceTile.getLocation());
+			
+			if (sourceTile.getLocation().equals(foxToMove.getTail().getLocation())) { // Check if the user clicked the tail
+				
+				if ((NewFox.getFoxBorderLocations().contains(foxToMove.getTail().getLocation())) 
+						&& (NewFox.getFoxBorderLocations().contains(destPoint))) {
+					Direction movementDirection = foxToMove.getTail().getLocation().getDirectionTo(destPoint);
+					
+					if (movementDirection.equals(Direction.NORTH)) {
+						destPoint = new GridPoint(destPoint.getRow()+1, destPoint.getCol());
+					} else if (movementDirection.equals(Direction.SOUTH)) {
+						destPoint = new GridPoint(destPoint.getRow()-1, destPoint.getCol());
+					} else if (movementDirection.equals(Direction.EAST)) {
+						destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()-1);
+					} else if (movementDirection.equals(Direction.WEST)) {
+						destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()+1);
+					} else {
+						throw new IllegalArgumentException("The direction calculated is not a valid direction! Fox can only move horizontally or vertically");
+					}
+				}
+				
+				// Convert the movement into a point that is equivalent for the head
+				if (foxToMove.getOrientation() == Direction.NORTH) {
+					destPoint = new GridPoint(destPoint.getRow()-1, destPoint.getCol());
+				} else if (foxToMove.getOrientation() == Direction.SOUTH) {
+					destPoint = new GridPoint(destPoint.getRow()+1, destPoint.getCol());
+				} else if (foxToMove.getOrientation() == Direction.EAST) {
+					destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()+1);
+				} else if (foxToMove.getOrientation() == Direction.WEST) {
+					destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()-1);
+				}
+			} else { // User clicked the head of the fox
+				
+				if ((NewFox.getFoxBorderLocations().contains(foxToMove.getHead().getLocation())) // Check if moving from one border location to another
+						&& (NewFox.getFoxBorderLocations().contains(destPoint)))  {  // If the fox head is moving to another border location
+					
+					Direction movementDirection = foxToMove.getHead().getLocation().getDirectionTo(destPoint);
+					
+					if (movementDirection.equals(Direction.NORTH)) {
+						destPoint = new GridPoint(destPoint.getRow()+1, destPoint.getCol());
+					} else if (movementDirection.equals(Direction.SOUTH)) {
+						destPoint = new GridPoint(destPoint.getRow()-1, destPoint.getCol());
+					} else if (movementDirection.equals(Direction.EAST)) {
+						destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()-1);
+					} else if (movementDirection.equals(Direction.EAST)) {
+						destPoint = new GridPoint(destPoint.getRow(), destPoint.getCol()+1);
+					} else {
+						throw new IllegalArgumentException("The direction calculated is not a valid direction! Fox can only move horizontally or vertically");
+					}
+				}
+			}
+			
+			game.moveFox(foxToMove, destPoint);
+			
+		} catch (IllegalArgumentException error) {
+			System.out.println("Something went wrong!");
+			System.err.println(error);
+		}
 	}
 
 	
