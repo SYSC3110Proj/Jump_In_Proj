@@ -44,7 +44,7 @@ Test code:
 Author:Tiantian Lin
 
 UML Diagram:     
-Author:Zewen Chen
+Author:Tiantian Lin
 
 
 
