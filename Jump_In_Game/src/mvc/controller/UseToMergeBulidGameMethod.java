@@ -71,45 +71,79 @@ public class UseToMergeBulidGameMethod {
 					}
 				}
 				else if(e.getActionCommand().equals("save")) {
-					XMLHandler handler = new XMLHandler(4);
+					XMLHandler handler = new XMLHandler();
 					try {
 						handler.setBoard(game);
-						handler.toXMLFile("123");
+						handler.toXMLFile("saved_game");
 					} catch (SAXException e1) {
 						e1.printStackTrace();
 					}
 				}
 				else if(e.getActionCommand().equals("load")) {
-					XMLHandler handler = new XMLHandler(4);
+					XMLHandler handler = new XMLHandler();
 					try {
-						handler.importXMLFileByName("123");
+						handler.importXMLFileByName("saved_game");
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					game = handler.getBoard();
-					//view.updateButton(game.getBoardName());
-					initButtons();
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("game1")) {
-					XMLHandler handler = new XMLHandler(1);
+					XMLHandler handler = new XMLHandler();
 					try {
-						handler.importXMLFile();
+						handler.importXMLFile(1);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					game = handler.getBoard();
-					initButtons();
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
+					
 				}
 				else if(e.getActionCommand().equals("game2")) {
-					XMLHandler handler = new XMLHandler(2);
-					game = handler.getBoard();
-					initButtons();
+					XMLHandler handler = new XMLHandler();
+					try {
+						handler.importXMLFile(2);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("game3")) {
-					XMLHandler handler = new XMLHandler(3);
-					game = handler.getBoard();
-					initButtons();
+					XMLHandler handler = new XMLHandler();
+					try {
+						handler.importXMLFile(3);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					if(game == null) {
+						setGame(handler.getBoard());
+						initButtons();
+					}
+					else {
+						setGame(handler.getBoard());
+						view.updateButton(game.getBoardName());
+					}
 				}
 				else if(e.getActionCommand().equals("build game")) {
 					BuilderWindow bc= new BuilderWindow();
@@ -234,6 +268,9 @@ public class UseToMergeBulidGameMethod {
 		}
 	}
 	
+	private void setGame(TilePlayBoard newGame) {
+		this.game = new TilePlayBoard(newGame);
+	}
 	
 	/**
 	 * Logic for moving the fox

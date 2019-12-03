@@ -168,7 +168,27 @@ public class NewFox  implements PropertyChangeListener,Serializable  {
 	public void setOrientation(Direction orientation) {
 		this.orientation = orientation;
 	}
-	
+	/**List of all valid GridPoints along the edge of the board*/
+	public static final List<GridPoint> FOX_BORDER_LOCATIONS = Collections.unmodifiableList(
+			new ArrayList<GridPoint>() {
+				private static final long serialVersionUID = -1912311069171602663L;
+			{
+				add(new GridPoint(0,1));
+				add(new GridPoint(0,3));
+				add(new GridPoint(1,0));
+				add(new GridPoint(1,4));
+				add(new GridPoint(3,0));
+				add(new GridPoint(3,4));
+				add(new GridPoint(4,1));
+				add(new GridPoint(4,3));
+			}}) ;
+	/**
+	 * @return the foxBorderLocations
+	 */
+	public static List<GridPoint> getFoxBorderLocations() {
+		return FOX_BORDER_LOCATIONS;
+	}
+
 
 	@Override
 	public String toString() {
