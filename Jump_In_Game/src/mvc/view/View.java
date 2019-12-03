@@ -33,7 +33,7 @@ public class View extends JPanel implements PropertyChangeListener {
 	private GridButton[][] button;
 	private JMenuBar menuBar;
 	private JMenu edit, file, startWith;
-	private JMenuItem undo, redo, save, load, getSolution;
+	private JMenuItem undo, redo, save, load, getSolution, set;
 	private JMenuItem game1, game2, game3;
 	
 	private JDialog dialog;
@@ -57,6 +57,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		getSolution.setActionCommand("solve");
 		save = new JMenuItem("save");
 		load = new JMenuItem("load");
+		set = new JMenuItem("set");
 		game1 = new JMenuItem("game1");
 		game2 = new JMenuItem("game2");
 		game3 = new JMenuItem("game3");
@@ -73,6 +74,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		startWith.add(game1);
 		startWith.add(game2);
 		startWith.add(game3);
+		startWith.add(set);
 		
 		textArea = new JTextArea();
 		textArea.setPreferredSize(new Dimension(500, 100));
@@ -101,6 +103,7 @@ public class View extends JPanel implements PropertyChangeListener {
 		game1.addActionListener(listener);
 		game2.addActionListener(listener);
 		game3.addActionListener(listener);
+		set.addActionListener(listener);
 	}
 	
 	public JMenuBar getMenuBar() {
