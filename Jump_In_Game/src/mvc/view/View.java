@@ -1,3 +1,4 @@
+
 package mvc.view;
 
 import java.awt.Dimension;

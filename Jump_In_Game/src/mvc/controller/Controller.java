@@ -42,7 +42,7 @@ public class Controller {
 	
 	public Controller() {
 		this.view = new View();
-		
+		this.game = new TilePlayBoard();
 		view.initMenu(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getActionCommand().equals("undo")) {
@@ -190,6 +190,46 @@ public class Controller {
 					
 					if(init) initButtons();
 					else view.updateButton(game.getBoardName());
+				}
+				else if(e.getActionCommand().equals("build game")) {
+					BuilderWindow bc= new BuilderWindow();
+					   JDialog dialog = new JDialog();
+					   dialog.add(bc);
+					   dialog.setBounds(300, 50, 550, 350);
+					   dialog.setVisible(true);
+					   bc.confirm(new ActionListener () {
+						   public void actionPerformed(ActionEvent e) {
+							   //System.out.print("test");
+							   if(!bc.getXr1().isEmpty()&&!bc.getYr1().isEmpty()) {
+								   game.setRabbit(Integer.parseInt(bc.getXr1()), Integer.parseInt(bc.getYr1()));
+							   }
+							   if(!bc.getXr2().isEmpty()&&!bc.getYr2().isEmpty()) {
+								   game.setRabbit(Integer.parseInt(bc.getXr2()), Integer.parseInt(bc.getYr2()));
+							   }
+							   if(!bc.getXr3().isEmpty()&&!bc.getYr3().isEmpty()) {
+								   game.setRabbit(Integer.parseInt(bc.getXr3()), Integer.parseInt(bc.getYr3()));
+							   }
+							   if(!bc.getXm1().isEmpty()&&!bc.getYm1().isEmpty()) {
+								   game.setMushroom(Integer.parseInt(bc.getXm1()), Integer.parseInt(bc.getYm1()));
+							   }
+							   if(!bc.getXm2().isEmpty()&&!bc.getYm2().isEmpty()) {
+								   game.setMushroom(Integer.parseInt(bc.getXm2()), Integer.parseInt(bc.getYm2()));
+							   }
+							   if(!bc.getXm3().isEmpty()&&!bc.getYm3().isEmpty()) {
+								   game.setMushroom(Integer.parseInt(bc.getXm3()), Integer.parseInt(bc.getYm3()));
+							   }
+							   
+							   if(!bc.getXf1().isEmpty()&&!bc.getYf1().isEmpty()&&bc.getF1Dir()!=null) {
+								   GridPoint g = new GridPoint(Integer.parseInt(bc.getXf1()), Integer.parseInt(bc.getYf1()));
+								   game.setFox(g,bc.getF1Dir());
+							   }
+							   if(!bc.getXf2().isEmpty()&&!bc.getYf2().isEmpty()&&bc.getF2Dir()!=null) {
+								   GridPoint g = new GridPoint(Integer.parseInt(bc.getXf2()), Integer.parseInt(bc.getYf2()));
+								   game.setFox(g,bc.getF2Dir());
+							   }
+							   initButtons();
+						   } 
+					   });
 				}
 				
 			}

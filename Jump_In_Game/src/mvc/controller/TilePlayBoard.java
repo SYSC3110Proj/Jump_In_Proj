@@ -536,31 +536,9 @@ public class TilePlayBoard  implements Serializable{
 	public Record getUndoInfo() {
 		return after.peek();
 	}
-	public static void save(Serializable data, String file) {
-		try {
-			ObjectOutputStream output = new ObjectOutputStream(Files.newOutputStream(Paths.get(file)));
-			output.writeObject(data);
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	
-	public static Object load(String file) {
-		Object o=null;
-		try {
-			ObjectInputStream input = new ObjectInputStream(Files.newInputStream(Paths.get(file)));
-			o=input.readObject();
-			input.close();
-		} catch (IOException e) {
+	
+	}
 
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return o;
-		
-	}
 	
-}
+
