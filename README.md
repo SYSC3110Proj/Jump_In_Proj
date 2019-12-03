@@ -30,6 +30,8 @@ Author: Zewen Chen
 Author: Craig Worthington
 * XMLHanlder.java: Used to store/load games to/from XML files   
 Author: Ruixuan Ni
+* BuilderWindow.java: generate a gui allow user to customize a game and save it afterwords
+Author: Zewen Chen
 
 Test code:
 * BoardTest.java:Test of Board class
