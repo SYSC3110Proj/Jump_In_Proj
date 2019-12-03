@@ -8,6 +8,7 @@ import gamePieces.Direction;
 import gamePieces.GridPoint;
 import gamePieces.NewFox;
 import gamePieces.Rabbit;
+import gamePieces.Tile;
 import tree.FullPathNode;
 import tree.MovementData;
 
